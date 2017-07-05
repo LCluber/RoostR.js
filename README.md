@@ -4,7 +4,7 @@ RoostR is An open source WebGL 3D engine written in Javascript. To help you deve
 
 ## Code Example
 
-[See a basic example on the dedicated website](http://roostrjs.lcluber.com/#source).
+[See a basic example on the dedicated website](http://roostrjs.lcluber.com/#example).
 
 ## Motivation
 
