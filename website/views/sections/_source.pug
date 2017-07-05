@@ -1,0 +1,47 @@
+section( id='source' class='container content-section text-center' )
+  div( class='row' )
+    div( class='col-lg-8 col-lg-offset-2' )
+      h2=t('section.code.h2')
+      
+      h3=t('section.code.h3')
+      
+      p=t('section.code.p1')
+      
+      pre.
+        function init() {
+
+          scene = new ROOSTR.Scene('canvas');
+          
+          mesh = new ROOSTR.Mesh( new ROOSTR.Cube(), scene.getContext() );
+          //compile shader
+          mesh.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
+                              assetsLoader.getAsset('flat-shading_frag.glsl').response.data
+                            );
+          
+          scene.add(mesh);
+          
+          camera = new ROOSTR.Camera( 45, 0.1, 1000, scene.getContext() );
+          camera.setPosition(TYPE6.Vector3.create(0.0,0.0,5.0));
+          camera.setViewMatrix();
+      
+          render(0);
+        }
+      
+      p=t('section.code.p2')
+      
+      pre.
+        function animate(){
+          scene.clearFrame();
+          render(animation.getElapsedTime().getSecond());
+          animation.newFrame();
+        }
+        
+        function render(time){
+          var rot = rotationSpeed * time;
+          mesh.modelMatrix.rotateXBy(rot);
+          mesh.rotationMatrix.rotateYBy(rot);
+          mesh.modelMatrix.multiplyBy(mesh.rotationMatrix);
+          mesh.rotationMatrix.rotateZBy(rot);
+          mesh.modelMatrix.multiplyBy(mesh.rotationMatrix);
+          scene.render(camera,time);
+        }

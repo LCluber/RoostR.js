@@ -1,0 +1,23 @@
+section( id='example' class='container content-section text-center' )
+  div( class='row' )
+    div( class='col-lg-8 col-lg-offset-2' )
+      h2 Example
+
+      ul( class='list-inline banner-social-buttons' )
+        li
+          button( type="button" class="btn btn-default" onclick='playAnimation()' title='Play / Pause' id='play' )
+            span( class="glyphicon glyphicon-play" )
+        li
+          button( type="button" class="btn btn-default" onclick='stopAnimation()' title='Stop')
+            span( class="glyphicon glyphicon-stop" )  
+      
+      canvas( id='canvas' )
+        
+      div( class="col-sm-4" )
+        span( class="glyphicon glyphicon-time" ) &nbsp;
+        span( id="time" ) 000.00
+      div( class="col-sm-4" )
+        span( id="fps" ) 00 fps 
+      div( class="col-sm-4" )
+        a( href="http://shadergun.lcluber.com/" target="_blank") More examples
+      
