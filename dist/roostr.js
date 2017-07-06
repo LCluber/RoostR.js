@@ -82,6 +82,10 @@
             this.objects.push(object);
             this.nbObjects++;
         },
+        clear: function() {
+            this.objects = [];
+            this.nbObjects = 0;
+        },
         render: function(camera, time) {
             for (var i = 0; i < this.nbObjects; i++) {
                 this.objects[i].render(camera, time);

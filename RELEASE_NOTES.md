@@ -10,6 +10,6 @@ Version 0.2.0 (July 5th 2017)
  * Dedicated website
  * Examples
 
-Version 0.1.0 (December 1st 2015)
+Version 0.1.0 (July 1st 2014)
 -----------------------------
  * initial version
