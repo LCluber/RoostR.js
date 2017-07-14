@@ -52,11 +52,20 @@
         enable: function(capability) {
             this.context.enable(this.context[capability]);
         },
+        disable: function(capability) {
+            this.context.disable(this.context[capability]);
+        },
         setCullFace: function(mode) {
             this.context.cullFace(this.context[mode]);
         },
         setDepthTest: function(mode) {
             this.context.depthFunc(this.context[mode]);
+        },
+        setBlendFunction: function(sourceFactor, destinationFactor) {
+            this.context.blendFunc(sourceFactor, destinationFactor);
+        },
+        setBlendEquation: function(mode) {
+            this.context.blendFunc(mode);
         },
         setViewport: function(width, height) {
             this.context.viewport(0, 0, width, height);
@@ -140,29 +149,28 @@
             this.context.drawArrays(this.context.TRIANGLE_STRIP, 0, numItems);
         }
     });
-    function Camera(fov, zNear, zFar, context) {
-        this.fov = fov;
-        this.ratio = 0;
-        this.zNear = zNear;
-        this.zFar = zFar;
-        this.context = context;
+    function Camera(position, target, up) {
         this.viewMatrix = TYPE6.Matrix4x3.create();
         this.projectionMatrix = TYPE6.Matrix4x4.create();
-        this.position = TYPE6.Vector3.create(0, 0, 0);
-        this.target = TYPE6.Vector3.create(0, 0, 0);
-        this.up = TYPE6.Vector3.create(0, 1, 0);
-        this.setProjectionMatrix();
+        this.position = position;
+        this.target = target;
+        this.up = up;
     }
     Object.assign(Camera.prototype, {
-        setProjectionMatrix: function() {
-            var viewport = this.context.getParameter(this.context.VIEWPORT);
-            this.ratio = viewport[2] / Math.max(1, viewport[3]);
-            this.projectionMatrix.perspective(this.fov, this.ratio, this.zNear, this.zFar);
-        },
         setPosition: function(vector3) {
             this.position.setX(vector3.getX());
             this.position.setY(vector3.getY());
             this.position.setZ(vector3.getZ());
+        },
+        setTarget: function(vector3) {
+            this.target.setX(vector3.getX());
+            this.target.setY(vector3.getY());
+            this.target.setZ(vector3.getZ());
+        },
+        setUp: function(vector3) {
+            this.up.setX(vector3.getX());
+            this.up.setY(vector3.getY());
+            this.up.setZ(vector3.getZ());
         },
         setViewMatrix: function() {
             this.viewMatrix.lookAtRH(this.position, this.target, this.up);
@@ -172,6 +180,75 @@
         },
         getProjectionMatrix: function() {
             return this.projectionMatrix.toArray();
+        }
+    });
+    function PerspectiveCamera(fov, zNear, zFar, context) {
+        this.fov = fov;
+        this.ratio = 0;
+        this.zNear = zNear;
+        this.zFar = zFar;
+        this.context = context;
+        this.camera = new Camera(TYPE6.Vector3.create(), TYPE6.Vector3.create(), TYPE6.Vector3.create(0, 1, 0));
+        this.setProjectionMatrix();
+    }
+    Object.assign(PerspectiveCamera.prototype, {
+        setProjectionMatrix: function() {
+            var viewport = this.context.getParameter(this.context.VIEWPORT);
+            this.ratio = viewport[2] / Math.max(1, viewport[3]);
+            this.camera.projectionMatrix.perspective(this.fov, this.ratio, this.zNear, this.zFar);
+            this.camera.setViewMatrix();
+        },
+        setPosition: function(vector3) {
+            this.camera.setPosition(vector3);
+            this.camera.setViewMatrix();
+        },
+        setTarget: function(vector3) {
+            this.camera.setTarget(vector3);
+            this.camera.setViewMatrix();
+        },
+        setUp: function(vector3) {
+            this.camera.setUp(vector3);
+            this.camera.setViewMatrix();
+        },
+        getViewMatrix: function() {
+            return this.camera.getViewMatrix();
+        },
+        getProjectionMatrix: function() {
+            return this.camera.getProjectionMatrix();
+        }
+    });
+    function OrthographicCamera(left, right, top, bottom, near, far) {
+        this.left = left;
+        this.right = right;
+        this.top = top;
+        this.bottom = bottom;
+        this.near = near;
+        this.far = far;
+        this.camera = new Camera(TYPE6.Vector3.create(), TYPE6.Vector3.create(), TYPE6.Vector3.create(0, 1, 0));
+        this.setProjectionMatrix();
+    }
+    Object.assign(OrthographicCamera.prototype, {
+        setProjectionMatrix: function() {
+            this.camera.projectionMatrix.orthographic(this.left, this.right, this.top, this.bottom, this.near, this.far);
+            this.camera.setViewMatrix();
+        },
+        setPosition: function(vector3) {
+            this.camera.setPosition(vector3);
+            this.camera.setViewMatrix();
+        },
+        setTarget: function(vector3) {
+            this.camera.setTarget(vector3);
+            this.camera.setViewMatrix();
+        },
+        setUp: function(vector3) {
+            this.camera.setUp(vector3);
+            this.camera.setViewMatrix();
+        },
+        getViewMatrix: function() {
+            return this.camera.getViewMatrix();
+        },
+        getProjectionMatrix: function() {
+            return this.camera.getProjectionMatrix();
         }
     });
     function createShader(context, str, type) {
@@ -313,7 +390,8 @@
     exports.Scene = Scene;
     exports.WebGLRenderer = WebGLRenderer;
     exports.RendererTarget = RendererTarget;
-    exports.Camera = Camera;
+    exports.PerspectiveCamera = PerspectiveCamera;
+    exports.OrthographicCamera = OrthographicCamera;
     exports.Mesh = Mesh;
     exports.FullscreenQuad = FullscreenQuad;
     exports.Cube = Cube;

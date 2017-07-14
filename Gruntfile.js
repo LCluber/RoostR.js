@@ -16,8 +16,8 @@ module.exports = function(grunt){
   var docDir    = 'doc/';
   var zipDir    = 'zip/';
 
-  var src       = [ srcDir + projectNameLC + '.js'
-                  ];
+  //var src       = [ srcDir + projectNameLC + '.js'
+  //                ];
 
   var banner    = '/** MIT License\n' +
     '* \n' +
@@ -120,7 +120,7 @@ module.exports = function(grunt){
     },
     jsdoc: {
       dist : {
-        src: src,
+        src: distDir + projectNameLC + '.js',
         config: 'config/jsdoc-conf.json'
       }
     },
@@ -168,9 +168,10 @@ module.exports = function(grunt){
         moduleName: projectName
       },
       bundle:{
-        files: {
-          'dist/roostr.js': [ srcDir + projectNameLC +'.js'] // Only one source file is permitted 
-        }
+        files: [ {
+          src : srcDir + projectNameLC + '.js', 
+          dest : distDir + projectNameLC + '.js' 
+        } ]
       }
     },
     bower_concat: {
@@ -417,8 +418,8 @@ module.exports = function(grunt){
                         'clean:lib',
                         'rollup',
                         'bower_concat',
-                        'uglify:libmin', 'uglify:lib',
-                        'jsdoc'
+                        'jsdoc',
+                        'uglify:libmin', 'uglify:lib'
                       ]
                     );
 

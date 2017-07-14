@@ -4,15 +4,16 @@
  * @api private
  */
 
-export { Scene }           from './scene';
-export { WebGLRenderer }   from './renderers/webgl';
-export { RendererTarget }  from './renderers/target';
-export { Camera }          from './camera';
-export { Mesh }            from './mesh';
-export { FullscreenQuad }  from './geometries/fullscreenQuad';
-export { Cube }            from './geometries/cube';
-export { Sphere }          from './geometries/sphere';
-export { VWing }           from './geometries/vwing';
-export { Texture }         from './texture';
+ export { Scene }              from './scene';
+ export { WebGLRenderer }      from './renderers/webgl';
+ export { RendererTarget }     from './renderers/target';
+ export { PerspectiveCamera }  from './cameras/perspective';
+ export { OrthographicCamera } from './cameras/orthographic';
+ export { Mesh }               from './mesh';
+ export { FullscreenQuad }     from './geometries/fullscreenQuad';
+ export { Cube }               from './geometries/cube';
+ export { Sphere }             from './geometries/sphere';
+ export { VWing }              from './geometries/vwing';
+ export { Texture }            from './texture';
 //export { Matrix4x3 }       from './maths/matrix4x3';
 //export { WebGLRenderer }   from './renderers/WebGLRenderer';

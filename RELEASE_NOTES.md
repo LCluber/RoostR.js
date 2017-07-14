@@ -1,7 +1,12 @@
 
-Version 0.2.1 ()
+Version 0.2.2 ()
 ------------------------------
  * Documentation
+
+Version 0.2.1 (July 14th 2017)
+------------------------------
+ * New PerspectiveCamera and OrthographicCamera classes to chose different types of projections.
+ * New setDepthTest(), setBlendFunction() and setBlendEquation() in rendererTarget class to allow different types of blendings
 
 Version 0.2.0 (July 5th 2017)
 ------------------------------

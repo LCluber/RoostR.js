@@ -52,9 +52,13 @@
     
     scene.add(mesh);
     
-    camera = new ROOSTR.Camera( 45, 0.1, 1000, scene.getContext() );
+    camera = new ROOSTR.PerspectiveCamera( 45, 0.1, 1000, scene.getContext() );
+    // var viewport = scene.getContext().getParameter(scene.getContext().VIEWPORT);
+    // var ratio = viewport[2] / Math.max(1, viewport[3]);
+    // var distance = 5;
+    // camera = new ROOSTR.OrthographicCamera( -distance*ratio, distance*ratio, distance, -distance, 1, 100 );
     camera.setPosition(TYPE6.Vector3.create(0.0,0.0,5.0));
-    camera.setViewMatrix();
+    //camera.setViewMatrix();
   
     render(0);
   	// geometry = new THREE.BoxGeometry( 200, 200, 200 );

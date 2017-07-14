@@ -1,6 +1,6 @@
-## Taipan.js project installation guide
+## RoostR.js project installation guide
 
-You just cloned Taipan.js : git clone https://github.com/LCluber/Taipan.js.git
+You just cloned RoostR.js : git clone https://github.com/LCluber/RoostR.js.git
 
 ### Install nodejs 4 on your server :
   - Windows and OSX : **https://nodejs.org/en/**
@@ -40,8 +40,8 @@ You just cloned Taipan.js : git clone https://github.com/LCluber/Taipan.js.git
     - **grunt dist** build library and website,
     - **grunt serve** launch server, open website and watch for changes,
     - Start Express server manually :
-      - Windows : Run **set DEBUG=Taipanjs:* & npm start**
-      - Linux / OSX : Run **DEBUG=Taipanjs:* npm start**
+      - Windows : Run **set DEBUG=RoostRjs:* & npm start**
+      - Linux / OSX : Run **DEBUG=RoostRjs:* npm start**
     - Go to **http://localhost:3004/** to test the app.
     - Keep in mind running **grunt** once will do all this automatically.
     
