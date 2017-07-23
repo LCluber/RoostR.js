@@ -54,7 +54,7 @@ module.exports = function(grunt){
       }
     }
   });
-
+  grunt.option('stack', true);
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),

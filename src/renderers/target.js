@@ -9,7 +9,7 @@ function RendererTarget( canvasID ) {
   // default resolution
   this.canvas.width = 1280;
   this.canvas.height = 720;
-  this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl");
+  this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl",{alpha:false});
   
   this.context.getExtension('OES_standard_derivatives');
   
@@ -17,14 +17,8 @@ function RendererTarget( canvasID ) {
   this.enable('CULL_FACE');
   this.setCullFace('BACK');
   
-  //  this.enable('GL_BLEND');
-  
-  this.enable('DEPTH_TEST');
-  this.context.depthMask(true);
-  //LESS LEQUAL
-  this.setDepthTest('LEQUAL');
-  // this.context.disable(this.context.DEPTH_TEST);
-  // this.context.depthMask(false);
+  this.setDepthFunc('LEQUAL');
+  this.enableDepthTest();
   
   //this.setViewport(1280,720);
   this.setViewport(this.context.drawingBufferWidth, this.context.drawingBufferHeight);
@@ -79,7 +73,7 @@ Object.assign( RendererTarget.prototype, {
   // GL_GREATER	Passes if the fragment's depth value is greater than the stored depth value.
   // GL_NOTEQUAL	Passes if the fragment's depth value is not equal to the stored depth value.
   // GL_GEQUAL	Passes if the fragment's depth value is greater than or equal to the stored depth value.
-  setDepthTest: function (mode) {
+  setDepthFunc: function (mode) {
     this.context.depthFunc(this.context[mode]);
   },
 
@@ -100,7 +94,7 @@ Object.assign( RendererTarget.prototype, {
   // gl.SRC_ALPHA_SATURATE	
   // min(AS, 1 - AD), min(AS, 1 - AD), min(AS, 1 - AD), 1 Multiplies the RGB colors by the smaller of either the source alpha value or the value of 1 minus the destination alpha value. The alpha value is multiplied by 1.
   setBlendFunction: function ( sourceFactor, destinationFactor ) {
-    this.context.blendFunc( sourceFactor, destinationFactor );
+    this.context.blendFunc( this.context[sourceFactor], this.context[destinationFactor] );
   },
 
   // GL_FUNC_ADD
@@ -109,7 +103,7 @@ Object.assign( RendererTarget.prototype, {
   // GL_MIN
   // GL_MAX
   setBlendEquation: function ( mode ) {
-    this.context.blendFunc( mode );
+    this.context.blendEquation( this.context[mode] );
   },
 
   // specifies the affine transformation of x and y from normalized device coordinates to window coordinates.
@@ -128,9 +122,29 @@ Object.assign( RendererTarget.prototype, {
   
   getContext: function () {
     return this.context;
-	}
+	},
   
+  enableDepthTest:function(){
+    this.enable('DEPTH_TEST');
+    this.context.depthMask(true);
+    //this.gl.depthFunc(this.gl.LESS);
+    //this.setDepthFunc('LEQUAL');
+  },
   
+  disableDepthTest:function(){
+    this.disable('DEPTH_TEST');
+    this.context.depthMask(false);
+  },
+  
+  enableBlendMode:function(equation, source, destination){
+    this.setBlendEquation(equation);
+    this.setBlendFunction(source, destination);
+    this.enable('BLEND');
+  },
+  
+  disableBlendMode:function() {
+    this.disable('BLEND');
+  }
 
 } );
 

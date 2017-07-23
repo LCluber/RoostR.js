@@ -29,10 +29,51 @@ function Mesh( mesh, context ) {
   
   //this.modelMatrix.identity();
   //this.rotationMatrix.identity();
+  
+  this.active = true;
+  
 
 }
 
 Object.assign( Mesh.prototype, {
+
+  /**
+  * Set the element as active
+  * @since 0.4.0
+  * @method
+  */
+  setActive : function(){
+    this.active = true;
+  },
+  
+  /**
+  * Set the element as inactive
+  * @since 0.4.0
+  * @method
+  */
+  setInactive : function(){
+    this.active = false;
+  },
+  
+  /**
+  * Toggle the element between active and inactive.
+  * @since 0.4.0
+  * @method
+  * @returns {vector} The active boolean
+  */
+  toggleActive : function(){
+    this.active = !this.active;
+    return this.active;
+  },
+  
+  /**
+  * Return true if the element is active. false otherwise
+  * @since 0.4.0
+  * @method
+  */
+  isActive : function(){
+    return this.active;
+  },
 
   setTexture: function(texture){
     this.WebGLTexture = texture.WebGLTexture;
@@ -57,12 +98,13 @@ Object.assign( Mesh.prototype, {
       this.program.textureCoordAttribute = this.context.getAttribLocation(this.program, 'aTextureCoord');
       this.context.enableVertexAttribArray(this.program.textureCoordAttribute);
     }
+    
     this.program.uTime = this.context.getUniformLocation(this.program, 'uTime');
     this.program.uScreenResolution = this.context.getUniformLocation(this.program, 'uScreenResolution');
     
-    //if (this.WebGLTexture) {
+    if (this.WebGLTexture) {
       this.program.uSampler = this.context.getUniformLocation(this.program, 'uSampler');
-    //}
+    }
     
     this.renderer.useProgram(this.program);//use program before adding static uniforms
     
@@ -78,7 +120,7 @@ Object.assign( Mesh.prototype, {
   },
   
   render: function( camera, time ){
-    //if(this.draw){
+    if(this.isActive()){
       this.renderer.useProgram(this.program);
       
       if(this.indices){
@@ -92,6 +134,11 @@ Object.assign( Mesh.prototype, {
         this.renderer.vertexAttribPointer(this.program.vertexNormalAttribute, this.itemSize, 'FLOAT', false, 0, 0);
       }
       
+      if (this.uvs) {
+        this.renderer.bindBuffer("ARRAY_BUFFER", this.textureCoordBuffer );
+        this.renderer.vertexAttribPointer(this.program.textureCoordAttribute, 2, 'FLOAT', false, 0, 0);
+      }
+      
       this.sendMatrixUniforms(camera);
       
       if (this.indices) {
@@ -99,7 +146,7 @@ Object.assign( Mesh.prototype, {
       }else{
         this.renderer.drawArrays(this.program, this.numVertices, time, this.WebGLTexture);
       }
-    //}
+    }
   }
 
 } );

@@ -34,14 +34,15 @@
         this.canvas = findById(canvasID);
         this.canvas.width = 1280;
         this.canvas.height = 720;
-        this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl");
+        this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl", {
+            alpha: false
+        });
         this.context.getExtension("OES_standard_derivatives");
         this.setFrontFace("CW");
         this.enable("CULL_FACE");
         this.setCullFace("BACK");
-        this.enable("DEPTH_TEST");
-        this.context.depthMask(true);
-        this.setDepthTest("LEQUAL");
+        this.setDepthFunc("LEQUAL");
+        this.enableDepthTest();
         this.setViewport(this.context.drawingBufferWidth, this.context.drawingBufferHeight);
         this.setClearColor(0, 0, 0, 1);
     }
@@ -58,14 +59,14 @@
         setCullFace: function(mode) {
             this.context.cullFace(this.context[mode]);
         },
-        setDepthTest: function(mode) {
+        setDepthFunc: function(mode) {
             this.context.depthFunc(this.context[mode]);
         },
         setBlendFunction: function(sourceFactor, destinationFactor) {
-            this.context.blendFunc(sourceFactor, destinationFactor);
+            this.context.blendFunc(this.context[sourceFactor], this.context[destinationFactor]);
         },
         setBlendEquation: function(mode) {
-            this.context.blendFunc(mode);
+            this.context.blendEquation(this.context[mode]);
         },
         setViewport: function(width, height) {
             this.context.viewport(0, 0, width, height);
@@ -78,6 +79,22 @@
         },
         getContext: function() {
             return this.context;
+        },
+        enableDepthTest: function() {
+            this.enable("DEPTH_TEST");
+            this.context.depthMask(true);
+        },
+        disableDepthTest: function() {
+            this.disable("DEPTH_TEST");
+            this.context.depthMask(false);
+        },
+        enableBlendMode: function(equation, source, destination) {
+            this.setBlendEquation(equation);
+            this.setBlendFunction(source, destination);
+            this.enable("BLEND");
+        },
+        disableBlendMode: function() {
+            this.disable("BLEND");
         }
     });
     function Scene(canvasID) {
@@ -289,8 +306,22 @@
         this.textureCoordBuffer = this.uvs ? this.renderer.createBuffer("ARRAY_BUFFER", new Float32Array(this.uvs), "STATIC_DRAW") : null;
         this.modelMatrix = TYPE6.Matrix4x3.create();
         this.rotationMatrix = TYPE6.Matrix4x3.create();
+        this.active = true;
     }
     Object.assign(Mesh.prototype, {
+        setActive: function() {
+            this.active = true;
+        },
+        setInactive: function() {
+            this.active = false;
+        },
+        toggleActive: function() {
+            this.active = !this.active;
+            return this.active;
+        },
+        isActive: function() {
+            return this.active;
+        },
         setTexture: function(texture) {
             this.WebGLTexture = texture.WebGLTexture;
         },
@@ -311,7 +342,9 @@
             }
             this.program.uTime = this.context.getUniformLocation(this.program, "uTime");
             this.program.uScreenResolution = this.context.getUniformLocation(this.program, "uScreenResolution");
-            this.program.uSampler = this.context.getUniformLocation(this.program, "uSampler");
+            if (this.WebGLTexture) {
+                this.program.uSampler = this.context.getUniformLocation(this.program, "uSampler");
+            }
             this.renderer.useProgram(this.program);
             var viewport = this.context.getParameter(this.context.VIEWPORT);
             this.context.uniform2f(this.program.uScreenResolution, viewport[2], viewport[3]);
@@ -322,20 +355,26 @@
             this.context.uniformMatrix4fv(this.program.viewMatrixUniform, false, camera.getViewMatrix());
         },
         render: function(camera, time) {
-            this.renderer.useProgram(this.program);
-            if (this.indices) {
-                this.renderer.bindBuffer("ELEMENT_ARRAY_BUFFER", this.indexBuffer);
-            }
-            this.renderer.bindBuffer("ARRAY_BUFFER", this.vertexPositionBuffer);
-            this.renderer.vertexAttribPointer(this.program.vertexPositionAttribute, this.itemSize, "FLOAT", false, 0, 0);
-            if (this.normals) {
-                this.renderer.vertexAttribPointer(this.program.vertexNormalAttribute, this.itemSize, "FLOAT", false, 0, 0);
-            }
-            this.sendMatrixUniforms(camera);
-            if (this.indices) {
-                this.renderer.drawElements(this.program, this.numIndices, time, this.WebGLTexture);
-            } else {
-                this.renderer.drawArrays(this.program, this.numVertices, time, this.WebGLTexture);
+            if (this.isActive()) {
+                this.renderer.useProgram(this.program);
+                if (this.indices) {
+                    this.renderer.bindBuffer("ELEMENT_ARRAY_BUFFER", this.indexBuffer);
+                }
+                this.renderer.bindBuffer("ARRAY_BUFFER", this.vertexPositionBuffer);
+                this.renderer.vertexAttribPointer(this.program.vertexPositionAttribute, this.itemSize, "FLOAT", false, 0, 0);
+                if (this.normals) {
+                    this.renderer.vertexAttribPointer(this.program.vertexNormalAttribute, this.itemSize, "FLOAT", false, 0, 0);
+                }
+                if (this.uvs) {
+                    this.renderer.bindBuffer("ARRAY_BUFFER", this.textureCoordBuffer);
+                    this.renderer.vertexAttribPointer(this.program.textureCoordAttribute, 2, "FLOAT", false, 0, 0);
+                }
+                this.sendMatrixUniforms(camera);
+                if (this.indices) {
+                    this.renderer.drawElements(this.program, this.numIndices, time, this.WebGLTexture);
+                } else {
+                    this.renderer.drawArrays(this.program, this.numVertices, time, this.WebGLTexture);
+                }
             }
         }
     });
@@ -346,6 +385,15 @@
         this.numVertices = 4;
     }
     Object.assign(FullscreenQuad.prototype, {});
+    function Quad(width, height) {
+        width = width ? width * .5 : 1;
+        height = height ? height * .5 : 1;
+        this.vertices = [ width, -height, 0, -width, -height, 0, width, height, 0, -width, height, 0 ];
+        this.uvs = [ 1, 0, 0, 0, 1, 1, 0, 1 ];
+        this.itemSize = 3;
+        this.numVertices = 4;
+    }
+    Object.assign(Quad.prototype, {});
     function Cube() {
         this.vertices = [ 1, -1, -1, -1, -1, 1, 1, -1, 1, -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, 1, -1 ];
         this.indices = [ 0, 1, 2, 3, 4, 5, 5, 0, 2, 4, 6, 0, 6, 3, 1, 2, 3, 5, 0, 6, 1, 3, 7, 4, 5, 4, 0, 4, 7, 6, 6, 7, 3, 2, 1, 3 ];
@@ -387,6 +435,30 @@
             context.bindTexture(context.TEXTURE_2D, null);
         }
     });
+    function Material() {
+        this.ambient = null;
+        this.diffuse = null;
+        this.specular = null;
+        this.shininess = null;
+    }
+    Object.assign(Material.prototype, {
+        setAmbient: function() {},
+        setDiffuse: function() {},
+        setSpecular: function() {},
+        setShininess: function() {},
+        getAmbient: function() {
+            return this.ambient;
+        },
+        getDiffuse: function() {
+            return this.diffuse;
+        },
+        getSpecular: function() {
+            return this.specular;
+        },
+        getShininess: function() {
+            return this.shininess;
+        }
+    });
     exports.Scene = Scene;
     exports.WebGLRenderer = WebGLRenderer;
     exports.RendererTarget = RendererTarget;
@@ -394,10 +466,12 @@
     exports.OrthographicCamera = OrthographicCamera;
     exports.Mesh = Mesh;
     exports.FullscreenQuad = FullscreenQuad;
+    exports.Quad = Quad;
     exports.Cube = Cube;
     exports.Sphere = Sphere;
     exports.VWing = VWing;
     exports.Texture = Texture;
+    exports.Material = Material;
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
