@@ -9,60 +9,10 @@ function VWing( ) {
                 ];
   this.itemSize = 3;
   this.numIndices = 84;
-
+  this.primitive = 'TRIANGLES';
 }
 
 Object.assign( VWing.prototype, {
-
-  // setTexture: function(texture){
-  //   this.WebGLTexture = texture.WebGLTexture;
-  // },
-  // 
-  // createProgram: function(vertexShader, fragmentShader) {
-  //   console.log('Create program');
-  //   this.program = createProgram( this.context, vertexShader, fragmentShader );
-  //   
-  //   this.program.vertexPositionAttribute = this.context.getAttribLocation(this.program, 'aVertexPosition');
-  //   this.context.enableVertexAttribArray(this.program.vertexPositionAttribute);
-  //   
-  //   this.program.vertexNormalAttribute = this.context.getAttribLocation(this.program, 'aVertexNormal');
-  //   this.context.enableVertexAttribArray(this.program.vertexNormalAttribute);
-  //   
-  //   this.program.modelMatrixUniform = this.context.getUniformLocation(this.program, 'uModelMatrix');
-  //   this.program.viewMatrixUniform = this.context.getUniformLocation(this.program, 'uViewMatrix');
-  //   this.program.projectionMatrixUniform = this.context.getUniformLocation(this.program, 'uProjectionMatrix');
-  //   
-  //   this.program.uTime = this.context.getUniformLocation(this.program, 'uTime');
-  //   //this.program.uScreenResolution = this.context.getUniformLocation(this.program, 'uScreenResolution');
-  //   
-  //   //if (this.WebGLTexture) {
-  //     this.program.uSampler = this.context.getUniformLocation(this.program, 'uSampler');
-  //   //}
-  //   
-  //   this.renderer.useProgram(this.program);//use program before adding static uniforms
-  //   
-  // },
-  // 
-  // sendMatrixUniforms: function(camera) {
-  //   this.context.uniformMatrix4fv(this.program.modelMatrixUniform, false, this.modelMatrix.get());
-  //   this.context.uniformMatrix4fv(this.program.projectionMatrixUniform, false, camera.projectionMatrix.get());
-  //   this.context.uniformMatrix4fv(this.program.viewMatrixUniform, false, camera.viewMatrix.get());
-  // },
-  // 
-  // render: function( camera, time ){
-  //   if(this.draw){
-  //     this.renderer.useProgram(this.program);
-  //     
-  //     this.renderer.bindBuffer('ELEMENT_ARRAY_BUFFER', this.indexBuffer);
-  //     this.renderer.bindBuffer('ARRAY_BUFFER', this.vertexPositionBuffer);
-  //     this.renderer.vertexAttribPointer(this.program.vertexPositionAttribute, this.itemSize, 'FLOAT', false, 0, 0);
-  //     
-  //     this.renderer.vertexAttribPointer(this.program.vertexNormalAttribute, this.itemSize, 'FLOAT', false, 0, 0);
-  //     
-  //     this.sendMatrixUniforms(camera);
-  //     this.renderer.drawElements(this.program, this.numIndices, time, this.WebGLTexture);
-  //   }
-  // }
 
 } );
 

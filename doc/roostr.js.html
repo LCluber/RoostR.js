@@ -269,24 +269,38 @@
       this.context.uniform1i(program.uSampler, 0);
     },
     
-    drawElements: function(program, numItems, time, texture){
+    drawElements: function(primitive, program, numItems, time, texture){
       this.sendDefaultUniforms(program, time);
 
       if(texture){
         this.sendTexture(program, texture);
       }
-
-      this.context.drawElements(this.context.TRIANGLES, numItems, this.context.UNSIGNED_SHORT, 0);
+      
+      // gl.POINTS: Draws a single dot.
+      // gl.LINE_STRIP: Draws a straight line to the next vertex.
+      // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
+      // gl.LINES: Draws a line between a pair of vertices.
+      // gl.TRIANGLE_STRIP
+      // gl.TRIANGLE_FAN
+      // gl.TRIANGLES: Draws a triangle for a group of three vertices.
+      this.context.drawElements(this.context[primitive], numItems, this.context.UNSIGNED_SHORT, 0);
     },
     
-    drawArrays: function(program, numItems, time, texture) {
+    drawArrays: function(primitive, program, numItems, time, texture) {
       this.sendDefaultUniforms(program, time);
       
       if(texture){
         this.sendTexture(program, texture);
       }
       
-      this.context.drawArrays(this.context.TRIANGLE_STRIP, 0, numItems);
+      // gl.POINTS: Draws a single dot.
+      // gl.LINE_STRIP: Draws a straight line to the next vertex.
+      // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
+      // gl.LINES: Draws a line between a pair of vertices.
+      // gl.TRIANGLE_STRIP
+      // gl.TRIANGLE_FAN
+      // gl.TRIANGLES: Draws a triangle for a group of three vertices.
+      this.context.drawArrays(this.context[primitive], 0, numItems);
       
       // this.context.useProgram(program);
       // 
@@ -503,7 +517,9 @@
     this.numIndices  = mesh.numIndices ? mesh.numIndices : null;
     this.numVertices = mesh.numVertices ? mesh.numVertices : null;
     
-    this.cameraDefaultPosition = mesh.cameraDefaultPosition ? mesh.cameraDefaultPosition : TYPE6.Vector3.create(0.0,0.0,0.0);
+    this.primitive = mesh.primitive ? mesh.primitive : null;
+    
+    //this.cameraDefaultPosition = mesh.cameraDefaultPosition ? mesh.cameraDefaultPosition : TYPE6.Vector3.create(0.0,0.0,0.0);
     
     this.context = context;
     
@@ -523,6 +539,8 @@
     //this.rotationMatrix.identity();
     
     this.active = true;
+    
+    this.drawMethod = this.indices ? 'drawElements' : 'drawArrays';
     
 
   }
@@ -633,13 +651,35 @@
         
         this.sendMatrixUniforms(camera);
         
-        if (this.indices) {
-          this.renderer.drawElements(this.program, this.numIndices, time, this.WebGLTexture);
-        }else{
-          this.renderer.drawArrays(this.program, this.numVertices, time, this.WebGLTexture);
-        }
+        this.renderer[this.drawMethod](this.primitive, this.program, this.numIndices ? this.numIndices : this.numVertices, time, this.WebGLTexture);
+        
       }
     }
+
+  } );
+
+  function Line( vertices, thickness ) {
+    this.thickness = thickness ? thickness * 0.5 : 1.0;
+
+    this.vertices = vertices;
+    
+    this.itemSize = 3;
+    this.numVertices = vertices.length / this.itemSize;
+    this.primitive = 'LINE_STRIP';
+    
+  }
+
+  Object.assign( Line.prototype, {
+    
+    // setSize : function(width,height){
+    //   width  *= 0.5;
+    //   height *= 0.5;
+    //   this.vertices = [  width,-height, 0.0,
+    //                     -width,-height, 0.0,
+    //                      width, height, 0.0,
+    //                     -width, height, 0.0 
+    //                   ];
+    // }
 
   } );
 
@@ -657,6 +697,7 @@
                ];
     this.itemSize = 2;
     this.numVertices = 4;
+    this.primitive = 'TRIANGLE_STRIP';
     
   }
 
@@ -684,6 +725,7 @@
                ];
     this.itemSize = 3;
     this.numVertices = 4;
+    this.primitive = 'TRIANGLE_STRIP';
     
   }
 
@@ -701,16 +743,17 @@
 
   } );
 
-  function Cube( ) {
-
-    this.vertices = [  1.0,-1.0,-1.0,
-                      -1.0,-1.0, 1.0,
-                       1.0,-1.0, 1.0,
-                      -1.0, 1.0, 1.0,
-                       1.0, 1.0,-1.0,
-                       1.0, 1.0, 1.0,
-                      -1.0,-1.0,-1.0,
-                      -1.0, 1.0,-1.0
+  function Cube( size ) {
+    size = size ? size * 0.5 : 1.0;
+    
+    this.vertices = [  size,-size,-size,
+                      -size,-size, size,
+                       size,-size, size,
+                      -size, size, size,
+                       size, size,-size,
+                       size, size, size,
+                      -size,-size,-size,
+                      -size, size,-size
                     ];
     this.indices = [  0,1,2, 3,4,5,
                       5,0,2, 4,6,0,
@@ -730,6 +773,7 @@
                   ];
     this.itemSize = 3;
     this.numIndices = 36;
+    this.primitive = 'TRIANGLES';
 
   }
 
@@ -753,6 +797,7 @@
                   ];
     this.itemSize = 3;
     this.numIndices = 2880;
+    this.primitive = 'TRIANGLES';
 
   }
 
@@ -821,60 +866,10 @@
                   ];
     this.itemSize = 3;
     this.numIndices = 84;
-
+    this.primitive = 'TRIANGLES';
   }
 
   Object.assign( VWing.prototype, {
-
-    // setTexture: function(texture){
-    //   this.WebGLTexture = texture.WebGLTexture;
-    // },
-    // 
-    // createProgram: function(vertexShader, fragmentShader) {
-    //   console.log('Create program');
-    //   this.program = createProgram( this.context, vertexShader, fragmentShader );
-    //   
-    //   this.program.vertexPositionAttribute = this.context.getAttribLocation(this.program, 'aVertexPosition');
-    //   this.context.enableVertexAttribArray(this.program.vertexPositionAttribute);
-    //   
-    //   this.program.vertexNormalAttribute = this.context.getAttribLocation(this.program, 'aVertexNormal');
-    //   this.context.enableVertexAttribArray(this.program.vertexNormalAttribute);
-    //   
-    //   this.program.modelMatrixUniform = this.context.getUniformLocation(this.program, 'uModelMatrix');
-    //   this.program.viewMatrixUniform = this.context.getUniformLocation(this.program, 'uViewMatrix');
-    //   this.program.projectionMatrixUniform = this.context.getUniformLocation(this.program, 'uProjectionMatrix');
-    //   
-    //   this.program.uTime = this.context.getUniformLocation(this.program, 'uTime');
-    //   //this.program.uScreenResolution = this.context.getUniformLocation(this.program, 'uScreenResolution');
-    //   
-    //   //if (this.WebGLTexture) {
-    //     this.program.uSampler = this.context.getUniformLocation(this.program, 'uSampler');
-    //   //}
-    //   
-    //   this.renderer.useProgram(this.program);//use program before adding static uniforms
-    //   
-    // },
-    // 
-    // sendMatrixUniforms: function(camera) {
-    //   this.context.uniformMatrix4fv(this.program.modelMatrixUniform, false, this.modelMatrix.get());
-    //   this.context.uniformMatrix4fv(this.program.projectionMatrixUniform, false, camera.projectionMatrix.get());
-    //   this.context.uniformMatrix4fv(this.program.viewMatrixUniform, false, camera.viewMatrix.get());
-    // },
-    // 
-    // render: function( camera, time ){
-    //   if(this.draw){
-    //     this.renderer.useProgram(this.program);
-    //     
-    //     this.renderer.bindBuffer('ELEMENT_ARRAY_BUFFER', this.indexBuffer);
-    //     this.renderer.bindBuffer('ARRAY_BUFFER', this.vertexPositionBuffer);
-    //     this.renderer.vertexAttribPointer(this.program.vertexPositionAttribute, this.itemSize, 'FLOAT', false, 0, 0);
-    //     
-    //     this.renderer.vertexAttribPointer(this.program.vertexNormalAttribute, this.itemSize, 'FLOAT', false, 0, 0);
-    //     
-    //     this.sendMatrixUniforms(camera);
-    //     this.renderer.drawElements(this.program, this.numIndices, time, this.WebGLTexture);
-    //   }
-    // }
 
   } );
 
@@ -994,6 +989,7 @@
   exports.PerspectiveCamera = PerspectiveCamera;
   exports.OrthographicCamera = OrthographicCamera;
   exports.Mesh = Mesh;
+  exports.Line = Line;
   exports.FullscreenQuad = FullscreenQuad;
   exports.Quad = Quad;
   exports.Cube = Cube;
@@ -1021,7 +1017,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Jul 23 2017 21:56:12 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Jul 30 2017 19:58:51 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

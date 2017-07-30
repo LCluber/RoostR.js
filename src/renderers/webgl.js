@@ -44,24 +44,38 @@ Object.assign( WebGLRenderer.prototype, {
     this.context.uniform1i(program.uSampler, 0);
   },
   
-  drawElements: function(program, numItems, time, texture){
+  drawElements: function(primitive, program, numItems, time, texture){
     this.sendDefaultUniforms(program, time);
 
     if(texture){
       this.sendTexture(program, texture);
     }
-
-    this.context.drawElements(this.context.TRIANGLES, numItems, this.context.UNSIGNED_SHORT, 0);
+    
+    // gl.POINTS: Draws a single dot.
+    // gl.LINE_STRIP: Draws a straight line to the next vertex.
+    // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
+    // gl.LINES: Draws a line between a pair of vertices.
+    // gl.TRIANGLE_STRIP
+    // gl.TRIANGLE_FAN
+    // gl.TRIANGLES: Draws a triangle for a group of three vertices.
+    this.context.drawElements(this.context[primitive], numItems, this.context.UNSIGNED_SHORT, 0);
   },
   
-  drawArrays: function(program, numItems, time, texture) {
+  drawArrays: function(primitive, program, numItems, time, texture) {
     this.sendDefaultUniforms(program, time);
     
     if(texture){
       this.sendTexture(program, texture);
     }
     
-    this.context.drawArrays(this.context.TRIANGLE_STRIP, 0, numItems);
+    // gl.POINTS: Draws a single dot.
+    // gl.LINE_STRIP: Draws a straight line to the next vertex.
+    // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
+    // gl.LINES: Draws a line between a pair of vertices.
+    // gl.TRIANGLE_STRIP
+    // gl.TRIANGLE_FAN
+    // gl.TRIANGLES: Draws a triangle for a group of three vertices.
+    this.context.drawArrays(this.context[primitive], 0, numItems);
     
     // this.context.useProgram(program);
     // 

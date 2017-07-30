@@ -14,6 +14,7 @@ function FullscreenQuad( ) {
              ];
   this.itemSize = 2;
   this.numVertices = 4;
+  this.primitive = 'TRIANGLE_STRIP';
   
 }
 

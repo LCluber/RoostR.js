@@ -3,6 +3,10 @@ Version 0.2.3 (soon)
 ------------------------------
  * Documentation
 
+ Version 0.2.3 (July 30th 2017)
+ ------------------------------
+  * Added Line geometry to draw lines.
+
  Version 0.2.2 (July 23th 2017)
  ------------------------------
   * Added Quad geometry to draw quads.

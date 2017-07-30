@@ -11,7 +11,9 @@ function Mesh( mesh, context ) {
   this.numIndices  = mesh.numIndices ? mesh.numIndices : null;
   this.numVertices = mesh.numVertices ? mesh.numVertices : null;
   
-  this.cameraDefaultPosition = mesh.cameraDefaultPosition ? mesh.cameraDefaultPosition : TYPE6.Vector3.create(0.0,0.0,0.0);
+  this.primitive = mesh.primitive ? mesh.primitive : null;
+  
+  //this.cameraDefaultPosition = mesh.cameraDefaultPosition ? mesh.cameraDefaultPosition : TYPE6.Vector3.create(0.0,0.0,0.0);
   
   this.context = context;
   
@@ -31,6 +33,8 @@ function Mesh( mesh, context ) {
   //this.rotationMatrix.identity();
   
   this.active = true;
+  
+  this.drawMethod = this.indices ? 'drawElements' : 'drawArrays';
   
 
 }
@@ -141,11 +145,8 @@ Object.assign( Mesh.prototype, {
       
       this.sendMatrixUniforms(camera);
       
-      if (this.indices) {
-        this.renderer.drawElements(this.program, this.numIndices, time, this.WebGLTexture);
-      }else{
-        this.renderer.drawArrays(this.program, this.numVertices, time, this.WebGLTexture);
-      }
+      this.renderer[this.drawMethod](this.primitive, this.program, this.numIndices ? this.numIndices : this.numVertices, time, this.WebGLTexture);
+      
     }
   }
 

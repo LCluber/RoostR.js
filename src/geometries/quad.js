@@ -20,6 +20,7 @@ function Quad( width, height ) {
              ];
   this.itemSize = 3;
   this.numVertices = 4;
+  this.primitive = 'TRIANGLE_STRIP';
   
 }
 

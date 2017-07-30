@@ -11,6 +11,7 @@
  export { OrthographicCamera } from './cameras/orthographic';
  export { Mesh }               from './mesh';
  //export { Entity }             from './entity';
+ export { Line }               from './geometries/line';
  export { FullscreenQuad }     from './geometries/fullscreenQuad';
  export { Quad }               from './geometries/quad';
  export { Cube }               from './geometries/cube';

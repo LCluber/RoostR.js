@@ -9,6 +9,7 @@ function Sphere( ) {
                 ];
   this.itemSize = 3;
   this.numIndices = 2880;
+  this.primitive = 'TRIANGLES';
 
 }
 

@@ -1,14 +1,15 @@
 
-function Cube( ) {
-
-  this.vertices = [  1.0,-1.0,-1.0,
-                    -1.0,-1.0, 1.0,
-                     1.0,-1.0, 1.0,
-                    -1.0, 1.0, 1.0,
-                     1.0, 1.0,-1.0,
-                     1.0, 1.0, 1.0,
-                    -1.0,-1.0,-1.0,
-                    -1.0, 1.0,-1.0
+function Cube( size ) {
+  size = size ? size * 0.5 : 1.0;
+  
+  this.vertices = [  size,-size,-size,
+                    -size,-size, size,
+                     size,-size, size,
+                    -size, size, size,
+                     size, size,-size,
+                     size, size, size,
+                    -size,-size,-size,
+                    -size, size,-size
                   ];
   this.indices = [  0,1,2, 3,4,5,
                     5,0,2, 4,6,0,
@@ -28,6 +29,7 @@ function Cube( ) {
                 ];
   this.itemSize = 3;
   this.numIndices = 36;
+  this.primitive = 'TRIANGLES';
 
 }
 
