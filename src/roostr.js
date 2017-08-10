@@ -16,6 +16,7 @@
  export { Quad }               from './geometries/quad';
  export { Cube }               from './geometries/cube';
  export { Sphere }             from './geometries/sphere';
+ export { Hemisphere }         from './geometries/hemisphere';
  export { VWing }              from './geometries/vwing';
  export { Texture }            from './texture';
  export { Material }           from './material';

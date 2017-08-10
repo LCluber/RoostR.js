@@ -1,17 +1,20 @@
-
-Version 0.2.3 (soon)
+Version 0.2.5 (soon)
 ------------------------------
  * Documentation
 
- Version 0.2.3 (July 30th 2017)
- ------------------------------
-  * Added Line geometry to draw lines.
+Version 0.2.4 (August 10th 2017)
+------------------------------
+ * Added Hemisphere geometry.
 
- Version 0.2.2 (July 23th 2017)
- ------------------------------
-  * Added Quad geometry to draw quads.
-  * Fixed a bug with texture coordinates.
-  * Added enableDepthTest(), disableDepthTest(), enableBlendMode() and disableBlendMode() methods in rendererTarget class to facilitate blending modifications along the rendering loop.
+Version 0.2.3 (July 30th 2017)
+------------------------------
+ * Added Line geometry to draw lines.
+
+Version 0.2.2 (July 23th 2017)
+------------------------------
+ * Added Quad geometry to draw quads.
+ * Fixed a bug with texture coordinates.
+ * Added enableDepthTest(), disableDepthTest(), enableBlendMode() and disableBlendMode() methods in rendererTarget class to facilitate blending modifications along the rendering loop.
 
 Version 0.2.1 (July 14th 2017)
 ------------------------------
