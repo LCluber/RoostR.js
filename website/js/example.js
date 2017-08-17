@@ -44,7 +44,8 @@
 
     scene = new ROOSTR.Scene('canvas');
     
-    mesh = new ROOSTR.Mesh( new ROOSTR.Hemisphere(), scene.getContext() );
+    mesh = new ROOSTR.Mesh( new ROOSTR.Cube(), scene.getContext() );
+    //mesh = new ROOSTR.Mesh( new ROOSTR.FullscreenQuad(), scene.getContext() );
     //compile shader
     mesh.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
                         assetsLoader.getAsset('flat-shading_frag.glsl').response.data

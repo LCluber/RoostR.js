@@ -2,6 +2,10 @@ Version 0.2.5 (soon)
 ------------------------------
  * Documentation
 
+Version 0.2.5 (August 15th 2017)
+------------------------------
+ * Ability to send custom uniforms to the shaders using addUniform() and setUniform() methods in the mesh class.
+
 Version 0.2.4 (August 10th 2017)
 ------------------------------
  * Added Hemisphere geometry.

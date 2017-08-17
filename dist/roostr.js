@@ -30,6 +30,9 @@
     function findById(id) {
         return document.getElementById(id);
     }
+    function ucfirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
     function RendererTarget(canvasID) {
         this.canvas = findById(canvasID);
         this.canvas.width = 1280;
@@ -143,26 +146,10 @@
         vertexAttribPointer: function(index, size, type, normalized, stride, offset) {
             this.context.vertexAttribPointer(index, size, this.context[type], normalized, stride, offset);
         },
-        sendDefaultUniforms: function(program, time) {
-            this.context.uniform1f(program.uTime, time);
-        },
-        sendTexture: function(program, texture) {
-            this.context.activeTexture(this.context.TEXTURE0);
-            this.context.bindTexture(this.context.TEXTURE_2D, texture);
-            this.context.uniform1i(program.uSampler, 0);
-        },
-        drawElements: function(primitive, program, numItems, time, texture) {
-            this.sendDefaultUniforms(program, time);
-            if (texture) {
-                this.sendTexture(program, texture);
-            }
+        drawElements: function(primitive, numItems) {
             this.context.drawElements(this.context[primitive], numItems, this.context.UNSIGNED_SHORT, 0);
         },
-        drawArrays: function(primitive, program, numItems, time, texture) {
-            this.sendDefaultUniforms(program, time);
-            if (texture) {
-                this.sendTexture(program, texture);
-            }
+        drawArrays: function(primitive, numItems) {
             this.context.drawArrays(this.context[primitive], 0, numItems);
         }
     });
@@ -288,6 +275,11 @@
         if (!context.getProgramParameter(program, context.LINK_STATUS)) console.log(context.getProgramInfoLog(program));
         return program;
     }
+    function Uniform(type, value) {
+        this.type = type;
+        this.value = value;
+    }
+    Object.assign(Uniform.prototype, {});
     function Mesh(mesh, context) {
         this.vertices = mesh.vertices ? mesh.vertices : null;
         this.indices = mesh.indices ? mesh.indices : null;
@@ -297,6 +289,7 @@
         this.numIndices = mesh.numIndices ? mesh.numIndices : null;
         this.numVertices = mesh.numVertices ? mesh.numVertices : null;
         this.primitive = mesh.primitive ? mesh.primitive : null;
+        this.customUniforms = {};
         this.context = context;
         this.renderer = new WebGLRenderer(this.context);
         this.WebGLTexture = null;
@@ -326,52 +319,125 @@
         setTexture: function(texture) {
             this.WebGLTexture = texture.WebGLTexture;
         },
+        addUniform: function(name, type, value) {
+            if (!this.customUniforms.hasOwnProperty(name)) {
+                this.customUniforms[name] = new Uniform(type, value);
+            }
+        },
+        setUniform: function(name, value) {
+            if (this.customUniforms.hasOwnProperty(name)) {
+                this.customUniforms[name].value = value;
+            }
+        },
+        createTextureProgram: function() {
+            if (this.WebGLTexture) {
+                this.addProgramUniform("sampler");
+            }
+        },
+        createPositionsProgram: function() {
+            this.addProgramAttribute("vertexPosition");
+        },
+        createNormalsProgram: function() {
+            if (this.normals) {
+                this.addProgramAttribute("vertexNormal");
+            }
+        },
+        createUvsProgram: function() {
+            if (this.uvs && this.WebGLTexture) {
+                this.addProgramAttribute("textureCoord");
+            }
+        },
+        createMatrixUniformsProgram: function() {
+            this.addProgramUniform("modelMatrix");
+            this.addProgramUniform("viewMatrix");
+            this.addProgramUniform("projectionMatrix");
+        },
+        createDefaultUniformsProgram: function() {
+            this.addProgramUniform("time");
+            this.addProgramUniform("screenResolution");
+        },
+        createCustomUniformsProgram: function() {
+            for (var property in this.customUniforms) {
+                if (this.customUniforms.hasOwnProperty(property)) {
+                    this.addProgramUniform(property);
+                }
+            }
+        },
+        sendScreenResolution: function() {
+            var viewport = this.context.getParameter(this.context.VIEWPORT);
+            this.context.uniform2f(this.program.screenResolution, viewport[2], viewport[3]);
+        },
         createProgram: function(vertexShader, fragmentShader) {
             this.program = createProgram(this.context, vertexShader, fragmentShader);
-            this.program.vertexPositionAttribute = this.context.getAttribLocation(this.program, "aVertexPosition");
-            this.context.enableVertexAttribArray(this.program.vertexPositionAttribute);
-            if (this.normals) {
-                this.program.vertexNormalAttribute = this.context.getAttribLocation(this.program, "aVertexNormal");
-                this.context.enableVertexAttribArray(this.program.vertexNormalAttribute);
-            }
-            this.program.modelMatrixUniform = this.context.getUniformLocation(this.program, "uModelMatrix");
-            this.program.viewMatrixUniform = this.context.getUniformLocation(this.program, "uViewMatrix");
-            this.program.projectionMatrixUniform = this.context.getUniformLocation(this.program, "uProjectionMatrix");
-            if (this.uvs) {
-                this.program.textureCoordAttribute = this.context.getAttribLocation(this.program, "aTextureCoord");
-                this.context.enableVertexAttribArray(this.program.textureCoordAttribute);
-            }
-            this.program.uTime = this.context.getUniformLocation(this.program, "uTime");
-            this.program.uScreenResolution = this.context.getUniformLocation(this.program, "uScreenResolution");
-            if (this.WebGLTexture) {
-                this.program.uSampler = this.context.getUniformLocation(this.program, "uSampler");
-            }
+            this.createPositionsProgram();
+            this.createNormalsProgram();
+            this.createUvsProgram();
+            this.createMatrixUniformsProgram();
+            this.createDefaultUniformsProgram();
+            this.createCustomUniformsProgram();
+            this.createTextureProgram();
             this.renderer.useProgram(this.program);
-            var viewport = this.context.getParameter(this.context.VIEWPORT);
-            this.context.uniform2f(this.program.uScreenResolution, viewport[2], viewport[3]);
+            this.sendScreenResolution();
+        },
+        addProgramAttribute: function(name) {
+            this.program[name] = this.context.getAttribLocation(this.program, "a" + ucfirst(name));
+            this.context.enableVertexAttribArray(this.program[name]);
+        },
+        addProgramUniform: function(name) {
+            this.program[name] = this.context.getUniformLocation(this.program, "u" + ucfirst(name));
         },
         sendMatrixUniforms: function(camera) {
-            this.context.uniformMatrix4fv(this.program.modelMatrixUniform, false, this.modelMatrix.toArray());
-            this.context.uniformMatrix4fv(this.program.projectionMatrixUniform, false, camera.getProjectionMatrix());
-            this.context.uniformMatrix4fv(this.program.viewMatrixUniform, false, camera.getViewMatrix());
+            this.context.uniformMatrix4fv(this.program.modelMatrix, false, this.modelMatrix.toArray());
+            this.context.uniformMatrix4fv(this.program.projectionMatrix, false, camera.getProjectionMatrix());
+            this.context.uniformMatrix4fv(this.program.viewMatrix, false, camera.getViewMatrix());
+        },
+        sendCustomUniforms: function() {
+            for (var property in this.customUniforms) {
+                if (this.customUniforms.hasOwnProperty(property)) {
+                    var uniform = this.customUniforms[property];
+                    this.context[uniform.type](this.program[property], uniform.value);
+                }
+            }
+        },
+        sendDefaultUniforms: function(time) {
+            this.context.uniform1f(this.program.time, time);
+        },
+        sendTexture: function() {
+            if (this.WebGLTexture) {
+                this.context.activeTexture(this.context.TEXTURE0);
+                this.context.bindTexture(this.context.TEXTURE_2D, this.WebGLTexture);
+                this.context.uniform1i(this.program.sampler, 0);
+            }
+        },
+        sendUvs: function() {
+            if (this.uvs && this.WebGLTexture) {
+                this.renderer.bindBuffer("ARRAY_BUFFER", this.textureCoordBuffer);
+                this.renderer.vertexAttribPointer(this.program.textureCoord, 2, "FLOAT", false, 0, 0);
+            }
+        },
+        sendNormals: function() {
+            if (this.normals) {
+                this.renderer.vertexAttribPointer(this.program.vertexNormal, this.itemSize, "FLOAT", false, 0, 0);
+            }
+        },
+        sendPositions: function() {
+            if (this.indices) {
+                this.renderer.bindBuffer("ELEMENT_ARRAY_BUFFER", this.indexBuffer);
+            }
+            this.renderer.bindBuffer("ARRAY_BUFFER", this.vertexPositionBuffer);
+            this.renderer.vertexAttribPointer(this.program.vertexPosition, this.itemSize, "FLOAT", false, 0, 0);
         },
         render: function(camera, time) {
             if (this.isActive()) {
                 this.renderer.useProgram(this.program);
-                if (this.indices) {
-                    this.renderer.bindBuffer("ELEMENT_ARRAY_BUFFER", this.indexBuffer);
-                }
-                this.renderer.bindBuffer("ARRAY_BUFFER", this.vertexPositionBuffer);
-                this.renderer.vertexAttribPointer(this.program.vertexPositionAttribute, this.itemSize, "FLOAT", false, 0, 0);
-                if (this.normals) {
-                    this.renderer.vertexAttribPointer(this.program.vertexNormalAttribute, this.itemSize, "FLOAT", false, 0, 0);
-                }
-                if (this.uvs) {
-                    this.renderer.bindBuffer("ARRAY_BUFFER", this.textureCoordBuffer);
-                    this.renderer.vertexAttribPointer(this.program.textureCoordAttribute, 2, "FLOAT", false, 0, 0);
-                }
+                this.sendPositions();
+                this.sendNormals();
+                this.sendUvs();
                 this.sendMatrixUniforms(camera);
-                this.renderer[this.drawMethod](this.primitive, this.program, this.numIndices ? this.numIndices : this.numVertices, time, this.WebGLTexture);
+                this.sendDefaultUniforms(time);
+                this.sendCustomUniforms();
+                this.sendTexture();
+                this.renderer[this.drawMethod](this.primitive, this.numIndices ? this.numIndices : this.numVertices);
             }
         }
     });

@@ -34,23 +34,7 @@ Object.assign( WebGLRenderer.prototype, {
     this.context.vertexAttribPointer(index, size, this.context[type], normalized, stride, offset);
   },
   
-  sendDefaultUniforms: function(program, time){
-    this.context.uniform1f(program.uTime, time);
-  },
-  
-  sendTexture: function(program, texture){
-    this.context.activeTexture(this.context.TEXTURE0);
-    this.context.bindTexture(this.context.TEXTURE_2D, texture);
-    this.context.uniform1i(program.uSampler, 0);
-  },
-  
-  drawElements: function(primitive, program, numItems, time, texture){
-    this.sendDefaultUniforms(program, time);
-
-    if(texture){
-      this.sendTexture(program, texture);
-    }
-    
+  drawElements: function(primitive, numItems){
     // gl.POINTS: Draws a single dot.
     // gl.LINE_STRIP: Draws a straight line to the next vertex.
     // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
@@ -61,13 +45,7 @@ Object.assign( WebGLRenderer.prototype, {
     this.context.drawElements(this.context[primitive], numItems, this.context.UNSIGNED_SHORT, 0);
   },
   
-  drawArrays: function(primitive, program, numItems, time, texture) {
-    this.sendDefaultUniforms(program, time);
-    
-    if(texture){
-      this.sendTexture(program, texture);
-    }
-    
+  drawArrays: function(primitive, numItems) {
     // gl.POINTS: Draws a single dot.
     // gl.LINE_STRIP: Draws a straight line to the next vertex.
     // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
@@ -76,20 +54,6 @@ Object.assign( WebGLRenderer.prototype, {
     // gl.TRIANGLE_FAN
     // gl.TRIANGLES: Draws a triangle for a group of three vertices.
     this.context.drawArrays(this.context[primitive], 0, numItems);
-    
-    // this.context.useProgram(program);
-    // 
-    // this.context.bindBuffer(this.context.ARRAY_BUFFER, vertexPositionBuffer );
-    // //this.context.bindBuffer(this.context.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    // this.context.vertexAttribPointer(program.vertexPositionAttribute, vertexPositionBuffer.itemSize, this.context.FLOAT, false, 0, 0);
-    // 
-    // //if (program.vertexTextureCoordAttribute !== -1) {
-    //   this.context.bindBuffer(this.context.ARRAY_BUFFER, vertexTextureCoordBuffer);
-    //   this.context.vertexAttribPointer(program.vertexTextureCoordAttribute, 2, this.context.FLOAT, false, 0, 0);
-    // //}
-    // 
-    // 
-    // this.context.drawArrays(this.context.TRIANGLE_STRIP, 0, vertexPositionBuffer.numItems);
   }
 
 });

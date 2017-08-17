@@ -19,4 +19,8 @@ function hideOverflow(){
   document.body.style.overflow = 'hidden';
 }
 
-export { findById, showById, hideById, showOverflow, hideOverflow };
+function ucfirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export { findById, showById, hideById, showOverflow, hideOverflow, ucfirst };

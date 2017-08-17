@@ -223,7 +223,7 @@ module.exports = function(grunt){
             join_vars:true,
             cascade:true,
             warnings: true,
-            drop_console: true,
+            drop_console: false,
             keep_fargs: false,
             keep_fnames: false
           }
