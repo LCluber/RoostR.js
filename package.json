@@ -55,7 +55,7 @@
       "grunt-concurrent":             "2.3.1",
       "grunt-nodemon":                "0.4.2",
       "grunt-open":                   "0.2.3",
-      "grunt-rollup":                 "1.0.1",
+      "grunt-rollup":                 "4.0.0",
       "time-grunt":                   "1.4.0"
     }
 }
