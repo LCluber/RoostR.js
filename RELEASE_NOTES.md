@@ -1,6 +1,11 @@
-Version 0.2.5 (soon)
+Version 0.2.7 (soon)
 ------------------------------
  * Documentation
+
+ Version 0.2.6 (August 26th 2017)
+ ------------------------------
+  * Added a scene graph and the ability to add children to a mesh with mesh.addChild(mesh) method.
+  * Added Gun0 geometry.
 
 Version 0.2.5 (August 15th 2017)
 ------------------------------

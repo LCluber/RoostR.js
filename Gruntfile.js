@@ -16,8 +16,6 @@ module.exports = function(grunt){
   var docDir    = 'doc/';
   var zipDir    = 'zip/';
 
-  //var src       = [ srcDir + projectNameLC + '.js'
-  //                ];
 
   var banner    = '/** MIT License\n' +
     '* \n' +

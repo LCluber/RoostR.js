@@ -100,11 +100,34 @@
             this.disable("BLEND");
         }
     });
+    function SceneGraph() {
+        this.model = [ TYPE6.Matrix4x3.create() ];
+        this.model[0].identity();
+        this.nbModel = this.model.length;
+        this.modelStackTop = 0;
+    }
+    Object.assign(SceneGraph.prototype, {
+        pushModelMatrix: function(modelMatrix) {
+            this.modelStackTop++;
+            if (this.modelStackTop === this.nbModel) {
+                this.model.push(TYPE6.Matrix4x3.create());
+                this.nbModel++;
+            }
+            this.model[this.modelStackTop].copy(modelMatrix);
+        },
+        popModelMatrix: function() {
+            this.modelStackTop--;
+        },
+        getWorldMatrix: function() {
+            return this.model[this.modelStackTop];
+        }
+    });
     function Scene(canvasID) {
         this.rendererTarget = new RendererTarget(canvasID);
         this.context = this.rendererTarget.getContext();
         this.objects = [];
         this.nbObjects = 0;
+        this.graph = new SceneGraph();
     }
     Object.assign(Scene.prototype, {
         add: function(object) {
@@ -117,7 +140,7 @@
         },
         render: function(camera, time) {
             for (var i = 0; i < this.nbObjects; i++) {
-                this.objects[i].render(camera, time);
+                this.objects[i].render(camera, time, this.graph);
             }
         },
         clearFrame: function() {
@@ -299,8 +322,12 @@
         this.textureCoordBuffer = this.uvs ? this.renderer.createBuffer("ARRAY_BUFFER", new Float32Array(this.uvs), "STATIC_DRAW") : null;
         this.modelMatrix = TYPE6.Matrix4x3.create();
         this.rotationMatrix = TYPE6.Matrix4x3.create();
+        this.worldMatrix = TYPE6.Matrix4x3.create();
+        this.worldMatrix.identity();
         this.active = true;
         this.drawMethod = this.indices ? "drawElements" : "drawArrays";
+        this.children = [];
+        this.nbChildren = 0;
     }
     Object.assign(Mesh.prototype, {
         setActive: function() {
@@ -315,6 +342,14 @@
         },
         isActive: function() {
             return this.active;
+        },
+        addChild: function(mesh) {
+            this.children.push(mesh);
+            this.nbChildren++;
+        },
+        setWorldMatrix: function(worldMatrix) {
+            this.worldMatrix.copy(worldMatrix);
+            this.worldMatrix.multiplyBy(this.modelMatrix);
         },
         setTexture: function(texture) {
             this.WebGLTexture = texture.WebGLTexture;
@@ -387,7 +422,7 @@
             this.program[name] = this.context.getUniformLocation(this.program, "u" + ucfirst(name));
         },
         sendMatrixUniforms: function(camera) {
-            this.context.uniformMatrix4fv(this.program.modelMatrix, false, this.modelMatrix.toArray());
+            this.context.uniformMatrix4fv(this.program.modelMatrix, false, this.worldMatrix.toArray());
             this.context.uniformMatrix4fv(this.program.projectionMatrix, false, camera.getProjectionMatrix());
             this.context.uniformMatrix4fv(this.program.viewMatrix, false, camera.getViewMatrix());
         },
@@ -427,8 +462,10 @@
             this.renderer.bindBuffer("ARRAY_BUFFER", this.vertexPositionBuffer);
             this.renderer.vertexAttribPointer(this.program.vertexPosition, this.itemSize, "FLOAT", false, 0, 0);
         },
-        render: function(camera, time) {
+        render: function(camera, time, graph) {
             if (this.isActive()) {
+                this.setWorldMatrix(graph.getWorldMatrix());
+                graph.pushModelMatrix(this.worldMatrix);
                 this.renderer.useProgram(this.program);
                 this.sendPositions();
                 this.sendNormals();
@@ -438,6 +475,11 @@
                 this.sendCustomUniforms();
                 this.sendTexture();
                 this.renderer[this.drawMethod](this.primitive, this.numIndices ? this.numIndices : this.numVertices);
+                for (var i = 0; i < this.nbChildren; i++) {
+                    var child = this.children[i];
+                    child.render(camera, time, graph);
+                }
+                graph.popModelMatrix();
             }
         }
     });
@@ -504,6 +546,15 @@
         this.primitive = "TRIANGLES";
     }
     Object.assign(VWing.prototype, {});
+    function Gun0() {
+        this.vertices = [ 0, -.4, .1885, .7, 0, -.9849, 0, -.4, -.9849, 0, .4, -.9849, .7, 0, .4525, 0, .4, .9293, 0, 0, -.8408, 0, .4, -.9849, 0, 0, 1.9525, 0, .4, .9293, .7, 0, .4525, 0, 0, -.8408, 0, .3, -1.1203, .6, 0, -1.1203, 0, .11, -2.8486, .2351, 0, -3.0108, 0, -.11, -3.0108, 0, -.3, -1.1203, 0, 0, -.8408, .7, 0, .4525, 0, -.4, .1885, -.7, 0, -.9849, -.7, 0, .4525, 0, .4, -.9849, -.7, 0, .4525, 0, .4, .9293, 0, 0, -.8408, -.6, 0, -1.1203, -.2351, 0, -3.0108, 0, 0, -.8408, -.7, 0, .4525, 0, -.4, .1885, .7, 0, .4525, -.7, 0, .4525 ];
+        this.indices = [ 0, 1, 2, 3, 4, 5, 1, 6, 2, 1, 7, 6, 8, 9, 10, 11, 12, 13, 14, 13, 12, 15, 14, 16, 13, 17, 18, 19, 20, 8, 17, 13, 15, 15, 16, 17, 21, 0, 2, 22, 3, 5, 21, 2, 6, 21, 6, 23, 8, 24, 25, 26, 27, 12, 27, 14, 12, 28, 16, 14, 27, 29, 17, 30, 8, 31, 17, 28, 27, 28, 17, 16, 0, 32, 1, 3, 1, 4, 14, 15, 13, 21, 33, 0, 22, 21, 3, 27, 28, 14 ];
+        this.normals = [ 0, -.9962, .0863, .7964, 0, -.6047, 0, -.7073, -.7069, 0, .7073, -.7069, .9834, -.0314, .1787, 0, .973, .231, 0, 0, -1, 0, .7073, -.7069, 0, -.0518, .9987, 0, .973, .231, .9834, -.0314, .1787, 0, 0, -1, 0, .9499, .3124, .9369, .0022, .3496, 0, .9436, -.3311, .6731, .0686, -.7363, 0, -.5683, -.8228, 0, -.948, .3182, 0, 0, -1, .9834, -.0314, .1787, 0, -.9962, .0863, -.7964, 0, -.6047, -.9834, -.0314, .1787, 0, .7073, -.7069, -.9834, -.0314, .1787, 0, .973, .231, 0, 0, -1, -.9369, .0022, .3496, -.6731, .0686, -.7363, 0, 0, -1, -.9834, -.0314, .1787, 0, -.9962, .0863, .9834, -.0314, .1787, -.9834, -.0314, .1787 ];
+        this.itemSize = 3;
+        this.numIndices = 90;
+        this.primitive = "TRIANGLES";
+    }
+    Object.assign(Gun0.prototype, {});
     function Texture(context, img) {
         this.img = img;
         this.WebGLTexture = context.createTexture();
@@ -558,6 +609,7 @@
     exports.Sphere = Sphere;
     exports.Hemisphere = Hemisphere;
     exports.VWing = VWing;
+    exports.Gun0 = Gun0;
     exports.Texture = Texture;
     exports.Material = Material;
     Object.defineProperty(exports, "__esModule", {

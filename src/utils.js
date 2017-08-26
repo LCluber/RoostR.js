@@ -21,6 +21,11 @@ function hideOverflow(){
 
 function ucfirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+  
+  // str += '';
+  // var f = str.charAt(0).toUpperCase();
+  // return f + str.substr(1);
+  
 }
 
 export { findById, showById, hideById, showOverflow, hideOverflow, ucfirst };

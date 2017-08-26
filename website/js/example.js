@@ -44,7 +44,19 @@
 
     scene = new ROOSTR.Scene('canvas');
     
-    mesh = new ROOSTR.Mesh( new ROOSTR.Cube(), scene.getContext() );
+    mesh = new ROOSTR.Mesh( new ROOSTR.VWing(), scene.getContext() );
+    childMesh = new ROOSTR.Mesh( new ROOSTR.Gun0(), scene.getContext() );
+    childMesh.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
+                        assetsLoader.getAsset('flat-shading_frag.glsl').response.data
+                      );
+    mesh.addChild(childMesh);
+    
+    // childMesh2 = new ROOSTR.Mesh( new ROOSTR.Cube(), scene.getContext() );
+    // childMesh2.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
+    //                     assetsLoader.getAsset('flat-shading_frag.glsl').response.data
+    //                   );
+    // mesh.addChild(childMesh2);
+    
     //mesh = new ROOSTR.Mesh( new ROOSTR.FullscreenQuad(), scene.getContext() );
     //compile shader
     mesh.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
@@ -52,13 +64,12 @@
                       );
     
     scene.add(mesh);
-    
     camera = new ROOSTR.PerspectiveCamera( 45, 0.1, 1000, scene.getContext() );
     // var viewport = scene.getContext().getParameter(scene.getContext().VIEWPORT);
     // var ratio = viewport[2] / Math.max(1, viewport[3]);
     // var distance = 5;
     // camera = new ROOSTR.OrthographicCamera( -distance*ratio, distance*ratio, distance, -distance, 1, 100 );
-    camera.setPosition(TYPE6.Vector3.create(0.0,0.0,5.0));
+    camera.setPosition(TYPE6.Vector3.create(0.0,0.0,12.0));
     //camera.setViewMatrix();
   
     render(0);
@@ -93,6 +104,17 @@
   
   function render(time){
     var rot = rotationSpeed * time;
+    var translateX = 0.0;
+    var translateY = -0.56;
+    var translateZ = -2.4525;
+    childMesh.modelMatrix.identity();
+    childMesh.modelMatrix.translateTo(translateX,translateY,translateZ);
+    
+    // translateX = -2.5;
+    // translateY = 0.0;
+    // childMesh2.modelMatrix.identity();
+    // childMesh2.modelMatrix.translateTo(translateX,translateY,0.0);
+    
     mesh.modelMatrix.rotateXBy(rot);
     mesh.rotationMatrix.rotateYBy(rot);
     mesh.modelMatrix.multiplyBy(mesh.rotationMatrix);

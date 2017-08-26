@@ -38,6 +38,11 @@
 
   function ucfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+    
+    // str += '';
+    // var f = str.charAt(0).toUpperCase();
+    // return f + str.substr(1);
+    
   }
 
   //var canvas = require('./canvas');
@@ -192,6 +197,42 @@
    */
 
 
+  function SceneGraph(  ) {
+    
+    this.model = [ TYPE6.Matrix4x3.create() ]; //model matrices
+    this.model[0].identity();
+    this.nbModel = this.model.length;
+    this.modelStackTop = 0;
+    
+  }
+
+  Object.assign( SceneGraph.prototype, {
+
+    pushModelMatrix : function(modelMatrix){
+      this.modelStackTop++;
+      if (this.modelStackTop === this.nbModel) {
+        this.model.push(TYPE6.Matrix4x3.create());
+        this.nbModel++;
+      }
+      this.model[this.modelStackTop].copy(modelMatrix);
+    },
+    
+    popModelMatrix : function(){
+      this.modelStackTop--;
+    },
+
+    getWorldMatrix : function(){
+      return this.model[this.modelStackTop];
+    }
+
+  } );
+
+  /**
+   * Module dependencies.
+   * @api private
+   */
+
+
   //import { Texture } from './texture';
 
   function Scene( canvasID ) {
@@ -199,6 +240,7 @@
     this.context = this.rendererTarget.getContext();
     this.objects = [];
     this.nbObjects = 0;
+    this.graph = new SceneGraph();
   }
 
   Object.assign( Scene.prototype, {
@@ -215,7 +257,7 @@
     
     render: function (camera, time) {
       for (var i = 0 ; i &lt; this.nbObjects ; i++) {
-        this.objects[i].render( camera, time );
+        this.objects[i].render( camera, time , this.graph);
       }
     },
     
@@ -505,8 +547,6 @@
     
     this.primitive   = mesh.primitive ? mesh.primitive : null;
     
-    //this.cameraDefaultPosition = mesh.cameraDefaultPosition ? mesh.cameraDefaultPosition : TYPE6.Vector3.create(0.0,0.0,0.0);
-    
     this.customUniforms = {};
     
     this.context = context;
@@ -520,16 +560,19 @@
     this.vertexNormalBuffer   = this.normals ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.normals), 'STATIC_DRAW') : null;
     this.textureCoordBuffer   = this.uvs ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.uvs), 'STATIC_DRAW') : null;
 
-    this.modelMatrix = TYPE6.Matrix4x3.create();
+    this.modelMatrix    = TYPE6.Matrix4x3.create();
     this.rotationMatrix = TYPE6.Matrix4x3.create();
+    this.worldMatrix    = TYPE6.Matrix4x3.create();
     
-    //this.modelMatrix.identity();
+    this.worldMatrix.identity();
     //this.rotationMatrix.identity();
     
     this.active = true;
     
     this.drawMethod = this.indices ? 'drawElements' : 'drawArrays';
     
+    this.children = [];
+    this.nbChildren = 0;
 
   }
 
@@ -571,6 +614,16 @@
     */
     isActive : function(){
       return this.active;
+    },
+
+    addChild: function(mesh){
+      this.children.push(mesh);
+      this.nbChildren ++;
+    },
+    
+    setWorldMatrix : function(worldMatrix){
+      this.worldMatrix.copy(worldMatrix);
+      this.worldMatrix.multiplyBy(this.modelMatrix);
     },
 
     setTexture: function(texture){
@@ -664,7 +717,7 @@
     },
     
     sendMatrixUniforms: function(camera) {
-      this.context.uniformMatrix4fv(this.program.modelMatrix,      false, this.modelMatrix.toArray());
+      this.context.uniformMatrix4fv(this.program.modelMatrix,      false, this.worldMatrix.toArray());
       this.context.uniformMatrix4fv(this.program.projectionMatrix, false, camera.getProjectionMatrix());
       this.context.uniformMatrix4fv(this.program.viewMatrix,       false, camera.getViewMatrix());
     },
@@ -711,8 +764,10 @@
       this.renderer.vertexAttribPointer(this.program.vertexPosition, this.itemSize, 'FLOAT', false, 0, 0);
     },
     
-    render: function( camera, time ){
+    render: function( camera, time, graph ){
       if(this.isActive()) {
+        this.setWorldMatrix(graph.getWorldMatrix());
+        graph.pushModelMatrix(this.worldMatrix);
         this.renderer.useProgram(this.program);
         
         this.sendPositions();
@@ -723,8 +778,15 @@
         this.sendCustomUniforms();
         this.sendTexture();
         
-        this.renderer[this.drawMethod](this.primitive, this.numIndices ? this.numIndices : this.numVertices);
-        
+        this.renderer[this.drawMethod](this.primitive, this.numIndices ? this.numIndices : this.numVertices);  
+      
+        for ( var i = 0 ; i &lt; this.nbChildren ; i++ ) {
+          var child = this.children[i];
+          child.render(camera, time, graph);
+        }
+      
+        graph.popModelMatrix();
+      
       }
     }
 
@@ -1014,6 +1076,23 @@
 
   } );
 
+  function Gun0( ) {
+    //this.position = [0,-0.56,-2.4525];
+    this.vertices = [ 0,-0.4,0.1885,0.7,0,-0.9849,0,-0.4,-0.9849,0,0.4,-0.9849,0.7,0,0.4525,0,0.4,0.9293,0,0,-0.8408,0,0.4,-0.9849,0,0,1.9525,0,0.4,0.9293,0.7,0,0.4525,0,0,-0.8408,0,0.3,-1.1203,0.6,0,-1.1203,0,0.11,-2.8486,0.2351,0,-3.0108,0,-0.11,-3.0108,0,-0.3,-1.1203,0,0,-0.8408,0.7,0,0.4525,0,-0.4,0.1885,-0.7,0,-0.9849,-0.7,0,0.4525,0,0.4,-0.9849,-0.7,0,0.4525,0,0.4,0.9293,0,0,-0.8408,-0.6,0,-1.1203,-0.2351,0,-3.0108,0,0,-0.8408,-0.7,0,0.4525,0,-0.4,0.1885,0.7,0,0.4525,-0.7,0,0.4525
+                    ];
+    this.indices = [ 0,1,2,3,4,5,1,6,2,1,7,6,8,9,10,11,12,13,14,13,12,15,14,16,13,17,18,19,20,8,17,13,15,15,16,17,21,0,2,22,3,5,21,2,6,21,6,23,8,24,25,26,27,12,27,14,12,28,16,14,27,29,17,30,8,31,17,28,27,28,17,16,0,32,1,3,1,4,14,15,13,21,33,0,22,21,3,27,28,14
+                    ];
+    this.normals = [ 0,-0.9962,0.0863,0.7964,0,-0.6047,0,-0.7073,-0.7069,0,0.7073,-0.7069,0.9834,-0.0314,0.1787,0,0.973,0.231,0,0,-1,0,0.7073,-0.7069,0,-0.0518,0.9987,0,0.973,0.231,0.9834,-0.0314,0.1787,0,0,-1,0,0.9499,0.3124,0.9369,0.0022,0.3496,0,0.9436,-0.3311,0.6731,0.0686,-0.7363,0,-0.5683,-0.8228,0,-0.948,0.3182,0,0,-1,0.9834,-0.0314,0.1787,0,-0.9962,0.0863,-0.7964,0,-0.6047,-0.9834,-0.0314,0.1787,0,0.7073,-0.7069,-0.9834,-0.0314,0.1787,0,0.973,0.231,0,0,-1,-0.9369,0.0022,0.3496,-0.6731,0.0686,-0.7363,0,0,-1,-0.9834,-0.0314,0.1787,0,-0.9962,0.0863,0.9834,-0.0314,0.1787,-0.9834,-0.0314,0.1787
+                  ];
+    this.itemSize = 3;
+    this.numIndices = 90;
+    this.primitive = 'TRIANGLES';
+  }
+
+  Object.assign( Gun0.prototype, {
+
+  } );
+
   /**
    * Module dependencies.
    * @api private
@@ -1137,6 +1216,7 @@
   exports.Sphere = Sphere;
   exports.Hemisphere = Hemisphere;
   exports.VWing = VWing;
+  exports.Gun0 = Gun0;
   exports.Texture = Texture;
   exports.Material = Material;
 
@@ -1159,7 +1239,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Aug 17 2017 20:22:17 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Aug 26 2017 21:54:14 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

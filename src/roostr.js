@@ -18,6 +18,7 @@
  export { Sphere }             from './geometries/sphere';
  export { Hemisphere }         from './geometries/hemisphere';
  export { VWing }              from './geometries/vwing';
+ export { Gun0 }               from './geometries/gun0';
  export { Texture }            from './texture';
  export { Material }           from './material';
 //export { Matrix4x3 }       from './maths/matrix4x3';

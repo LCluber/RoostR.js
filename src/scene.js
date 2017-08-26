@@ -6,6 +6,7 @@
 
 
 import { RendererTarget } from './renderers/target';
+import { SceneGraph } from './sceneGraph';
 
 //import { Texture } from './texture';
 
@@ -14,6 +15,7 @@ function Scene( canvasID ) {
   this.context = this.rendererTarget.getContext();
   this.objects = [];
   this.nbObjects = 0;
+  this.graph = new SceneGraph();
 }
 
 Object.assign( Scene.prototype, {
@@ -30,7 +32,7 @@ Object.assign( Scene.prototype, {
   
   render: function (camera, time) {
     for (var i = 0 ; i < this.nbObjects ; i++) {
-      this.objects[i].render( camera, time );
+      this.objects[i].render( camera, time , this.graph);
     }
   },
   

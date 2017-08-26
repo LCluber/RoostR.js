@@ -15,8 +15,6 @@ function Mesh( mesh, context ) {
   
   this.primitive   = mesh.primitive ? mesh.primitive : null;
   
-  //this.cameraDefaultPosition = mesh.cameraDefaultPosition ? mesh.cameraDefaultPosition : TYPE6.Vector3.create(0.0,0.0,0.0);
-  
   this.customUniforms = {};
   
   this.context = context;
@@ -30,16 +28,19 @@ function Mesh( mesh, context ) {
   this.vertexNormalBuffer   = this.normals ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.normals), 'STATIC_DRAW') : null;
   this.textureCoordBuffer   = this.uvs ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.uvs), 'STATIC_DRAW') : null;
 
-  this.modelMatrix = TYPE6.Matrix4x3.create();
+  this.modelMatrix    = TYPE6.Matrix4x3.create();
   this.rotationMatrix = TYPE6.Matrix4x3.create();
+  this.worldMatrix    = TYPE6.Matrix4x3.create();
   
-  //this.modelMatrix.identity();
+  this.worldMatrix.identity();
   //this.rotationMatrix.identity();
   
   this.active = true;
   
   this.drawMethod = this.indices ? 'drawElements' : 'drawArrays';
   
+  this.children = [];
+  this.nbChildren = 0;
 
 }
 
@@ -81,6 +82,16 @@ Object.assign( Mesh.prototype, {
   */
   isActive : function(){
     return this.active;
+  },
+
+  addChild: function(mesh){
+    this.children.push(mesh);
+    this.nbChildren ++;
+  },
+  
+  setWorldMatrix : function(worldMatrix){
+    this.worldMatrix.copy(worldMatrix);
+    this.worldMatrix.multiplyBy(this.modelMatrix);
   },
 
   setTexture: function(texture){
@@ -174,7 +185,7 @@ Object.assign( Mesh.prototype, {
   },
   
   sendMatrixUniforms: function(camera) {
-    this.context.uniformMatrix4fv(this.program.modelMatrix,      false, this.modelMatrix.toArray());
+    this.context.uniformMatrix4fv(this.program.modelMatrix,      false, this.worldMatrix.toArray());
     this.context.uniformMatrix4fv(this.program.projectionMatrix, false, camera.getProjectionMatrix());
     this.context.uniformMatrix4fv(this.program.viewMatrix,       false, camera.getViewMatrix());
   },
@@ -221,8 +232,10 @@ Object.assign( Mesh.prototype, {
     this.renderer.vertexAttribPointer(this.program.vertexPosition, this.itemSize, 'FLOAT', false, 0, 0);
   },
   
-  render: function( camera, time ){
+  render: function( camera, time, graph ){
     if(this.isActive()) {
+      this.setWorldMatrix(graph.getWorldMatrix());
+      graph.pushModelMatrix(this.worldMatrix);
       this.renderer.useProgram(this.program);
       
       this.sendPositions();
@@ -233,8 +246,15 @@ Object.assign( Mesh.prototype, {
       this.sendCustomUniforms();
       this.sendTexture();
       
-      this.renderer[this.drawMethod](this.primitive, this.numIndices ? this.numIndices : this.numVertices);
-      
+      this.renderer[this.drawMethod](this.primitive, this.numIndices ? this.numIndices : this.numVertices);  
+    
+      for ( var i = 0 ; i < this.nbChildren ; i++ ) {
+        var child = this.children[i];
+        child.render(camera, time, graph);
+      }
+    
+      graph.popModelMatrix();
+    
     }
   }
 
