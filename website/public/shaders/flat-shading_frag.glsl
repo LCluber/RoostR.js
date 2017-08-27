@@ -4,8 +4,6 @@
   precision highp float;
 #endif	
 
-uniform float uTime;
-
 varying vec4 vWorldSpaceNormal;
 varying vec3 vMaterialColor;
 varying vec3 vViewSpaceVertex;

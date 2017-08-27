@@ -12,9 +12,9 @@ function Uniform( type, value ) {
   
 }
 
-Object.assign( Uniform.prototype, {
-  
-
-} );
+// Object.assign( Uniform.prototype, {
+//   
+// 
+// } );
 
 export { Uniform };

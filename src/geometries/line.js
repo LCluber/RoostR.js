@@ -1,12 +1,14 @@
-
+import { SubMesh } from './subMesh';
 
 function Line( vertices, thickness ) {
   this.thickness = thickness ? thickness * 0.5 : 1.0;
 
   this.vertices = vertices;
-  
   this.itemSize = 3;
-  this.numVertices = vertices.length / this.itemSize;
+  this.subMeshes = [
+    new SubMesh( 0, vertices.length / this.itemSize)
+  ];
+  
   this.primitive = 'LINE_STRIP';
   
 }

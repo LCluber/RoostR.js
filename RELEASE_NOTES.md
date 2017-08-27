@@ -1,6 +1,10 @@
-Version 0.2.7 (soon)
+Version 0.2.8 (soon)
 ------------------------------
  * Documentation
+
+ Version 0.2.7 (August 27th 2017)
+ ------------------------------
+  * Added multi materials capability to the mesh class
 
  Version 0.2.6 (August 26th 2017)
  ------------------------------

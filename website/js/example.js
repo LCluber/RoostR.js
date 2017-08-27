@@ -46,7 +46,7 @@
     
     mesh = new ROOSTR.Mesh( new ROOSTR.VWing(), scene.getContext() );
     childMesh = new ROOSTR.Mesh( new ROOSTR.Gun0(), scene.getContext() );
-    childMesh.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
+    childMesh.addMaterial( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
                         assetsLoader.getAsset('flat-shading_frag.glsl').response.data
                       );
     mesh.addChild(childMesh);
@@ -59,8 +59,11 @@
     
     //mesh = new ROOSTR.Mesh( new ROOSTR.FullscreenQuad(), scene.getContext() );
     //compile shader
-    mesh.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
+    mesh.addMaterial( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
                         assetsLoader.getAsset('flat-shading_frag.glsl').response.data
+                      );
+    mesh.addMaterial( assetsLoader.getAsset('emissive_vert.glsl').response.data,
+                        assetsLoader.getAsset('emissive_frag.glsl').response.data
                       );
     
     scene.add(mesh);

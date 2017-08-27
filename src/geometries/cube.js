@@ -1,3 +1,4 @@
+import { SubMesh } from './subMesh';
 
 function Cube( size ) {
   size = size ? size * 0.5 : 1.0;
@@ -27,20 +28,18 @@ function Cube( size ) {
                   -0.5773,-0.5773,-0.5773,
                   -0.5773, 0.5773,-0.5773
                 ];
+  this.subMeshes = [
+    new SubMesh( 0, 36)
+  ];
   this.itemSize = 3;
-  this.numIndices = 36;
   this.primitive = 'TRIANGLES';
 
 }
 
-Object.assign( Cube.prototype, {
-
-  // setTexture: function(texture){
-  //   this.mesh.setTexture(texture);
-  // },
-  
-  
-
-} );
+// Object.assign( Cube.prototype, {
+// 
+//   
+// 
+// } );
 
 export { Cube };

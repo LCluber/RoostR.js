@@ -1,4 +1,4 @@
-
+import { SubMesh } from './subMesh';
 
 function FullscreenQuad( ) {
 
@@ -12,14 +12,16 @@ function FullscreenQuad( ) {
                1.0, 1.0,
                0.0, 1.0
              ];
+  this.subMeshes = [
+    new SubMesh( 0, 4)
+  ];
   this.itemSize = 2;
-  this.numVertices = 4;
   this.primitive = 'TRIANGLE_STRIP';
   
 }
 
-Object.assign( FullscreenQuad.prototype, {
-
-} );
+// Object.assign( FullscreenQuad.prototype, {
+// 
+// } );
 
 export { FullscreenQuad };

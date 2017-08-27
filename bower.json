@@ -6,7 +6,7 @@
     "dist/roostr.js"
   ],
   "description": "WebGL 3D engine",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "dependencies": {
     "Type6js":    "git+https://github.com/LCluber/Type6.js.git#0.3.1",
     "FrameRatjs": "git+https://github.com/LCluber/FrameRat.js.git#0.2.8",

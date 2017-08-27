@@ -10,8 +10,8 @@ function Mesh( mesh, context ) {
   this.normals     = mesh.normals ? mesh.normals : null;
   this.uvs         = mesh.uvs ? mesh.uvs : null;
   this.itemSize    = mesh.itemSize ? mesh.itemSize : null;
-  this.numIndices  = mesh.numIndices ? mesh.numIndices : null;
-  this.numVertices = mesh.numVertices ? mesh.numVertices : null;
+  this.subMeshes   = mesh.subMeshes;
+  this.nbSubMeshes = this.subMeshes.length;
   
   this.primitive   = mesh.primitive ? mesh.primitive : null;
   
@@ -38,6 +38,9 @@ function Mesh( mesh, context ) {
   this.active = true;
   
   this.drawMethod = this.indices ? 'drawElements' : 'drawArrays';
+  
+  this.materials = [];
+  this.nbMaterials = 0;
   
   this.children = [];
   this.nbChildren = 0;
@@ -87,6 +90,16 @@ Object.assign( Mesh.prototype, {
   addChild: function(mesh){
     this.children.push(mesh);
     this.nbChildren ++;
+  },
+  
+  addMaterial : function(vertexShader, fragmentShader){
+    if(this.nbMaterials < this.nbSubMeshes){
+      this.materials.push(createProgram( this.context, vertexShader, fragmentShader ));
+      this.createProgram();
+      this.nbMaterials ++;
+      return true;
+    }
+    return false;
   },
   
   setWorldMatrix : function(worldMatrix){
@@ -151,14 +164,9 @@ Object.assign( Mesh.prototype, {
     }
   },
 
-  sendScreenResolution: function(){
-    var viewport = this.context.getParameter(this.context.VIEWPORT);
-    this.context.uniform2f(this.program.screenResolution, viewport[2], viewport[3]);
-  },
-
-  createProgram: function(vertexShader, fragmentShader) {
-    this.program = createProgram( this.context, vertexShader, fragmentShader );
-    
+  createProgram: function(/*vertexShader, fragmentShader*/) {
+    //this.program = createProgram( this.context, vertexShader, fragmentShader );
+    var program = this.materials[this.nbMaterials];
     this.createPositionsProgram();
     this.createNormalsProgram();
     this.createUvsProgram();
@@ -167,88 +175,102 @@ Object.assign( Mesh.prototype, {
     this.createCustomUniformsProgram();
     this.createTextureProgram();
     
-    this.renderer.useProgram(this.program);//use program before adding static uniforms
+    this.renderer.useProgram(program);//use program before adding static uniforms
     
-    this.sendScreenResolution();
+    this.sendScreenResolution(program);
     
   },
   
   addProgramAttribute: function(name){
     //var attribute = name + 'Attribute'; 
-    this.program[name] = this.context.getAttribLocation(this.program, 'a' + ucfirst(name));
-    this.context.enableVertexAttribArray(this.program[name]);
+    this.materials[this.nbMaterials][name] = this.context.getAttribLocation(this.materials[this.nbMaterials], 'a' + ucfirst(name));
+    this.context.enableVertexAttribArray(this.materials[this.nbMaterials][name]);
   },
   
   addProgramUniform: function(name){
     //var attribute = name + 'Uniform'; 
-    this.program[name] = this.context.getUniformLocation(this.program, 'u' + ucfirst(name));
+    this.materials[this.nbMaterials][name] = this.context.getUniformLocation(this.materials[this.nbMaterials], 'u' + ucfirst(name));
   },
   
-  sendMatrixUniforms: function(camera) {
-    this.context.uniformMatrix4fv(this.program.modelMatrix,      false, this.worldMatrix.toArray());
-    this.context.uniformMatrix4fv(this.program.projectionMatrix, false, camera.getProjectionMatrix());
-    this.context.uniformMatrix4fv(this.program.viewMatrix,       false, camera.getViewMatrix());
+  sendScreenResolution: function(program){
+    var viewport = this.context.getParameter(this.context.VIEWPORT);
+    this.context.uniform2f(program.screenResolution, viewport[2], viewport[3]);
   },
   
-  sendCustomUniforms: function() {
+  sendMatrixUniforms: function(program, camera) {
+    this.context.uniformMatrix4fv(program.modelMatrix,      false, this.worldMatrix.toArray());
+    this.context.uniformMatrix4fv(program.projectionMatrix, false, camera.getProjectionMatrix());
+    this.context.uniformMatrix4fv(program.viewMatrix,       false, camera.getViewMatrix());
+  },
+  
+  sendCustomUniforms: function(program) {
     for (var property in this.customUniforms) {
       if (this.customUniforms.hasOwnProperty(property)) {
         var uniform = this.customUniforms[property];
-        this.context[uniform.type](this.program[property], uniform.value);
+        this.context[uniform.type](program[property], uniform.value);
       }
     }
   },
   
-  sendDefaultUniforms: function(time){
-    this.context.uniform1f(this.program.time, time);
+  sendDefaultUniforms: function(program, time){
+    this.context.uniform1f(program.time, time);
   },
   
-  sendTexture: function(){
+  sendTexture: function(program){
     if(this.WebGLTexture){
       this.context.activeTexture(this.context.TEXTURE0);
       this.context.bindTexture(this.context.TEXTURE_2D, this.WebGLTexture);
-      this.context.uniform1i(this.program.sampler, 0);
+      this.context.uniform1i(program.sampler, 0);
     }
   },
   
-  sendUvs: function(){
+  sendUvs: function(program){
     if (this.uvs && this.WebGLTexture) {
       this.renderer.bindBuffer('ARRAY_BUFFER', this.textureCoordBuffer );
-      this.renderer.vertexAttribPointer(this.program.textureCoord, 2, 'FLOAT', false, 0, 0);
+      this.renderer.vertexAttribPointer(program.textureCoord, 2, 'FLOAT', false, 0, 0);
     }
   },
   
-  sendNormals: function(){
+  sendNormals: function(program){
     if (this.normals) {
-      this.renderer.vertexAttribPointer(this.program.vertexNormal, this.itemSize, 'FLOAT', false, 0, 0);
+      this.renderer.vertexAttribPointer(program.vertexNormal, this.itemSize, 'FLOAT', false, 0, 0);
     }
   },
   
-  sendPositions: function(){
+  sendPositions: function(program){
     if(this.indices) {
       this.renderer.bindBuffer('ELEMENT_ARRAY_BUFFER', this.indexBuffer);
     }
     this.renderer.bindBuffer('ARRAY_BUFFER', this.vertexPositionBuffer);
-    this.renderer.vertexAttribPointer(this.program.vertexPosition, this.itemSize, 'FLOAT', false, 0, 0);
+    this.renderer.vertexAttribPointer(program.vertexPosition, this.itemSize, 'FLOAT', false, 0, 0);
   },
   
   render: function( camera, time, graph ){
     if(this.isActive()) {
       this.setWorldMatrix(graph.getWorldMatrix());
       graph.pushModelMatrix(this.worldMatrix);
-      this.renderer.useProgram(this.program);
-      
-      this.sendPositions();
-      this.sendNormals();
-      this.sendUvs();
-      this.sendMatrixUniforms(camera);
-      this.sendDefaultUniforms(time);
-      this.sendCustomUniforms();
-      this.sendTexture();
-      
-      this.renderer[this.drawMethod](this.primitive, this.numIndices ? this.numIndices : this.numVertices);  
+      var program = null;
+      for(var i = 0 ; i < this.nbSubMeshes ; i++) {
+        if (this.materials[i]){
+          program = this.materials[i];
+        }else{
+          program = this.materials[this.nbMaterials - 1];
+        }
+        
+        this.renderer.useProgram(program);
+        
+        this.sendPositions(program);
+        this.sendNormals(program);
+        this.sendUvs(program);
+        this.sendMatrixUniforms(program, camera);
+        this.sendDefaultUniforms(program, time);
+        this.sendCustomUniforms(program);
+        this.sendTexture(program);
+        
+        this.renderer[this.drawMethod](this.primitive, this.subMeshes[i]); 
+      } 
     
-      for ( var i = 0 ; i < this.nbChildren ; i++ ) {
+      for ( i = 0 ; i < this.nbChildren ; i++ ) {
         var child = this.children[i];
         child.render(camera, time, graph);
       }

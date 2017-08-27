@@ -7,7 +7,6 @@ attribute vec3 aVertexNormal;
 uniform mat4 uModelMatrix;
 uniform mat4 uViewMatrix;
 uniform mat4 uProjectionMatrix;
-uniform float uTime;
 
 varying vec4 vWorldSpaceNormal;
 varying vec3 vMaterialColor;

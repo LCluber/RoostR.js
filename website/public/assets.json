@@ -3,7 +3,9 @@
     "folder": "shaders",
     "files"	: [
       "flat-shading_vert.glsl",
-      "flat-shading_frag.glsl"
+      "flat-shading_frag.glsl",
+      "emissive_vert.glsl",
+      "emissive_frag.glsl"
     ]
   }
 }

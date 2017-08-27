@@ -1,4 +1,4 @@
-
+import { SubMesh } from './subMesh';
 
 function Quad( width, height ) {
   width = width ? width * 0.5 : 1.0;
@@ -18,24 +18,17 @@ function Quad( width, height ) {
                1.0, 1.0,
                0.0, 1.0
              ];
+  this.subMeshes = [
+    new SubMesh( 0, 4)
+  ];
   this.itemSize = 3;
-  this.numVertices = 4;
   this.primitive = 'TRIANGLE_STRIP';
   
 }
 
-Object.assign( Quad.prototype, {
-  
-  // setSize : function(width,height){
-  //   width  *= 0.5;
-  //   height *= 0.5;
-  //   this.vertices = [  width,-height, 0.0,
-  //                     -width,-height, 0.0,
-  //                      width, height, 0.0,
-  //                     -width, height, 0.0 
-  //                   ];
-  // }
-
-} );
+// Object.assign( Quad.prototype, {
+//   
+// 
+// } );
 
 export { Quad };

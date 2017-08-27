@@ -34,7 +34,7 @@ Object.assign( WebGLRenderer.prototype, {
     this.context.vertexAttribPointer(index, size, this.context[type], normalized, stride, offset);
   },
   
-  drawElements: function(primitive, numItems){
+  drawElements: function(primitive, subMesh){
     // gl.POINTS: Draws a single dot.
     // gl.LINE_STRIP: Draws a straight line to the next vertex.
     // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
@@ -42,10 +42,10 @@ Object.assign( WebGLRenderer.prototype, {
     // gl.TRIANGLE_STRIP
     // gl.TRIANGLE_FAN
     // gl.TRIANGLES: Draws a triangle for a group of three vertices.
-    this.context.drawElements(this.context[primitive], numItems, this.context.UNSIGNED_SHORT, 0);
+    this.context.drawElements(this.context[primitive], subMesh.getCount(), this.context.UNSIGNED_SHORT, subMesh.getStart() * 2);
   },
   
-  drawArrays: function(primitive, numItems) {
+  drawArrays: function(primitive, subMesh) {
     // gl.POINTS: Draws a single dot.
     // gl.LINE_STRIP: Draws a straight line to the next vertex.
     // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
@@ -53,7 +53,7 @@ Object.assign( WebGLRenderer.prototype, {
     // gl.TRIANGLE_STRIP
     // gl.TRIANGLE_FAN
     // gl.TRIANGLES: Draws a triangle for a group of three vertices.
-    this.context.drawArrays(this.context[primitive], 0, numItems);
+    this.context.drawArrays(this.context[primitive], 0, subMesh.getCount());
   }
 
 });
