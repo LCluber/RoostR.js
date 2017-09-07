@@ -1,15 +1,21 @@
-Version 0.2.8 (soon)
+Version 0.3.1 (soon)
 ------------------------------
  * Documentation
 
- Version 0.2.7 (August 27th 2017)
- ------------------------------
-  * Added multi materials capability to the mesh class
+Version 0.3.0 (September 3rd 2017)
+------------------------------
+ * Added activateBlendMode() and deactivateBlendMode() to the Mesh class 
+ * Blend modes are now at material level instead of scene level
+ * Added customMesh geometry to create custom shapes easily
 
- Version 0.2.6 (August 26th 2017)
- ------------------------------
-  * Added a scene graph and the ability to add children to a mesh with mesh.addChild(mesh) method.
-  * Added Gun0 geometry.
+Version 0.2.7 (August 27th 2017)
+------------------------------
+ * Added multi materials capability to the mesh class
+
+Version 0.2.6 (August 26th 2017)
+------------------------------
+ * Added a scene graph and the ability to add children to a mesh with mesh.addChild(mesh) method.
+ * Added Gun0 geometry.
 
 Version 0.2.5 (August 15th 2017)
 ------------------------------

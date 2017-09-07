@@ -1,7 +1,7 @@
 import { ucfirst }       from './utils';
 import { createProgram } from './program';
 import { Uniform }       from './uniform';
-import { WebGLRenderer } from './renderers/webgl';
+import { MeshRenderer }  from './renderer/mesh';
 
 function Mesh( mesh, context ) {
 
@@ -19,7 +19,7 @@ function Mesh( mesh, context ) {
   
   this.context = context;
   
-  this.renderer = new WebGLRenderer(this.context);
+  this.renderer = new MeshRenderer(this.context);
   
   this.WebGLTexture = null;
   
@@ -44,6 +44,10 @@ function Mesh( mesh, context ) {
   
   this.children = [];
   this.nbChildren = 0;
+  
+  this.blendMode = false;
+  
+  this.zOrder = 0;
 
 }
 
@@ -245,37 +249,59 @@ Object.assign( Mesh.prototype, {
     this.renderer.vertexAttribPointer(program.vertexPosition, this.itemSize, 'FLOAT', false, 0, 0);
   },
   
-  render: function( camera, time, graph ){
-    if(this.isActive()) {
+  activateBlendMode:function(){
+    this.blendMode = true;
+  },
+ 
+  deactivateBlendMode:function(){
+    this.blendMode = false;
+  },
+ 
+ 
+  computeWorldMatrix: function(graph){
+    //if(this.isActive()) {
       this.setWorldMatrix(graph.getWorldMatrix());
       graph.pushModelMatrix(this.worldMatrix);
-      var program = null;
-      for(var i = 0 ; i < this.nbSubMeshes ; i++) {
-        if (this.materials[i]){
-          program = this.materials[i];
-        }else{
-          program = this.materials[this.nbMaterials - 1];
-        }
-        
-        this.renderer.useProgram(program);
-        
-        this.sendPositions(program);
-        this.sendNormals(program);
-        this.sendUvs(program);
-        this.sendMatrixUniforms(program, camera);
-        this.sendDefaultUniforms(program, time);
-        this.sendCustomUniforms(program);
-        this.sendTexture(program);
-        
-        this.renderer[this.drawMethod](this.primitive, this.subMeshes[i]); 
-      } 
-    
-      for ( i = 0 ; i < this.nbChildren ; i++ ) {
+      
+      for ( var i = 0 ; i < this.nbChildren ; i++ ) {
         var child = this.children[i];
-        child.render(camera, time, graph);
+        child.computeWorldMatrix(graph);
       }
     
       graph.popModelMatrix();
+    //}
+  },
+  
+  render: function( camera, time, blendMode ){
+    if(this.isActive()) {
+
+      var program = null;
+      for(var i = 0 ; i < this.nbSubMeshes ; i++) {
+        if(this.blendMode === blendMode){
+          if (this.materials[i]){
+            program = this.materials[i];
+          }else{
+            program = this.materials[this.nbMaterials - 1];
+          }
+          
+          this.renderer.useProgram(program);
+          
+          this.sendPositions(program);
+          this.sendNormals(program);
+          this.sendUvs(program);
+          this.sendMatrixUniforms(program, camera);
+          this.sendDefaultUniforms(program, time);
+          this.sendCustomUniforms(program);
+          this.sendTexture(program);
+          
+          this.renderer[this.drawMethod](this.primitive, this.subMeshes[i]); 
+        } 
+      }
+      
+      for ( var j = 0 ; j < this.nbChildren ; j++ ) {
+        var child = this.children[j];
+        child.render(camera, time, blendMode);
+      }
     
     }
   }

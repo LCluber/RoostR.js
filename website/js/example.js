@@ -8,6 +8,7 @@
   var assetsLoader = ORBIS.create(updateProgress, animateProgress, loadingComplete, 0, 0); // create an assets loader with its callbacks
   var animation    = FRAMERAT.create(animate);
 
+  var renderer;
   var scene;
   var elapsedTime;
   var modal              = findById('myModal'); 
@@ -42,22 +43,24 @@
   
   function init() {
 
-    scene = new ROOSTR.Scene('canvas');
+    renderer = new ROOSTR.Renderer('canvas');
+    scene = new ROOSTR.Scene(renderer.getContext());
     
-    mesh = new ROOSTR.Mesh( new ROOSTR.VWing(), scene.getContext() );
-    childMesh = new ROOSTR.Mesh( new ROOSTR.Gun0(), scene.getContext() );
+    mesh = new ROOSTR.Mesh( new ROOSTR.VWing(), renderer.getContext() );
+    childMesh = new ROOSTR.Mesh( new ROOSTR.Gun0(), renderer.getContext() );
     childMesh.addMaterial( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
                         assetsLoader.getAsset('flat-shading_frag.glsl').response.data
                       );
+    //childMesh.activateBlendMode();
     mesh.addChild(childMesh);
     
-    // childMesh2 = new ROOSTR.Mesh( new ROOSTR.Cube(), scene.getContext() );
+    // childMesh2 = new ROOSTR.Mesh( new ROOSTR.Cube(), renderer.getContext() );
     // childMesh2.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
     //                     assetsLoader.getAsset('flat-shading_frag.glsl').response.data
     //                   );
     // mesh.addChild(childMesh2);
     
-    //mesh = new ROOSTR.Mesh( new ROOSTR.FullscreenQuad(), scene.getContext() );
+    //mesh = new ROOSTR.Mesh( new ROOSTR.FullscreenQuad(), renderer.getContext() );
     //compile shader
     mesh.addMaterial( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
                         assetsLoader.getAsset('flat-shading_frag.glsl').response.data
@@ -67,8 +70,8 @@
                       );
     
     scene.add(mesh);
-    camera = new ROOSTR.PerspectiveCamera( 45, 0.1, 1000, scene.getContext() );
-    // var viewport = scene.getContext().getParameter(scene.getContext().VIEWPORT);
+    camera = new ROOSTR.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
+    // var viewport = renderer.getContext().getParameter(renderer.getContext().VIEWPORT);
     // var ratio = viewport[2] / Math.max(1, viewport[3]);
     // var distance = 5;
     // camera = new ROOSTR.OrthographicCamera( -distance*ratio, distance*ratio, distance, -distance, 1, 100 );
@@ -98,7 +101,7 @@
   }
   
   function animate(){
-    scene.clearFrame();
+    renderer.clearFrame();
     render(animation.getElapsedTime().getSecond());
     //renderer.render(time);
     majConsole();
@@ -140,7 +143,7 @@
     animation.stop();
     findById('play').innerHTML = "<span class='glyphicon glyphicon-play'></span>";
     majConsole();
-    scene.clearFrame();
+    renderer.clearFrame();
   }
   
   function majTime() {

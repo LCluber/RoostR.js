@@ -27,40 +27,21 @@
     typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define([ "exports" ], factory) : factory(global.ROOSTR = global.ROOSTR || {});
 })(this, function(exports) {
     "use strict";
-    function findById(id) {
-        return document.getElementById(id);
+    function SceneRenderer(context) {
+        this.context = context;
+        this.defaultSettings();
     }
-    function ucfirst(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-    function RendererTarget(canvasID) {
-        this.canvas = findById(canvasID);
-        this.canvas.width = 1280;
-        this.canvas.height = 720;
-        this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl", {
-            alpha: false
-        });
-        this.context.getExtension("OES_standard_derivatives");
-        this.setFrontFace("CW");
-        this.enable("CULL_FACE");
-        this.setCullFace("BACK");
-        this.setDepthFunc("LEQUAL");
-        this.enableDepthTest();
-        this.setViewport(this.context.drawingBufferWidth, this.context.drawingBufferHeight);
-        this.setClearColor(0, 0, 0, 1);
-    }
-    Object.assign(RendererTarget.prototype, {
-        setFrontFace: function(mode) {
-            this.context.frontFace(this.context[mode]);
+    Object.assign(SceneRenderer.prototype, {
+        defaultSettings: function() {
+            this.setDepthFunc("LEQUAL");
+            this.enableDepthTest();
+            this.disableBlendMode();
         },
         enable: function(capability) {
             this.context.enable(this.context[capability]);
         },
         disable: function(capability) {
             this.context.disable(this.context[capability]);
-        },
-        setCullFace: function(mode) {
-            this.context.cullFace(this.context[mode]);
         },
         setDepthFunc: function(mode) {
             this.context.depthFunc(this.context[mode]);
@@ -70,18 +51,6 @@
         },
         setBlendEquation: function(mode) {
             this.context.blendEquation(this.context[mode]);
-        },
-        setViewport: function(width, height) {
-            this.context.viewport(0, 0, width, height);
-        },
-        setClearColor: function(red, green, blue, alpha) {
-            this.context.clearColor(red, green, blue, alpha);
-        },
-        clearFrame: function() {
-            this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
-        },
-        getContext: function() {
-            return this.context;
         },
         enableDepthTest: function() {
             this.enable("DEPTH_TEST");
@@ -98,6 +67,9 @@
         },
         disableBlendMode: function() {
             this.disable("BLEND");
+        },
+        getParameter: function(parameterName) {
+            return this.context.getParameter(parameterName);
         }
     });
     function SceneGraph() {
@@ -122,11 +94,11 @@
             return this.model[this.modelStackTop];
         }
     });
-    function Scene(canvasID) {
-        this.rendererTarget = new RendererTarget(canvasID);
-        this.context = this.rendererTarget.getContext();
+    function Scene(context) {
         this.objects = [];
         this.nbObjects = 0;
+        this.context = context;
+        this.renderer = new SceneRenderer(this.context);
         this.graph = new SceneGraph();
     }
     Object.assign(Scene.prototype, {
@@ -138,42 +110,82 @@
             this.objects = [];
             this.nbObjects = 0;
         },
+        enableBlendMode: function(equation, source, destination) {
+            this.renderer.enableBlendMode(equation, source, destination);
+        },
+        disableBlendMode: function() {
+            this.renderer.disableBlendMode();
+        },
+        getRendererBlendMode: function() {
+            this.renderer.getParameter(this.context.BLEND);
+        },
         render: function(camera, time) {
+            this.computeWorldMatrices();
+            this.disableBlendMode();
             for (var i = 0; i < this.nbObjects; i++) {
-                this.objects[i].render(camera, time, this.graph);
+                this.objects[i].render(camera, time, false);
+            }
+            this.renderBlended(camera, time);
+        },
+        renderBlended: function(camera, time) {
+            this.enableBlendMode("FUNC_ADD", "SRC_ALPHA", "ONE");
+            for (var i = 0; i < this.nbObjects; i++) {
+                this.objects[i].render(camera, time, true);
             }
         },
-        clearFrame: function() {
-            this.rendererTarget.clearFrame();
-        },
-        getContext: function() {
-            return this.rendererTarget.getContext();
+        computeWorldMatrices: function() {
+            for (var i = 0; i < this.nbObjects; i++) {
+                this.objects[i].computeWorldMatrix(this.graph);
+            }
         }
     });
-    function WebGLRenderer(context) {
-        this.context = context;
+    function findById(id) {
+        return document.getElementById(id);
     }
-    Object.assign(WebGLRenderer.prototype, {
-        createBuffer: function(target, arrayData, drawMethod) {
-            var buffer = this.context.createBuffer();
-            this.context.bindBuffer(this.context[target], buffer);
-            this.context.bufferData(this.context[target], arrayData, this.context[drawMethod]);
-            return buffer;
+    function ucfirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    function Renderer(canvasID) {
+        this.canvas = findById(canvasID);
+        this.canvas.width = 1280;
+        this.canvas.height = 720;
+        this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl", {
+            alpha: false
+        });
+        this.defaultSettings();
+    }
+    Object.assign(Renderer.prototype, {
+        defaultSettings: function() {
+            this.context.getExtension("OES_standard_derivatives");
+            this.setFrontFace("CW");
+            this.enable("CULL_FACE");
+            this.setCullFace("BACK");
+            this.setViewport(this.context.drawingBufferWidth, this.context.drawingBufferHeight);
+            this.setClearColor(0, 0, 0, 1);
         },
-        useProgram: function(program) {
-            this.context.useProgram(program);
+        setFrontFace: function(mode) {
+            this.context.frontFace(this.context[mode]);
         },
-        bindBuffer: function(target, buffer) {
-            this.context.bindBuffer(this.context[target], buffer);
+        enable: function(capability) {
+            this.context.enable(this.context[capability]);
         },
-        vertexAttribPointer: function(index, size, type, normalized, stride, offset) {
-            this.context.vertexAttribPointer(index, size, this.context[type], normalized, stride, offset);
+        disable: function(capability) {
+            this.context.disable(this.context[capability]);
         },
-        drawElements: function(primitive, subMesh) {
-            this.context.drawElements(this.context[primitive], subMesh.getCount(), this.context.UNSIGNED_SHORT, subMesh.getStart() * 2);
+        setCullFace: function(mode) {
+            this.context.cullFace(this.context[mode]);
         },
-        drawArrays: function(primitive, subMesh) {
-            this.context.drawArrays(this.context[primitive], 0, subMesh.getCount());
+        setViewport: function(width, height) {
+            this.context.viewport(0, 0, width, height);
+        },
+        setClearColor: function(red, green, blue, alpha) {
+            this.context.clearColor(red, green, blue, alpha);
+        },
+        clearFrame: function() {
+            this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+        },
+        getContext: function() {
+            return this.context;
         }
     });
     function Camera(position, target, up) {
@@ -302,6 +314,34 @@
         this.type = type;
         this.value = value;
     }
+    function MeshRenderer(context) {
+        this.context = context;
+        this.defaultSettings();
+    }
+    Object.assign(MeshRenderer.prototype, {
+        defaultSettings: function() {},
+        createBuffer: function(target, arrayData, drawMethod) {
+            var buffer = this.context.createBuffer();
+            this.context.bindBuffer(this.context[target], buffer);
+            this.context.bufferData(this.context[target], arrayData, this.context[drawMethod]);
+            return buffer;
+        },
+        useProgram: function(program) {
+            this.context.useProgram(program);
+        },
+        bindBuffer: function(target, buffer) {
+            this.context.bindBuffer(this.context[target], buffer);
+        },
+        vertexAttribPointer: function(index, size, type, normalized, stride, offset) {
+            this.context.vertexAttribPointer(index, size, this.context[type], normalized, stride, offset);
+        },
+        drawElements: function(primitive, subMesh) {
+            this.context.drawElements(this.context[primitive], subMesh.getCount(), this.context.UNSIGNED_SHORT, subMesh.getStart() * 2);
+        },
+        drawArrays: function(primitive, subMesh) {
+            this.context.drawArrays(this.context[primitive], 0, subMesh.getCount());
+        }
+    });
     function Mesh(mesh, context) {
         this.vertices = mesh.vertices ? mesh.vertices : null;
         this.indices = mesh.indices ? mesh.indices : null;
@@ -313,7 +353,7 @@
         this.primitive = mesh.primitive ? mesh.primitive : null;
         this.customUniforms = {};
         this.context = context;
-        this.renderer = new WebGLRenderer(this.context);
+        this.renderer = new MeshRenderer(this.context);
         this.WebGLTexture = null;
         this.vertexPositionBuffer = this.renderer.createBuffer("ARRAY_BUFFER", new Float32Array(this.vertices), "STATIC_DRAW");
         this.indexBuffer = this.indices ? this.renderer.createBuffer("ELEMENT_ARRAY_BUFFER", new Uint16Array(this.indices), "STATIC_DRAW") : null;
@@ -329,6 +369,8 @@
         this.nbMaterials = 0;
         this.children = [];
         this.nbChildren = 0;
+        this.blendMode = false;
+        this.zOrder = 0;
     }
     Object.assign(Mesh.prototype, {
         setActive: function() {
@@ -472,32 +514,46 @@
             this.renderer.bindBuffer("ARRAY_BUFFER", this.vertexPositionBuffer);
             this.renderer.vertexAttribPointer(program.vertexPosition, this.itemSize, "FLOAT", false, 0, 0);
         },
-        render: function(camera, time, graph) {
+        activateBlendMode: function() {
+            this.blendMode = true;
+        },
+        deactivateBlendMode: function() {
+            this.blendMode = false;
+        },
+        computeWorldMatrix: function(graph) {
+            this.setWorldMatrix(graph.getWorldMatrix());
+            graph.pushModelMatrix(this.worldMatrix);
+            for (var i = 0; i < this.nbChildren; i++) {
+                var child = this.children[i];
+                child.computeWorldMatrix(graph);
+            }
+            graph.popModelMatrix();
+        },
+        render: function(camera, time, blendMode) {
             if (this.isActive()) {
-                this.setWorldMatrix(graph.getWorldMatrix());
-                graph.pushModelMatrix(this.worldMatrix);
                 var program = null;
                 for (var i = 0; i < this.nbSubMeshes; i++) {
-                    if (this.materials[i]) {
-                        program = this.materials[i];
-                    } else {
-                        program = this.materials[this.nbMaterials - 1];
+                    if (this.blendMode === blendMode) {
+                        if (this.materials[i]) {
+                            program = this.materials[i];
+                        } else {
+                            program = this.materials[this.nbMaterials - 1];
+                        }
+                        this.renderer.useProgram(program);
+                        this.sendPositions(program);
+                        this.sendNormals(program);
+                        this.sendUvs(program);
+                        this.sendMatrixUniforms(program, camera);
+                        this.sendDefaultUniforms(program, time);
+                        this.sendCustomUniforms(program);
+                        this.sendTexture(program);
+                        this.renderer[this.drawMethod](this.primitive, this.subMeshes[i]);
                     }
-                    this.renderer.useProgram(program);
-                    this.sendPositions(program);
-                    this.sendNormals(program);
-                    this.sendUvs(program);
-                    this.sendMatrixUniforms(program, camera);
-                    this.sendDefaultUniforms(program, time);
-                    this.sendCustomUniforms(program);
-                    this.sendTexture(program);
-                    this.renderer[this.drawMethod](this.primitive, this.subMeshes[i]);
                 }
-                for (i = 0; i < this.nbChildren; i++) {
-                    var child = this.children[i];
-                    child.render(camera, time, graph);
+                for (var j = 0; j < this.nbChildren; j++) {
+                    var child = this.children[j];
+                    child.render(camera, time, blendMode);
                 }
-                graph.popModelMatrix();
             }
         }
     });
@@ -579,6 +635,53 @@
         this.itemSize = 3;
         this.primitive = "TRIANGLES";
     }
+    function CustomMesh() {
+        this.vertices = null;
+        this.indices = null;
+        this.normals = null;
+        this.uvs = null;
+        this.subMeshes = [];
+        this.itemSize = 3;
+        this.primitive = "TRIANGLES";
+        this.primitives = [ "POINTS", "LINE_STRIP", "LINE_LOOP", "LINES", "TRIANGLE_STRIP", "TRIANGLE_FAN", "TRIANGLES" ];
+    }
+    Object.assign(CustomMesh.prototype, {
+        setVertices: function(array) {
+            this.vertices = this.copyArray(array);
+        },
+        setIndices: function(array) {
+            this.indices = this.copyArray(array);
+        },
+        setNormals: function(array) {
+            this.normals = this.copyArray(array);
+        },
+        setUvs: function(array) {
+            this.uvs = this.copyArray(array);
+        },
+        addSubMeshes: function(array) {
+            for (var i = 0; i < array.length; i += 2) {
+                this.addSubMesh(array[i], array[i + 1]);
+            }
+        },
+        addSubMesh: function(start, count) {
+            this.subMeshes.push(new SubMesh(start, count));
+        },
+        setItemSize: function(itemSize) {
+            this.itemSize = itemSize;
+        },
+        setPrimitive: function(primitive) {
+            for (var i = 0; i < this.primitives.length; i++) {
+                if (this.primitives[i] === primitive) {
+                    this.primitive = primitive;
+                    return true;
+                }
+            }
+            return false;
+        },
+        copyArray: function(array) {
+            return array.slice(array);
+        }
+    });
     function Texture(context, img) {
         this.img = img;
         this.WebGLTexture = context.createTexture();
@@ -596,33 +699,8 @@
             context.bindTexture(context.TEXTURE_2D, null);
         }
     });
-    function Material() {
-        this.ambient = null;
-        this.diffuse = null;
-        this.specular = null;
-        this.shininess = null;
-    }
-    Object.assign(Material.prototype, {
-        setAmbient: function() {},
-        setDiffuse: function() {},
-        setSpecular: function() {},
-        setShininess: function() {},
-        getAmbient: function() {
-            return this.ambient;
-        },
-        getDiffuse: function() {
-            return this.diffuse;
-        },
-        getSpecular: function() {
-            return this.specular;
-        },
-        getShininess: function() {
-            return this.shininess;
-        }
-    });
     exports.Scene = Scene;
-    exports.WebGLRenderer = WebGLRenderer;
-    exports.RendererTarget = RendererTarget;
+    exports.Renderer = Renderer;
     exports.PerspectiveCamera = PerspectiveCamera;
     exports.OrthographicCamera = OrthographicCamera;
     exports.Mesh = Mesh;
@@ -634,8 +712,8 @@
     exports.Hemisphere = Hemisphere;
     exports.VWing = VWing;
     exports.Gun0 = Gun0;
+    exports.CustomMesh = CustomMesh;
     exports.Texture = Texture;
-    exports.Material = Material;
     Object.defineProperty(exports, "__esModule", {
         value: true
     });

@@ -1,38 +1,17 @@
 
 
-//var canvas = require('./canvas');
-import { findById } from '../utils';
-
-function RendererTarget( canvasID ) {
-
-  this.canvas = findById(canvasID);
-  // default resolution
-  this.canvas.width = 1280;
-  this.canvas.height = 720;
-  this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl",{alpha:false});
-  
-  this.context.getExtension('OES_standard_derivatives');
-  
-  this.setFrontFace('CW');
-  this.enable('CULL_FACE');
-  this.setCullFace('BACK');
-  
-  this.setDepthFunc('LEQUAL');
-  this.enableDepthTest();
-  
-  //this.setViewport(1280,720);
-  this.setViewport(this.context.drawingBufferWidth, this.context.drawingBufferHeight);
-  // console.log(this.context.getParameter(this.context.VIEWPORT));
-  this.setClearColor(0.0, 0.0, 0.0, 1.0);
+function SceneRenderer( context ) {
+  this.context = context;
+  this.defaultSettings();
 }
 
-Object.assign( RendererTarget.prototype, {
+Object.assign( SceneRenderer.prototype, {
 
-  // Sets the winding orientation. The default value is gl.CCW. Possible values:
-  // gl.CW: Clock-wise winding.
-  // gl.CCW: Counter-clock-wise winding.
-  setFrontFace: function ( mode ) {
-    this.context.frontFace(this.context[mode]);
+  defaultSettings: function (){
+    
+    this.setDepthFunc('LEQUAL');
+    this.enableDepthTest();
+    this.disableBlendMode();
   },
   
   // specifying which WebGL capability to enable. Possible values:
@@ -55,15 +34,6 @@ Object.assign( RendererTarget.prototype, {
   disable: function ( capability ) {
     this.context.disable(this.context[capability]);
   },
-  
-  // specifying whether front- or back-facing polygons are candidates for culling. The default value is gl.BACK. Possible values are:
-  // gl.FRONT
-  // gl.BACK
-  // gl.FRONT_AND_BACK
-  setCullFace: function ( mode ) {
-    this.context.cullFace(this.context[mode]);
-  },
-
 
   // GL_ALWAYS	The depth test always passes.
   // GL_NEVER	The depth test never passes.
@@ -105,25 +75,8 @@ Object.assign( RendererTarget.prototype, {
   setBlendEquation: function ( mode ) {
     this.context.blendEquation( this.context[mode] );
   },
+  
 
-  // specifies the affine transformation of x and y from normalized device coordinates to window coordinates.
-  setViewport: function ( width, height ) {
-    this.context.viewport(0, 0, width, height); //defaut values
-  },
-  
-  // This specifies what color values to use when calling the clear() method. The values are clamped between 0 and 1.
-  setClearColor: function ( red, green, blue, alpha ) {
-    this.context.clearColor( red, green, blue, alpha );
-  },
-  
-  clearFrame: function (){
-    this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
-  },
-  
-  getContext: function () {
-    return this.context;
-	},
-  
   enableDepthTest:function(){
     this.enable('DEPTH_TEST');
     this.context.depthMask(true);
@@ -144,8 +97,100 @@ Object.assign( RendererTarget.prototype, {
   
   disableBlendMode:function() {
     this.disable('BLEND');
+  },
+  
+  // gl.ACTIVE_TEXTURE	GLenum	 
+  // gl.ALIASED_LINE_WIDTH_RANGE	Float32Array (with 2 elements)	 
+  // gl.ALIASED_POINT_SIZE_RANGE	Float32Array (with 2 elements)	 
+  // gl.ALPHA_BITS	GLint	 
+  // gl.ARRAY_BUFFER_BINDING	WebGLBuffer	 
+  // gl.BLEND	GLboolean	 
+  // gl.BLEND_COLOR	Float32Array (with 4 values)	 
+  // gl.BLEND_DST_ALPHA	GLenum	 
+  // gl.BLEND_DST_RGB	GLenum	 
+  // gl.BLEND_EQUATION	GLenum	 
+  // gl.BLEND_EQUATION_ALPHA	GLenum	 
+  // gl.BLEND_EQUATION_RGB	GLenum	 
+  // gl.BLEND_SRC_ALPHA	GLenum	 
+  // gl.BLEND_SRC_RGB	GLenum	 
+  // gl.BLUE_BITS	GLint	 
+  // gl.COLOR_CLEAR_VALUE	Float32Array (with 4 values)	 
+  // gl.COLOR_WRITEMASK	sequence<GLboolean> (with 4 values)	 
+  // gl.COMPRESSED_TEXTURE_FORMATS	Uint32Array	Returns the compressed texture formats.
+  // gl.CULL_FACE	GLboolean	 
+  // gl.CULL_FACE_MODE	GLenum	 
+  // gl.CURRENT_PROGRAM	WebGLProgram	 
+  // gl.DEPTH_BITS	GLint	 
+  // gl.DEPTH_CLEAR_VALUE	GLfloat	 
+  // gl.DEPTH_FUNC	GLenum	 
+  // gl.DEPTH_RANGE	Float32Array (with 2 elements)	 
+  // gl.DEPTH_TEST	GLboolean	 
+  // gl.DEPTH_WRITEMASK	GLboolean	 
+  // gl.DITHER	GLboolean	 
+  // gl.ELEMENT_ARRAY_BUFFER_BINDING	WebGLBuffer	 
+  // gl.FRAMEBUFFER_BINDING	WebGLFramebuffer	 
+  // gl.FRONT_FACE	GLenum	 
+  // gl.GENERATE_MIPMAP_HINT	GLenum	 
+  // gl.GREEN_BITS	GLint	 
+  // gl.IMPLEMENTATION_COLOR_READ_FORMAT	GLenum	 
+  // gl.IMPLEMENTATION_COLOR_READ_TYPE	GLenum	 
+  // gl.LINE_WIDTH	GLfloat	 
+  // gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS	GLint	 
+  // gl.MAX_CUBE_MAP_TEXTURE_SIZE	GLint	 
+  // gl.MAX_FRAGMENT_UNIFORM_VECTORS	GLint	 
+  // gl.MAX_RENDERBUFFER_SIZE	GLint	 
+  // gl.MAX_TEXTURE_IMAGE_UNITS	GLint	 
+  // gl.MAX_TEXTURE_SIZE	GLint	 
+  // gl.MAX_VARYING_VECTORS	GLint	 
+  // gl.MAX_VERTEX_ATTRIBS	GLint	 
+  // gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS	GLint	 
+  // gl.MAX_VERTEX_UNIFORM_VECTORS	GLint	 
+  // gl.MAX_VIEWPORT_DIMS	Int32Array (with 2 elements)	 
+  // gl.PACK_ALIGNMENT	GLint	 
+  // gl.POLYGON_OFFSET_FACTOR	GLfloat	 
+  // gl.POLYGON_OFFSET_FILL	GLboolean	 
+  // gl.POLYGON_OFFSET_UNITS	GLfloat	 
+  // gl.RED_BITS	GLint	 
+  // gl.RENDERBUFFER_BINDING	WebGLRenderbuffer	 
+  // gl.RENDERER	DOMString	 
+  // gl.SAMPLE_BUFFERS	GLint	 
+  // gl.SAMPLE_COVERAGE_INVERT	GLboolean	 
+  // gl.SAMPLE_COVERAGE_VALUE	GLfloat	 
+  // gl.SAMPLES	GLint	 
+  // gl.SCISSOR_BOX	Int32Array (with 4 elements)	 
+  // gl.SCISSOR_TEST	GLboolean	 
+  // gl.SHADING_LANGUAGE_VERSION	DOMString	 
+  // gl.STENCIL_BACK_FAIL	GLenum	 
+  // gl.STENCIL_BACK_FUNC	GLenum	 
+  // gl.STENCIL_BACK_PASS_DEPTH_FAIL	GLenum	 
+  // gl.STENCIL_BACK_PASS_DEPTH_PASS	GLenum	 
+  // gl.STENCIL_BACK_REF	GLint	 
+  // gl.STENCIL_BACK_VALUE_MASK	GLuint	 
+  // gl.STENCIL_BACK_WRITEMASK	GLuint	 
+  // gl.STENCIL_BITS	GLint	 
+  // gl.STENCIL_CLEAR_VALUE	GLint	 
+  // gl.STENCIL_FAIL	GLenum	 
+  // gl.STENCIL_FUNC	GLenum	 
+  // gl.STENCIL_PASS_DEPTH_FAIL	GLenum	 
+  // gl.STENCIL_PASS_DEPTH_PASS	GLenum	 
+  // gl.STENCIL_REF	GLint	 
+  // gl.STENCIL_TEST	GLboolean	 
+  // gl.STENCIL_VALUE_MASK	GLuint	 
+  // gl.STENCIL_WRITEMASK	GLuint	 
+  // gl.SUBPIXEL_BITS	GLint	 
+  // gl.TEXTURE_BINDING_2D	WebGLTexture	 
+  // gl.TEXTURE_BINDING_CUBE_MAP	WebGLTexture	 
+  // gl.UNPACK_ALIGNMENT	GLint	 
+  // gl.UNPACK_COLORSPACE_CONVERSION_WEBGL	GLenum	 
+  // gl.UNPACK_FLIP_Y_WEBGL	GLboolean	 
+  // gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL	GLboolean	 
+  // gl.VENDOR	DOMString	 
+  // gl.VERSION	DOMString	 
+  // gl.VIEWPORT	Int32Array (with 4 elements)	
+  getParameter : function(parameterName){
+    return this.context.getParameter(parameterName);
   }
 
-} );
+});
 
-export { RendererTarget };
+export { SceneRenderer };

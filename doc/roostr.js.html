@@ -32,50 +32,18 @@
   (factory((global.ROOSTR = global.ROOSTR || {})));
 }(this, (function (exports) { 'use strict';
 
-  function findById( id ) {
-    return document.getElementById(id);
+  function SceneRenderer( context ) {
+    this.context = context;
+    this.defaultSettings();
   }
 
-  function ucfirst(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-    
-    // str += '';
-    // var f = str.charAt(0).toUpperCase();
-    // return f + str.substr(1);
-    
-  }
+  Object.assign( SceneRenderer.prototype, {
 
-  //var canvas = require('./canvas');
-  function RendererTarget( canvasID ) {
-
-    this.canvas = findById(canvasID);
-    // default resolution
-    this.canvas.width = 1280;
-    this.canvas.height = 720;
-    this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl",{alpha:false});
-    
-    this.context.getExtension('OES_standard_derivatives');
-    
-    this.setFrontFace('CW');
-    this.enable('CULL_FACE');
-    this.setCullFace('BACK');
-    
-    this.setDepthFunc('LEQUAL');
-    this.enableDepthTest();
-    
-    //this.setViewport(1280,720);
-    this.setViewport(this.context.drawingBufferWidth, this.context.drawingBufferHeight);
-    // console.log(this.context.getParameter(this.context.VIEWPORT));
-    this.setClearColor(0.0, 0.0, 0.0, 1.0);
-  }
-
-  Object.assign( RendererTarget.prototype, {
-
-    // Sets the winding orientation. The default value is gl.CCW. Possible values:
-    // gl.CW: Clock-wise winding.
-    // gl.CCW: Counter-clock-wise winding.
-    setFrontFace: function ( mode ) {
-      this.context.frontFace(this.context[mode]);
+    defaultSettings: function (){
+      
+      this.setDepthFunc('LEQUAL');
+      this.enableDepthTest();
+      this.disableBlendMode();
     },
     
     // specifying which WebGL capability to enable. Possible values:
@@ -98,15 +66,6 @@
     disable: function ( capability ) {
       this.context.disable(this.context[capability]);
     },
-    
-    // specifying whether front- or back-facing polygons are candidates for culling. The default value is gl.BACK. Possible values are:
-    // gl.FRONT
-    // gl.BACK
-    // gl.FRONT_AND_BACK
-    setCullFace: function ( mode ) {
-      this.context.cullFace(this.context[mode]);
-    },
-
 
     // GL_ALWAYS	The depth test always passes.
     // GL_NEVER	The depth test never passes.
@@ -148,25 +107,8 @@
     setBlendEquation: function ( mode ) {
       this.context.blendEquation( this.context[mode] );
     },
+    
 
-    // specifies the affine transformation of x and y from normalized device coordinates to window coordinates.
-    setViewport: function ( width, height ) {
-      this.context.viewport(0, 0, width, height); //defaut values
-    },
-    
-    // This specifies what color values to use when calling the clear() method. The values are clamped between 0 and 1.
-    setClearColor: function ( red, green, blue, alpha ) {
-      this.context.clearColor( red, green, blue, alpha );
-    },
-    
-    clearFrame: function (){
-      this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
-    },
-    
-    getContext: function () {
-      return this.context;
-  	},
-    
     enableDepthTest:function(){
       this.enable('DEPTH_TEST');
       this.context.depthMask(true);
@@ -187,9 +129,101 @@
     
     disableBlendMode:function() {
       this.disable('BLEND');
+    },
+    
+    // gl.ACTIVE_TEXTURE	GLenum	 
+    // gl.ALIASED_LINE_WIDTH_RANGE	Float32Array (with 2 elements)	 
+    // gl.ALIASED_POINT_SIZE_RANGE	Float32Array (with 2 elements)	 
+    // gl.ALPHA_BITS	GLint	 
+    // gl.ARRAY_BUFFER_BINDING	WebGLBuffer	 
+    // gl.BLEND	GLboolean	 
+    // gl.BLEND_COLOR	Float32Array (with 4 values)	 
+    // gl.BLEND_DST_ALPHA	GLenum	 
+    // gl.BLEND_DST_RGB	GLenum	 
+    // gl.BLEND_EQUATION	GLenum	 
+    // gl.BLEND_EQUATION_ALPHA	GLenum	 
+    // gl.BLEND_EQUATION_RGB	GLenum	 
+    // gl.BLEND_SRC_ALPHA	GLenum	 
+    // gl.BLEND_SRC_RGB	GLenum	 
+    // gl.BLUE_BITS	GLint	 
+    // gl.COLOR_CLEAR_VALUE	Float32Array (with 4 values)	 
+    // gl.COLOR_WRITEMASK	sequence&lt;GLboolean> (with 4 values)	 
+    // gl.COMPRESSED_TEXTURE_FORMATS	Uint32Array	Returns the compressed texture formats.
+    // gl.CULL_FACE	GLboolean	 
+    // gl.CULL_FACE_MODE	GLenum	 
+    // gl.CURRENT_PROGRAM	WebGLProgram	 
+    // gl.DEPTH_BITS	GLint	 
+    // gl.DEPTH_CLEAR_VALUE	GLfloat	 
+    // gl.DEPTH_FUNC	GLenum	 
+    // gl.DEPTH_RANGE	Float32Array (with 2 elements)	 
+    // gl.DEPTH_TEST	GLboolean	 
+    // gl.DEPTH_WRITEMASK	GLboolean	 
+    // gl.DITHER	GLboolean	 
+    // gl.ELEMENT_ARRAY_BUFFER_BINDING	WebGLBuffer	 
+    // gl.FRAMEBUFFER_BINDING	WebGLFramebuffer	 
+    // gl.FRONT_FACE	GLenum	 
+    // gl.GENERATE_MIPMAP_HINT	GLenum	 
+    // gl.GREEN_BITS	GLint	 
+    // gl.IMPLEMENTATION_COLOR_READ_FORMAT	GLenum	 
+    // gl.IMPLEMENTATION_COLOR_READ_TYPE	GLenum	 
+    // gl.LINE_WIDTH	GLfloat	 
+    // gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS	GLint	 
+    // gl.MAX_CUBE_MAP_TEXTURE_SIZE	GLint	 
+    // gl.MAX_FRAGMENT_UNIFORM_VECTORS	GLint	 
+    // gl.MAX_RENDERBUFFER_SIZE	GLint	 
+    // gl.MAX_TEXTURE_IMAGE_UNITS	GLint	 
+    // gl.MAX_TEXTURE_SIZE	GLint	 
+    // gl.MAX_VARYING_VECTORS	GLint	 
+    // gl.MAX_VERTEX_ATTRIBS	GLint	 
+    // gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS	GLint	 
+    // gl.MAX_VERTEX_UNIFORM_VECTORS	GLint	 
+    // gl.MAX_VIEWPORT_DIMS	Int32Array (with 2 elements)	 
+    // gl.PACK_ALIGNMENT	GLint	 
+    // gl.POLYGON_OFFSET_FACTOR	GLfloat	 
+    // gl.POLYGON_OFFSET_FILL	GLboolean	 
+    // gl.POLYGON_OFFSET_UNITS	GLfloat	 
+    // gl.RED_BITS	GLint	 
+    // gl.RENDERBUFFER_BINDING	WebGLRenderbuffer	 
+    // gl.RENDERER	DOMString	 
+    // gl.SAMPLE_BUFFERS	GLint	 
+    // gl.SAMPLE_COVERAGE_INVERT	GLboolean	 
+    // gl.SAMPLE_COVERAGE_VALUE	GLfloat	 
+    // gl.SAMPLES	GLint	 
+    // gl.SCISSOR_BOX	Int32Array (with 4 elements)	 
+    // gl.SCISSOR_TEST	GLboolean	 
+    // gl.SHADING_LANGUAGE_VERSION	DOMString	 
+    // gl.STENCIL_BACK_FAIL	GLenum	 
+    // gl.STENCIL_BACK_FUNC	GLenum	 
+    // gl.STENCIL_BACK_PASS_DEPTH_FAIL	GLenum	 
+    // gl.STENCIL_BACK_PASS_DEPTH_PASS	GLenum	 
+    // gl.STENCIL_BACK_REF	GLint	 
+    // gl.STENCIL_BACK_VALUE_MASK	GLuint	 
+    // gl.STENCIL_BACK_WRITEMASK	GLuint	 
+    // gl.STENCIL_BITS	GLint	 
+    // gl.STENCIL_CLEAR_VALUE	GLint	 
+    // gl.STENCIL_FAIL	GLenum	 
+    // gl.STENCIL_FUNC	GLenum	 
+    // gl.STENCIL_PASS_DEPTH_FAIL	GLenum	 
+    // gl.STENCIL_PASS_DEPTH_PASS	GLenum	 
+    // gl.STENCIL_REF	GLint	 
+    // gl.STENCIL_TEST	GLboolean	 
+    // gl.STENCIL_VALUE_MASK	GLuint	 
+    // gl.STENCIL_WRITEMASK	GLuint	 
+    // gl.SUBPIXEL_BITS	GLint	 
+    // gl.TEXTURE_BINDING_2D	WebGLTexture	 
+    // gl.TEXTURE_BINDING_CUBE_MAP	WebGLTexture	 
+    // gl.UNPACK_ALIGNMENT	GLint	 
+    // gl.UNPACK_COLORSPACE_CONVERSION_WEBGL	GLenum	 
+    // gl.UNPACK_FLIP_Y_WEBGL	GLboolean	 
+    // gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL	GLboolean	 
+    // gl.VENDOR	DOMString	 
+    // gl.VERSION	DOMString	 
+    // gl.VIEWPORT	Int32Array (with 4 elements)	
+    getParameter : function(parameterName){
+      return this.context.getParameter(parameterName);
     }
 
-  } );
+  });
 
   /**
    * Module dependencies.
@@ -232,14 +266,11 @@
    * @api private
    */
 
-
-  //import { Texture } from './texture';
-
-  function Scene( canvasID ) {
-    this.rendererTarget = new RendererTarget( canvasID );
-    this.context = this.rendererTarget.getContext();
+  function Scene(context) {
     this.objects = [];
     this.nbObjects = 0;
+    this.context = context;
+    this.renderer = new SceneRenderer(this.context);
     this.graph = new SceneGraph();
   }
 
@@ -255,79 +286,159 @@
       this.nbObjects = 0;
     },
     
+    enableBlendMode:function(equation, source, destination){
+      this.renderer.enableBlendMode(equation, source, destination);
+    },
+    
+    disableBlendMode:function() {
+      this.renderer.disableBlendMode();
+    },
+    
+    getRendererBlendMode:function(){
+      this.renderer.getParameter(this.context.BLEND);
+    },
+    
     render: function (camera, time) {
+      
+      this.computeWorldMatrices();
+      
+      //this.order();
+      //if (this.getRendererBlendMode()){
+        this.disableBlendMode();
+      //}
       for (var i = 0 ; i &lt; this.nbObjects ; i++) {
-        this.objects[i].render( camera, time , this.graph);
+        //if (!this.objects[i].blendMode) {
+          this.objects[i].render( camera, time, false );
+        //}
+      }
+      
+      this.renderBlended(camera, time);
+    },
+    
+    renderBlended: function (camera, time) {
+      this.enableBlendMode('FUNC_ADD', 'SRC_ALPHA', 'ONE');
+      for (var i = 0 ; i &lt; this.nbObjects ; i++) {
+        //if (this.objects[i].blendMode) {
+          this.objects[i].render( camera, time, true );
+        //}
       }
     },
     
-    clearFrame: function (){
-      this.rendererTarget.clearFrame();
+    computeWorldMatrices: function(){
+      for (var i = 0 ; i &lt; this.nbObjects ; i++) {
+        this.objects[i].computeWorldMatrix( this.graph );
+      }
     },
     
-    getContext: function(){
-      return this.rendererTarget.getContext();
-    }
+    // order: function (){
+    //   var z = -999999;
+    //   for (var i = 0 ; i &lt; this.nbObjects ; i++) {
+    //     if(this.objects[i].worldMatrix.m[14] > z){
+    //       
+    //     }
+    //   }
+    // }
+    
     
   });
 
-  //var canvas = require('./canvas');
+  function findById( id ) {
+    return document.getElementById(id);
+  }
 
-  function WebGLRenderer( context ) {
-
-    this.context = context;
+  function ucfirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+    
+    // str += '';
+    // var f = str.charAt(0).toUpperCase();
+    // return f + str.substr(1);
     
   }
 
-  Object.assign( WebGLRenderer.prototype, {
+  //var canvas = require('./canvas');
+  function Renderer( canvasID ) {
 
-    // specifying the binding point (target). Possible values:
-    // gl.ARRAY_BUFFER: Buffer containing vertex attributes, such as vertex coordinates, texture coordinate data, or vertex color data.
-    // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
-    createBuffer: function( target, arrayData, drawMethod ) {
-      var buffer = this.context.createBuffer();
-      //binds a given WebGLBuffer to a target
-      this.context.bindBuffer(this.context[target], buffer);
-      this.context.bufferData(this.context[target], arrayData, this.context[drawMethod]);
-      return buffer;
+    this.canvas = findById(canvasID);
+    // default resolution
+    this.canvas.width = 1280;
+    this.canvas.height = 720;
+    this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl",{alpha:false});
+    
+    this.defaultSettings();
+    
+  }
+
+  Object.assign( Renderer.prototype, {
+
+    defaultSettings: function (){
+      this.context.getExtension('OES_standard_derivatives');
+      this.setFrontFace('CW');
+      this.enable('CULL_FACE');
+      this.setCullFace('BACK');
+      
+      //this.setViewport(1280,720);
+      this.setViewport(this.context.drawingBufferWidth, this.context.drawingBufferHeight);
+      // console.log(this.context.getParameter(this.context.VIEWPORT));
+      this.setClearColor(0.0, 0.0, 0.0, 1.0);
       
     },
 
-    useProgram: function(program) {
-      this.context.useProgram(program);
+    // Sets the winding orientation. The default value is gl.CCW. Possible values:
+    // gl.CW: Clock-wise winding.
+    // gl.CCW: Counter-clock-wise winding.
+    setFrontFace: function ( mode ) {
+      this.context.frontFace(this.context[mode]);
     },
     
-    bindBuffer: function(target, buffer) {
-      this.context.bindBuffer(this.context[target], buffer);
+    // specifying which WebGL capability to enable. Possible values:
+    // GL_BLEND	Activates blending of the computed fragment color values. See WebGLRenderingContext.blendFunc().
+    // GL_CULL_FACE	Activates culling of polygons. See WebGLRenderingContext.cullFace().
+    // GL_DEPTH_TEST	Activates depth comparisons and updates to the depth buffer. See WebGLRenderingContext.depthFunc().
+    // GL_DITHER	Activates dithering of color components before they get written to the color buffer.
+    // GL_POLYGON_OFFSET_FILL	Activates adding an offset to depth values of polygon's fragments. See WebGLRenderingContext.polygonOffset().
+    // GL_SAMPLE_ALPHA_TO_COVERAGE	Activates the computation of a temporary coverage value determined by the alpha value.
+    // GL_SAMPLE_COVERAGE	Activates ANDing the fragment's coverage with the temporary coverage value. See WebGLRenderingContext.sampleCoverage().
+    // GL_SCISSOR_TEST	Activates the scissor test that discards fragments that are outside of the scissor rectangle. See WebGLRenderingContext.scissor().
+    // GL_STENCIL_TEST	Activates stencil testing and updates to the stencil buffer. See WebGLRenderingContext.stencilFunc().
+    // Examples
+    // Transparency is best implemented using blend function (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA) with primitives sorted from farthest to nearest. Note that this transparency calculation does not require the presence of alpha bitplanes in the frame buffer.
+    // Blend function (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA) is also useful for rendering antialiased points and lines in arbitrary order.
+    enable: function ( capability ) {
+      this.context.enable(this.context[capability]);
     },
     
-    vertexAttribPointer: function(index, size, type, normalized, stride, offset){
-      this.context.vertexAttribPointer(index, size, this.context[type], normalized, stride, offset);
+    disable: function ( capability ) {
+      this.context.disable(this.context[capability]);
     },
     
-    drawElements: function(primitive, subMesh){
-      // gl.POINTS: Draws a single dot.
-      // gl.LINE_STRIP: Draws a straight line to the next vertex.
-      // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
-      // gl.LINES: Draws a line between a pair of vertices.
-      // gl.TRIANGLE_STRIP
-      // gl.TRIANGLE_FAN
-      // gl.TRIANGLES: Draws a triangle for a group of three vertices.
-      this.context.drawElements(this.context[primitive], subMesh.getCount(), this.context.UNSIGNED_SHORT, subMesh.getStart() * 2);
+    // specifying whether front- or back-facing polygons are candidates for culling. The default value is gl.BACK. Possible values are:
+    // gl.FRONT
+    // gl.BACK
+    // gl.FRONT_AND_BACK
+    setCullFace: function ( mode ) {
+      this.context.cullFace(this.context[mode]);
     },
-    
-    drawArrays: function(primitive, subMesh) {
-      // gl.POINTS: Draws a single dot.
-      // gl.LINE_STRIP: Draws a straight line to the next vertex.
-      // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
-      // gl.LINES: Draws a line between a pair of vertices.
-      // gl.TRIANGLE_STRIP
-      // gl.TRIANGLE_FAN
-      // gl.TRIANGLES: Draws a triangle for a group of three vertices.
-      this.context.drawArrays(this.context[primitive], 0, subMesh.getCount());
-    }
 
-  });
+
+    // specifies the affine transformation of x and y from normalized device coordinates to window coordinates.
+    setViewport: function ( width, height ) {
+      this.context.viewport(0, 0, width, height); //defaut values
+    },
+    
+    // This specifies what color values to use when calling the clear() method. The values are clamped between 0 and 1.
+    setClearColor: function ( red, green, blue, alpha ) {
+      this.context.clearColor( red, green, blue, alpha );
+    },
+    
+    clearFrame: function (){
+      this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
+    },
+    
+    getContext: function () {
+      return this.context;
+  	}
+
+  } );
 
   function Camera( position, target, up) {
     
@@ -530,6 +641,179 @@
     
   }
 
+  function MeshRenderer( context ) {
+    this.context = context;
+    this.defaultSettings();
+  }
+
+  Object.assign( MeshRenderer.prototype, {
+
+    defaultSettings: function (){
+      
+      
+    },
+    
+    // specifying which WebGL capability to enable. Possible values:
+    // GL_BLEND	Activates blending of the computed fragment color values. See WebGLRenderingContext.blendFunc().
+    // GL_CULL_FACE	Activates culling of polygons. See WebGLRenderingContext.cullFace().
+    // GL_DEPTH_TEST	Activates depth comparisons and updates to the depth buffer. See WebGLRenderingContext.depthFunc().
+    // GL_DITHER	Activates dithering of color components before they get written to the color buffer.
+    // GL_POLYGON_OFFSET_FILL	Activates adding an offset to depth values of polygon's fragments. See WebGLRenderingContext.polygonOffset().
+    // GL_SAMPLE_ALPHA_TO_COVERAGE	Activates the computation of a temporary coverage value determined by the alpha value.
+    // GL_SAMPLE_COVERAGE	Activates ANDing the fragment's coverage with the temporary coverage value. See WebGLRenderingContext.sampleCoverage().
+    // GL_SCISSOR_TEST	Activates the scissor test that discards fragments that are outside of the scissor rectangle. See WebGLRenderingContext.scissor().
+    // GL_STENCIL_TEST	Activates stencil testing and updates to the stencil buffer. See WebGLRenderingContext.stencilFunc().
+    // Examples
+    // Transparency is best implemented using blend function (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA) with primitives sorted from farthest to nearest. Note that this transparency calculation does not require the presence of alpha bitplanes in the frame buffer.
+    // Blend function (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA) is also useful for rendering antialiased points and lines in arbitrary order.
+    // enable: function ( capability ) {
+    //   this.context.enable(this.context[capability]);
+    // },
+    // 
+    // disable: function ( capability ) {
+    //   this.context.disable(this.context[capability]);
+    // },
+
+    // specifying the binding point (target). Possible values:
+    // gl.ARRAY_BUFFER: Buffer containing vertex attributes, such as vertex coordinates, texture coordinate data, or vertex color data.
+    // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
+    createBuffer: function( target, arrayData, drawMethod ) {
+      var buffer = this.context.createBuffer();
+      //binds a given WebGLBuffer to a target
+      this.context.bindBuffer(this.context[target], buffer);
+      this.context.bufferData(this.context[target], arrayData, this.context[drawMethod]);
+      return buffer;
+      
+    },
+
+    useProgram: function(program) {
+      this.context.useProgram(program);
+    },
+    
+    bindBuffer: function(target, buffer) {
+      this.context.bindBuffer(this.context[target], buffer);
+    },
+    
+    vertexAttribPointer: function(index, size, type, normalized, stride, offset){
+      this.context.vertexAttribPointer(index, size, this.context[type], normalized, stride, offset);
+    },
+    
+    drawElements: function(primitive, subMesh){
+      // gl.POINTS: Draws a single dot.
+      // gl.LINE_STRIP: Draws a straight line to the next vertex.
+      // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
+      // gl.LINES: Draws a line between a pair of vertices.
+      // gl.TRIANGLE_STRIP
+      // gl.TRIANGLE_FAN
+      // gl.TRIANGLES: Draws a triangle for a group of three vertices.
+      this.context.drawElements(this.context[primitive], subMesh.getCount(), this.context.UNSIGNED_SHORT, subMesh.getStart() * 2);
+    },
+    
+    drawArrays: function(primitive, subMesh) {
+      // gl.POINTS: Draws a single dot.
+      // gl.LINE_STRIP: Draws a straight line to the next vertex.
+      // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
+      // gl.LINES: Draws a line between a pair of vertices.
+      // gl.TRIANGLE_STRIP
+      // gl.TRIANGLE_FAN
+      // gl.TRIANGLES: Draws a triangle for a group of three vertices.
+      this.context.drawArrays(this.context[primitive], 0, subMesh.getCount());
+    },
+      
+    // gl.ACTIVE_TEXTURE	GLenum	 
+    // gl.ALIASED_LINE_WIDTH_RANGE	Float32Array (with 2 elements)	 
+    // gl.ALIASED_POINT_SIZE_RANGE	Float32Array (with 2 elements)	 
+    // gl.ALPHA_BITS	GLint	 
+    // gl.ARRAY_BUFFER_BINDING	WebGLBuffer	 
+    // gl.BLEND	GLboolean	 
+    // gl.BLEND_COLOR	Float32Array (with 4 values)	 
+    // gl.BLEND_DST_ALPHA	GLenum	 
+    // gl.BLEND_DST_RGB	GLenum	 
+    // gl.BLEND_EQUATION	GLenum	 
+    // gl.BLEND_EQUATION_ALPHA	GLenum	 
+    // gl.BLEND_EQUATION_RGB	GLenum	 
+    // gl.BLEND_SRC_ALPHA	GLenum	 
+    // gl.BLEND_SRC_RGB	GLenum	 
+    // gl.BLUE_BITS	GLint	 
+    // gl.COLOR_CLEAR_VALUE	Float32Array (with 4 values)	 
+    // gl.COLOR_WRITEMASK	sequence&lt;GLboolean> (with 4 values)	 
+    // gl.COMPRESSED_TEXTURE_FORMATS	Uint32Array	Returns the compressed texture formats.
+    // gl.CULL_FACE	GLboolean	 
+    // gl.CULL_FACE_MODE	GLenum	 
+    // gl.CURRENT_PROGRAM	WebGLProgram	 
+    // gl.DEPTH_BITS	GLint	 
+    // gl.DEPTH_CLEAR_VALUE	GLfloat	 
+    // gl.DEPTH_FUNC	GLenum	 
+    // gl.DEPTH_RANGE	Float32Array (with 2 elements)	 
+    // gl.DEPTH_TEST	GLboolean	 
+    // gl.DEPTH_WRITEMASK	GLboolean	 
+    // gl.DITHER	GLboolean	 
+    // gl.ELEMENT_ARRAY_BUFFER_BINDING	WebGLBuffer	 
+    // gl.FRAMEBUFFER_BINDING	WebGLFramebuffer	 
+    // gl.FRONT_FACE	GLenum	 
+    // gl.GENERATE_MIPMAP_HINT	GLenum	 
+    // gl.GREEN_BITS	GLint	 
+    // gl.IMPLEMENTATION_COLOR_READ_FORMAT	GLenum	 
+    // gl.IMPLEMENTATION_COLOR_READ_TYPE	GLenum	 
+    // gl.LINE_WIDTH	GLfloat	 
+    // gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS	GLint	 
+    // gl.MAX_CUBE_MAP_TEXTURE_SIZE	GLint	 
+    // gl.MAX_FRAGMENT_UNIFORM_VECTORS	GLint	 
+    // gl.MAX_RENDERBUFFER_SIZE	GLint	 
+    // gl.MAX_TEXTURE_IMAGE_UNITS	GLint	 
+    // gl.MAX_TEXTURE_SIZE	GLint	 
+    // gl.MAX_VARYING_VECTORS	GLint	 
+    // gl.MAX_VERTEX_ATTRIBS	GLint	 
+    // gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS	GLint	 
+    // gl.MAX_VERTEX_UNIFORM_VECTORS	GLint	 
+    // gl.MAX_VIEWPORT_DIMS	Int32Array (with 2 elements)	 
+    // gl.PACK_ALIGNMENT	GLint	 
+    // gl.POLYGON_OFFSET_FACTOR	GLfloat	 
+    // gl.POLYGON_OFFSET_FILL	GLboolean	 
+    // gl.POLYGON_OFFSET_UNITS	GLfloat	 
+    // gl.RED_BITS	GLint	 
+    // gl.RENDERBUFFER_BINDING	WebGLRenderbuffer	 
+    // gl.RENDERER	DOMString	 
+    // gl.SAMPLE_BUFFERS	GLint	 
+    // gl.SAMPLE_COVERAGE_INVERT	GLboolean	 
+    // gl.SAMPLE_COVERAGE_VALUE	GLfloat	 
+    // gl.SAMPLES	GLint	 
+    // gl.SCISSOR_BOX	Int32Array (with 4 elements)	 
+    // gl.SCISSOR_TEST	GLboolean	 
+    // gl.SHADING_LANGUAGE_VERSION	DOMString	 
+    // gl.STENCIL_BACK_FAIL	GLenum	 
+    // gl.STENCIL_BACK_FUNC	GLenum	 
+    // gl.STENCIL_BACK_PASS_DEPTH_FAIL	GLenum	 
+    // gl.STENCIL_BACK_PASS_DEPTH_PASS	GLenum	 
+    // gl.STENCIL_BACK_REF	GLint	 
+    // gl.STENCIL_BACK_VALUE_MASK	GLuint	 
+    // gl.STENCIL_BACK_WRITEMASK	GLuint	 
+    // gl.STENCIL_BITS	GLint	 
+    // gl.STENCIL_CLEAR_VALUE	GLint	 
+    // gl.STENCIL_FAIL	GLenum	 
+    // gl.STENCIL_FUNC	GLenum	 
+    // gl.STENCIL_PASS_DEPTH_FAIL	GLenum	 
+    // gl.STENCIL_PASS_DEPTH_PASS	GLenum	 
+    // gl.STENCIL_REF	GLint	 
+    // gl.STENCIL_TEST	GLboolean	 
+    // gl.STENCIL_VALUE_MASK	GLuint	 
+    // gl.STENCIL_WRITEMASK	GLuint	 
+    // gl.SUBPIXEL_BITS	GLint	 
+    // gl.TEXTURE_BINDING_2D	WebGLTexture	 
+    // gl.TEXTURE_BINDING_CUBE_MAP	WebGLTexture	 
+    // gl.UNPACK_ALIGNMENT	GLint	 
+    // gl.UNPACK_COLORSPACE_CONVERSION_WEBGL	GLenum	 
+    // gl.UNPACK_FLIP_Y_WEBGL	GLboolean	 
+    // gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL	GLboolean	 
+    // gl.VENDOR	DOMString	 
+    // gl.VERSION	DOMString	 
+    // gl.VIEWPORT	Int32Array (with 4 elements)	
+    // getParameter : function(parameterName){
+    //   return this.context.getParameter(parameterName);
+    // }
+
+  });
+
   function Mesh( mesh, context ) {
 
     this.vertices    = mesh.vertices ? mesh.vertices : null;
@@ -546,7 +830,7 @@
     
     this.context = context;
     
-    this.renderer = new WebGLRenderer(this.context);
+    this.renderer = new MeshRenderer(this.context);
     
     this.WebGLTexture = null;
     
@@ -571,6 +855,10 @@
     
     this.children = [];
     this.nbChildren = 0;
+    
+    this.blendMode = false;
+    
+    this.zOrder = 0;
 
   }
 
@@ -772,37 +1060,59 @@
       this.renderer.vertexAttribPointer(program.vertexPosition, this.itemSize, 'FLOAT', false, 0, 0);
     },
     
-    render: function( camera, time, graph ){
-      if(this.isActive()) {
+    activateBlendMode:function(){
+      this.blendMode = true;
+    },
+   
+    deactivateBlendMode:function(){
+      this.blendMode = false;
+    },
+   
+   
+    computeWorldMatrix: function(graph){
+      //if(this.isActive()) {
         this.setWorldMatrix(graph.getWorldMatrix());
         graph.pushModelMatrix(this.worldMatrix);
-        var program = null;
-        for(var i = 0 ; i &lt; this.nbSubMeshes ; i++) {
-          if (this.materials[i]){
-            program = this.materials[i];
-          }else{
-            program = this.materials[this.nbMaterials - 1];
-          }
-          
-          this.renderer.useProgram(program);
-          
-          this.sendPositions(program);
-          this.sendNormals(program);
-          this.sendUvs(program);
-          this.sendMatrixUniforms(program, camera);
-          this.sendDefaultUniforms(program, time);
-          this.sendCustomUniforms(program);
-          this.sendTexture(program);
-          
-          this.renderer[this.drawMethod](this.primitive, this.subMeshes[i]); 
-        } 
-      
-        for ( i = 0 ; i &lt; this.nbChildren ; i++ ) {
+        
+        for ( var i = 0 ; i &lt; this.nbChildren ; i++ ) {
           var child = this.children[i];
-          child.render(camera, time, graph);
+          child.computeWorldMatrix(graph);
         }
       
         graph.popModelMatrix();
+      //}
+    },
+    
+    render: function( camera, time, blendMode ){
+      if(this.isActive()) {
+
+        var program = null;
+        for(var i = 0 ; i &lt; this.nbSubMeshes ; i++) {
+          if(this.blendMode === blendMode){
+            if (this.materials[i]){
+              program = this.materials[i];
+            }else{
+              program = this.materials[this.nbMaterials - 1];
+            }
+            
+            this.renderer.useProgram(program);
+            
+            this.sendPositions(program);
+            this.sendNormals(program);
+            this.sendUvs(program);
+            this.sendMatrixUniforms(program, camera);
+            this.sendDefaultUniforms(program, time);
+            this.sendCustomUniforms(program);
+            this.sendTexture(program);
+            
+            this.renderer[this.drawMethod](this.primitive, this.subMeshes[i]); 
+          } 
+        }
+        
+        for ( var j = 0 ; j &lt; this.nbChildren ; j++ ) {
+          var child = this.children[j];
+          child.render(camera, time, blendMode);
+        }
       
       }
     }
@@ -1056,6 +1366,66 @@
     this.primitive = 'TRIANGLES';
   }
 
+  function CustomMesh(/*mesh*/) {
+
+    this.vertices  = /*mesh.vertices ? this.copyArray(mesh.vertices) :*/ null;
+    this.indices   = /*mesh.indices ? this.copyArray(mesh.indices) :*/ null;
+    this.normals   = /*mesh.normals ? this.copyArray(mesh.normals) :*/ null;
+    this.uvs       = /*mesh.uvs ? this.copyArray(mesh.uvs) :*/ null;
+    this.subMeshes = [];
+    this.itemSize  = 3;
+    this.primitive = 'TRIANGLES';
+    // gl.POINTS: Draws a single dot.
+    // gl.LINE_STRIP: Draws a straight line to the next vertex.
+    // gl.LINE_LOOP: Draws a straight line to the next vertex, and connects the last vertex back to the first.
+    // gl.LINES: Draws a line between a pair of vertices.
+    // gl.TRIANGLE_STRIP
+    // gl.TRIANGLE_FAN
+    // gl.TRIANGLES: Draws a triangle for a group of three vertices.
+    this.primitives = ['POINTS', 'LINE_STRIP', 'LINE_LOOP', 'LINES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'TRIANGLES'];
+    
+  }
+
+  Object.assign( CustomMesh.prototype, {
+    setVertices : function(array) {
+      this.vertices = this.copyArray(array);
+    },
+    setIndices : function(array) {
+      this.indices = this.copyArray(array);
+    },
+    setNormals : function(array) {
+      this.normals = this.copyArray(array);
+    },
+    setUvs : function(array) {
+      this.uvs = this.copyArray(array);
+    },
+    addSubMeshes : function(array) {
+      for(var i = 0 ; i &lt; array.length ; i+=2 ){
+        this.addSubMesh( array[i], array[i+1] );
+      }
+    },
+    addSubMesh : function(start, count) {
+      this.subMeshes.push(new SubMesh( start, count));
+    },
+    setItemSize : function(itemSize) {
+      this.itemSize = itemSize;
+    },
+    setPrimitive : function(primitive) {
+      for (var i = 0 ; i &lt; this.primitives.length ; i++) {
+        if(this.primitives[i] === primitive){
+          this.primitive = primitive;
+          return true;
+        }
+      }
+      return false;
+    },
+    
+    copyArray : function( array) {
+      return array.slice(array);
+    }
+    
+  } );
+
   /**
    * Module dependencies.
    * @api private
@@ -1106,69 +1476,10 @@
 
   } );
 
-  /**
-   * Module dependencies.
-   * @api private
-   */
-
-  //import { RendererTarget } from './DOM/canvas';
-
-
-  function Material(  ) {
-    this.ambient = null;
-    this.diffuse = null;
-    this.specular = null;
-    this.shininess = null;
-    
-    // vec3(0.5, 0.5, 0.5),
-    // vec3(0.6, 0.6, 0.6),
-    // vec3(0.8, 0.8, 0.8),
-    // 8.0
-    
-  }
-
-  Object.assign( Material.prototype, {
-
-    setAmbient: function(){
-      
-    },
-    
-    setDiffuse: function(){
-      
-    },
-    
-    setSpecular: function(){
-      
-    },
-    
-    setShininess: function(){
-      
-    },
-    
-    getAmbient: function(){
-      return this.ambient;
-    },
-    
-    getDiffuse: function(){
-      return this.diffuse;
-    },
-    
-    getSpecular: function(){
-      return this.specular;
-    },
-    
-    getShininess: function(){
-      return this.shininess;
-    }
-
-  } );
-
-  //export { Matrix4x3 }       from './maths/matrix4x3';
-  //export { WebGLRenderer }   from './renderers/WebGLRenderer';
+  //export { Material }           from './material';
 
   exports.Scene = Scene;
-  exports.WebGLRenderer = WebGLRenderer;
-  exports.RendererTarget = RendererTarget;
+  exports.Renderer = Renderer;
   exports.PerspectiveCamera = PerspectiveCamera;
   exports.OrthographicCamera = OrthographicCamera;
   exports.Mesh = Mesh;
@@ -1180,8 +1491,8 @@
   exports.Hemisphere = Hemisphere;
   exports.VWing = VWing;
   exports.Gun0 = Gun0;
+  exports.CustomMesh = CustomMesh;
   exports.Texture = Texture;
-  exports.Material = Material;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -1202,7 +1513,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Aug 27 2017 18:03:06 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Sep 07 2017 20:06:59 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
