@@ -1,6 +1,6 @@
 
   var shader = {};
-  
+  var lights = [];
   var mesh = {};
   var rotationSpeed = 0.5;
   var camera = {};
@@ -46,14 +46,32 @@
     renderer = new ROOSTR.Renderer('canvas');
     scene = new ROOSTR.Scene(renderer.getContext());
     
+    sun = new ROOSTR.DirectionalLight();
+    sun.setPosition(0.34, 0.66, 0.0);
+    sun.setDiffuse(1.0, 0.0, 0.0);
+    scene.addLight(sun);
+    
+    sun2 = new ROOSTR.DirectionalLight();
+    sun2.setPosition(-0.34, 0.66, 0.0);
+    sun2.setDiffuse(0.0, 0.0, 1.0);
+    scene.addLight(sun2);
+    
     mesh = new ROOSTR.Mesh( new ROOSTR.VWing(), renderer.getContext() );
     childMesh = new ROOSTR.Mesh( new ROOSTR.Gun0(), renderer.getContext() );
+    
+    childMesh.addUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
+    childMesh.addUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));
+    childMesh.addUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
+    
     childMesh.addMaterial( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
                         assetsLoader.getAsset('flat-shading_frag.glsl').response.data
                       );
     //childMesh.activateBlendMode();
     mesh.addChild(childMesh);
-    
+  
+    mesh.addUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
+    mesh.addUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));
+    mesh.addUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
     // childMesh2 = new ROOSTR.Mesh( new ROOSTR.Cube(), renderer.getContext() );
     // childMesh2.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
     //                     assetsLoader.getAsset('flat-shading_frag.glsl').response.data
@@ -69,7 +87,7 @@
                         assetsLoader.getAsset('emissive_frag.glsl').response.data
                       );
     
-    scene.add(mesh);
+    scene.addMesh(mesh);
     camera = new ROOSTR.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
     // var viewport = renderer.getContext().getParameter(renderer.getContext().VIEWPORT);
     // var ratio = viewport[2] / Math.max(1, viewport[3]);
@@ -126,6 +144,15 @@
     mesh.modelMatrix.multiplyBy(mesh.rotationMatrix);
     mesh.rotationMatrix.rotateZBy(rot);
     mesh.modelMatrix.multiplyBy(mesh.rotationMatrix);
+    
+    mesh.setUniform('lightPosition', scene.getLightsProperty('position'));
+    mesh.setUniform('lightDiffuse', scene.getLightsProperty('diffuse'));
+    mesh.setUniform('lightSpecular', scene.getLightsProperty('specular'));
+    
+    childMesh.setUniform('lightPosition', scene.getLightsProperty('position'));
+    childMesh.setUniform('lightDiffuse', scene.getLightsProperty('diffuse'));
+    childMesh.setUniform('lightSpecular', scene.getLightsProperty('specular'));
+    
     scene.render(camera,time);
   }
   

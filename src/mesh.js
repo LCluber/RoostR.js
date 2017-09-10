@@ -272,7 +272,7 @@ Object.assign( Mesh.prototype, {
     //}
   },
   
-  render: function( camera, time, blendMode ){
+  render: function( camera, lights, time, blendMode ){
     if(this.isActive()) {
 
       var program = null;
@@ -300,7 +300,7 @@ Object.assign( Mesh.prototype, {
       
       for ( var j = 0 ; j < this.nbChildren ; j++ ) {
         var child = this.children[j];
-        child.render(camera, time, blendMode);
+        child.render(camera, lights, time, blendMode);
       }
     
     }

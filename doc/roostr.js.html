@@ -261,14 +261,102 @@
 
   } );
 
+  function findById( id ) {
+    return document.getElementById(id);
+  }
+
+  function ucfirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+    
+    // str += '';
+    // var f = str.charAt(0).toUpperCase();
+    // return f + str.substr(1);
+    
+  }
+
+  /**
+   * Module dependencies.
+   * @api private
+   */
+
+  function Lights() {
+    this.directionals = [];
+    this.points = [];
+    this.spots = [];
+    this.nbDirectionals = 0;
+    this.nbPoints = 0;
+    this.nbSpots = 0;
+    this.flatArrays = {
+      position : [],
+      diffuse : [],
+      specular : [],
+      constantAttenuation : [],
+      linearAttenuation : [],
+      quadraticAttenuation : [],
+      cutoff : [],
+      exponent : [],
+      direction : [],
+      type : []
+    };
+    this.types = ['spots', 'points', 'directionals'];
+    this.nbTypes = 3;
+  }
+
+  Object.assign( Lights.prototype, {
+
+    addLight : function(light){
+      var type = light.type;
+      this[type + 's'].push(light);
+      this['nb' + ucfirst(type) + 's']++;
+    },
+    
+    ClearFlatArrays:function(){
+      for (var property in this.flatArrays){
+        if (this.flatArrays.hasOwnProperty(property)){
+          this.flatArrays[property].length = 0;
+        }
+      }
+    },
+    
+    flatten : function(){
+      this.ClearFlatArrays();
+      for (var i = 0 ; i &lt; this.nbTypes ; i++) {
+        var type = this.types[i];
+        for (var j = 0 ; j &lt; this['nb' + ucfirst(type)] ; j++) {
+          for (var property in this.flatArrays) {
+            if (this[type][j].hasOwnProperty(property) &amp;&amp; this.flatArrays.hasOwnProperty(property)){
+              var lightProperty = this[type][j][property];
+              var flatArraysProperty = this.flatArrays[property];
+              if(typeof lightProperty.toArray === 'function'){//vector
+                flatArraysProperty.push.apply(flatArraysProperty, lightProperty.toArray());
+              }else{//floats, integers, strings
+                flatArraysProperty.push(lightProperty);
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    getFlatArray : function(property){
+      if(this.flatArrays.hasOwnProperty(property)){
+        return this.flatArrays[property];
+      }
+    }
+
+  } );
+
   /**
    * Module dependencies.
    * @api private
    */
 
   function Scene(context) {
-    this.objects = [];
-    this.nbObjects = 0;
+    this.meshes = [];
+    this.nbMeshes = 0;
+    
+    this.lights = new Lights();
+    
     this.context = context;
     this.renderer = new SceneRenderer(this.context);
     this.graph = new SceneGraph();
@@ -276,15 +364,25 @@
 
   Object.assign( Scene.prototype, {
     
-    add: function ( object ) {
-      this.objects.push(object);
-      this.nbObjects++;
+    addMesh: function ( mesh ) {
+      this.meshes.push(mesh);
+      this.nbMeshes++;
     },
     
-    clear: function () {
-      this.objects = [];
-      this.nbObjects = 0;
+    addLight: function ( light ) {
+      this.lights.addLight(light);
+      //this.lights.push(light);
+      //this.nbLights++;
     },
+    
+    getLightsProperty : function(property){
+      return this.lights.getFlatArray(property);
+    },
+    
+    // clear: function () {
+    //   this.meshes = [];
+    //   this.nbMeshes = 0;
+    // },
     
     enableBlendMode:function(equation, source, destination){
       this.renderer.enableBlendMode(equation, source, destination);
@@ -301,14 +399,14 @@
     render: function (camera, time) {
       
       this.computeWorldMatrices();
-      
+      this.lights.flatten();
       //this.order();
       //if (this.getRendererBlendMode()){
         this.disableBlendMode();
       //}
-      for (var i = 0 ; i &lt; this.nbObjects ; i++) {
-        //if (!this.objects[i].blendMode) {
-          this.objects[i].render( camera, time, false );
+      for (var i = 0 ; i &lt; this.nbMeshes ; i++) {
+        //if (!this.meshes[i].blendMode) {
+          this.meshes[i].render( camera, this.lights.getFlatArray(), time, false );
         //}
       }
       
@@ -317,23 +415,23 @@
     
     renderBlended: function (camera, time) {
       this.enableBlendMode('FUNC_ADD', 'SRC_ALPHA', 'ONE');
-      for (var i = 0 ; i &lt; this.nbObjects ; i++) {
-        //if (this.objects[i].blendMode) {
-          this.objects[i].render( camera, time, true );
+      for (var i = 0 ; i &lt; this.nbMeshes ; i++) {
+        //if (this.meshes[i].blendMode) {
+          this.meshes[i].render( camera, this.lights.getFlatArray(), time, true );
         //}
       }
     },
     
     computeWorldMatrices: function(){
-      for (var i = 0 ; i &lt; this.nbObjects ; i++) {
-        this.objects[i].computeWorldMatrix( this.graph );
+      for (var i = 0 ; i &lt; this.nbMeshes ; i++) {
+        this.meshes[i].computeWorldMatrix( this.graph );
       }
-    },
+    }
     
     // order: function (){
     //   var z = -999999;
-    //   for (var i = 0 ; i &lt; this.nbObjects ; i++) {
-    //     if(this.objects[i].worldMatrix.m[14] > z){
+    //   for (var i = 0 ; i &lt; this.nbMeshes ; i++) {
+    //     if(this.meshes[i].worldMatrix.m[14] > z){
     //       
     //     }
     //   }
@@ -341,19 +439,6 @@
     
     
   });
-
-  function findById( id ) {
-    return document.getElementById(id);
-  }
-
-  function ucfirst(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-    
-    // str += '';
-    // var f = str.charAt(0).toUpperCase();
-    // return f + str.substr(1);
-    
-  }
 
   //var canvas = require('./canvas');
   function Renderer( canvasID ) {
@@ -1083,7 +1168,7 @@
       //}
     },
     
-    render: function( camera, time, blendMode ){
+    render: function( camera, lights, time, blendMode ){
       if(this.isActive()) {
 
         var program = null;
@@ -1111,7 +1196,7 @@
         
         for ( var j = 0 ; j &lt; this.nbChildren ; j++ ) {
           var child = this.children[j];
-          child.render(camera, time, blendMode);
+          child.render(camera, lights, time, blendMode);
         }
       
       }
@@ -1476,6 +1561,228 @@
 
   } );
 
+  /**
+   * Module dependencies.
+   * @api private
+   */
+
+  function DirectionalLight(  ) {
+    this.position = TYPE6.Vector3.create();
+    this.diffuse  = TYPE6.Vector3.create(0.6,0.6,0.6);
+    this.specular = TYPE6.Vector3.create(0.8,0.8,0.8);
+    this.type = 'directional';
+    // struct lightSource
+    // {
+    //   vec3 position;
+    //   vec3 diffuse;
+    //   vec3 specular;
+    //   float constantAttenuation, linearAttenuation, quadraticAttenuation;
+    //   float spotCutoff, spotExponent;
+    //   vec3 spotDirection;
+    // };
+    // lightSource light0 = lightSource(
+    //   vec3(0.0, 300.0, 300.0),
+    //   vec3(0.6, 0.6, 0.6),
+    //   vec3(0.8, 0.8, 0.8),
+    //   0.0, 1.0, 0.0,
+    //   180.0, 0.0,
+    //   vec3(0.0, 0.0, 0.0)
+    // );
+    
+  }
+
+  Object.assign( DirectionalLight.prototype, {
+
+    setPosition: function(x,y,z){
+      this.position.setX(x);
+      this.position.setY(y);
+      this.position.setZ(z);
+    },
+    
+    setDiffuse: function(x,y,z){
+      this.diffuse.setX(x);
+      this.diffuse.setY(y);
+      this.diffuse.setZ(z);
+    },
+    
+    setSpecular: function(){
+      this.specular.setX(x);
+      this.specular.setY(y);
+      this.specular.setZ(z);
+    },
+    
+    getPosition: function(){
+      return this.position;
+    },
+    
+    getDiffuse: function(){
+      return this.diffuse;
+    },
+    
+    getSpecular: function(){
+      return this.specular;
+    }
+    
+
+  } );
+
+  /**
+   * Module dependencies.
+   * @api private
+   */
+
+  function PointLight(  ) {
+    this.directionalLight = new DirectionalLight();
+    
+    this.constantAttenuation = 0;
+    this.linearAttenuation = 1.0;
+    this.quadraticAttenuation = 0;
+    this.type = 'point';
+  }
+
+  Object.assign( PointLight.prototype, {
+
+    setPosition: function(x,y,z){
+      this.directionalLight.setPosition(x,y,z);
+    },
+    
+    setDiffuse: function(x,y,z){
+      this.directionalLight.setDiffuse(x,y,z);
+    },
+    
+    setSpecular: function(x,y,z){
+      this.directionalLight.setSpecular(x,y,z);
+    },
+    
+    setConstantAttenuation: function(){
+      
+    },
+    
+    setLinearAttenuation: function(){
+      
+    },
+    
+    setQuadraticAttenuation: function(){
+      
+    },
+    
+    getPosition: function(){
+      return this.DirectionalLight.getPosition();
+    },
+    
+    getDiffuse: function(){
+      return this.DirectionalLight.getDiffuse();
+    },
+    
+    getSpecular: function(){
+      return this.DirectionalLight.getSpecular();
+    },
+    
+    getConstantAttenuation: function(){
+      return this.constantAttenuation;
+    },
+    
+    getLinearAttenuation: function(){
+      return this.linearAttenuation;
+    },
+    
+    getQuadraticAttenuation: function(){
+      return this.quadraticAttenuation;
+    }
+
+  } );
+
+  /**
+   * Module dependencies.
+   * @api private
+   */
+
+  function SpotLight(  ) {
+    
+    this.pointLight = new PointLight();
+    
+    this.cutoff = 180;
+    this.exponent = 0;
+    this.direction = TYPE6.Vector3.create(1.0,0.0,0.0);
+    this.type = 'spot';
+  }
+
+  Object.assign( SpotLight.prototype, {
+
+    setPosition: function(x,y,z){
+      this.pointLight.setPosition(x,y,z);
+    },
+    
+    setDiffuse: function(){
+      this.pointLight.setDiffuse(x,y,z);
+    },
+    
+    setSpecular: function(){
+      this.pointLight.setSpecular(x,y,z);
+    },
+    
+    setConstantAttenuation: function(){
+      
+    },
+    
+    setLinearAttenuation: function(){
+      
+    },
+    
+    setQuadraticAttenuation: function(){
+      
+    },
+    
+    setSpotCutoff: function(){
+      
+    },
+    
+    setSpotExponent: function(){
+      
+    },
+    
+    setSpotDirection: function(){
+      
+    },
+    
+    getPosition: function(){
+      return this.PointLight.getPosition();
+    },
+    
+    getDiffuse: function(){
+      return this.PointLight.getDiffuse();
+    },
+    
+    getSpecular: function(){
+      return this.PointLight.getSpecular();
+    },
+    
+    getConstantAttenuation: function(){
+      
+    },
+    
+    getLinearAttenuation: function(){
+      
+    },
+    
+    getQuadraticAttenuation: function(){
+      
+    },
+    
+    getCutoff: function(){
+      return this.spotCutoff;
+    },
+    
+    getExponent: function(){
+      return this.spotExponent;
+    },
+    
+    getDirection: function(){
+      return this.spotDirection;
+    }
+
+  } );
+
   //export { Material }           from './material';
 
   exports.Scene = Scene;
@@ -1493,6 +1800,9 @@
   exports.Gun0 = Gun0;
   exports.CustomMesh = CustomMesh;
   exports.Texture = Texture;
+  exports.DirectionalLight = DirectionalLight;
+  exports.PointLight = PointLight;
+  exports.SpotLight = SpotLight;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -1513,7 +1823,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Sep 07 2017 20:06:59 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Sep 10 2017 11:57:44 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

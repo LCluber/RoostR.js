@@ -94,21 +94,90 @@
             return this.model[this.modelStackTop];
         }
     });
+    function findById(id) {
+        return document.getElementById(id);
+    }
+    function ucfirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    function Lights() {
+        this.directionals = [];
+        this.points = [];
+        this.spots = [];
+        this.nbDirectionals = 0;
+        this.nbPoints = 0;
+        this.nbSpots = 0;
+        this.flatArrays = {
+            position: [],
+            diffuse: [],
+            specular: [],
+            constantAttenuation: [],
+            linearAttenuation: [],
+            quadraticAttenuation: [],
+            cutoff: [],
+            exponent: [],
+            direction: [],
+            type: []
+        };
+        this.types = [ "spots", "points", "directionals" ];
+        this.nbTypes = 3;
+    }
+    Object.assign(Lights.prototype, {
+        addLight: function(light) {
+            var type = light.type;
+            this[type + "s"].push(light);
+            this["nb" + ucfirst(type) + "s"]++;
+        },
+        ClearFlatArrays: function() {
+            for (var property in this.flatArrays) {
+                if (this.flatArrays.hasOwnProperty(property)) {
+                    this.flatArrays[property].length = 0;
+                }
+            }
+        },
+        flatten: function() {
+            this.ClearFlatArrays();
+            for (var i = 0; i < this.nbTypes; i++) {
+                var type = this.types[i];
+                for (var j = 0; j < this["nb" + ucfirst(type)]; j++) {
+                    for (var property in this.flatArrays) {
+                        if (this[type][j].hasOwnProperty(property) && this.flatArrays.hasOwnProperty(property)) {
+                            var lightProperty = this[type][j][property];
+                            var flatArraysProperty = this.flatArrays[property];
+                            if (typeof lightProperty.toArray === "function") {
+                                flatArraysProperty.push.apply(flatArraysProperty, lightProperty.toArray());
+                            } else {
+                                flatArraysProperty.push(lightProperty);
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        getFlatArray: function(property) {
+            if (this.flatArrays.hasOwnProperty(property)) {
+                return this.flatArrays[property];
+            }
+        }
+    });
     function Scene(context) {
-        this.objects = [];
-        this.nbObjects = 0;
+        this.meshes = [];
+        this.nbMeshes = 0;
+        this.lights = new Lights();
         this.context = context;
         this.renderer = new SceneRenderer(this.context);
         this.graph = new SceneGraph();
     }
     Object.assign(Scene.prototype, {
-        add: function(object) {
-            this.objects.push(object);
-            this.nbObjects++;
+        addMesh: function(mesh) {
+            this.meshes.push(mesh);
+            this.nbMeshes++;
         },
-        clear: function() {
-            this.objects = [];
-            this.nbObjects = 0;
+        addLight: function(light) {
+            this.lights.addLight(light);
+        },
+        getLightsProperty: function(property) {
+            return this.lights.getFlatArray(property);
         },
         enableBlendMode: function(equation, source, destination) {
             this.renderer.enableBlendMode(equation, source, destination);
@@ -121,30 +190,25 @@
         },
         render: function(camera, time) {
             this.computeWorldMatrices();
+            this.lights.flatten();
             this.disableBlendMode();
-            for (var i = 0; i < this.nbObjects; i++) {
-                this.objects[i].render(camera, time, false);
+            for (var i = 0; i < this.nbMeshes; i++) {
+                this.meshes[i].render(camera, this.lights.getFlatArray(), time, false);
             }
             this.renderBlended(camera, time);
         },
         renderBlended: function(camera, time) {
             this.enableBlendMode("FUNC_ADD", "SRC_ALPHA", "ONE");
-            for (var i = 0; i < this.nbObjects; i++) {
-                this.objects[i].render(camera, time, true);
+            for (var i = 0; i < this.nbMeshes; i++) {
+                this.meshes[i].render(camera, this.lights.getFlatArray(), time, true);
             }
         },
         computeWorldMatrices: function() {
-            for (var i = 0; i < this.nbObjects; i++) {
-                this.objects[i].computeWorldMatrix(this.graph);
+            for (var i = 0; i < this.nbMeshes; i++) {
+                this.meshes[i].computeWorldMatrix(this.graph);
             }
         }
     });
-    function findById(id) {
-        return document.getElementById(id);
-    }
-    function ucfirst(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
     function Renderer(canvasID) {
         this.canvas = findById(canvasID);
         this.canvas.width = 1280;
@@ -529,7 +593,7 @@
             }
             graph.popModelMatrix();
         },
-        render: function(camera, time, blendMode) {
+        render: function(camera, lights, time, blendMode) {
             if (this.isActive()) {
                 var program = null;
                 for (var i = 0; i < this.nbSubMeshes; i++) {
@@ -552,7 +616,7 @@
                 }
                 for (var j = 0; j < this.nbChildren; j++) {
                     var child = this.children[j];
-                    child.render(camera, time, blendMode);
+                    child.render(camera, lights, time, blendMode);
                 }
             }
         }
@@ -699,6 +763,122 @@
             context.bindTexture(context.TEXTURE_2D, null);
         }
     });
+    function DirectionalLight() {
+        this.position = TYPE6.Vector3.create();
+        this.diffuse = TYPE6.Vector3.create(.6, .6, .6);
+        this.specular = TYPE6.Vector3.create(.8, .8, .8);
+        this.type = "directional";
+    }
+    Object.assign(DirectionalLight.prototype, {
+        setPosition: function(x, y, z) {
+            this.position.setX(x);
+            this.position.setY(y);
+            this.position.setZ(z);
+        },
+        setDiffuse: function(x, y, z) {
+            this.diffuse.setX(x);
+            this.diffuse.setY(y);
+            this.diffuse.setZ(z);
+        },
+        setSpecular: function() {
+            this.specular.setX(x);
+            this.specular.setY(y);
+            this.specular.setZ(z);
+        },
+        getPosition: function() {
+            return this.position;
+        },
+        getDiffuse: function() {
+            return this.diffuse;
+        },
+        getSpecular: function() {
+            return this.specular;
+        }
+    });
+    function PointLight() {
+        this.directionalLight = new DirectionalLight();
+        this.constantAttenuation = 0;
+        this.linearAttenuation = 1;
+        this.quadraticAttenuation = 0;
+        this.type = "point";
+    }
+    Object.assign(PointLight.prototype, {
+        setPosition: function(x, y, z) {
+            this.directionalLight.setPosition(x, y, z);
+        },
+        setDiffuse: function(x, y, z) {
+            this.directionalLight.setDiffuse(x, y, z);
+        },
+        setSpecular: function(x, y, z) {
+            this.directionalLight.setSpecular(x, y, z);
+        },
+        setConstantAttenuation: function() {},
+        setLinearAttenuation: function() {},
+        setQuadraticAttenuation: function() {},
+        getPosition: function() {
+            return this.DirectionalLight.getPosition();
+        },
+        getDiffuse: function() {
+            return this.DirectionalLight.getDiffuse();
+        },
+        getSpecular: function() {
+            return this.DirectionalLight.getSpecular();
+        },
+        getConstantAttenuation: function() {
+            return this.constantAttenuation;
+        },
+        getLinearAttenuation: function() {
+            return this.linearAttenuation;
+        },
+        getQuadraticAttenuation: function() {
+            return this.quadraticAttenuation;
+        }
+    });
+    function SpotLight() {
+        this.pointLight = new PointLight();
+        this.cutoff = 180;
+        this.exponent = 0;
+        this.direction = TYPE6.Vector3.create(1, 0, 0);
+        this.type = "spot";
+    }
+    Object.assign(SpotLight.prototype, {
+        setPosition: function(x, y, z) {
+            this.pointLight.setPosition(x, y, z);
+        },
+        setDiffuse: function() {
+            this.pointLight.setDiffuse(x, y, z);
+        },
+        setSpecular: function() {
+            this.pointLight.setSpecular(x, y, z);
+        },
+        setConstantAttenuation: function() {},
+        setLinearAttenuation: function() {},
+        setQuadraticAttenuation: function() {},
+        setSpotCutoff: function() {},
+        setSpotExponent: function() {},
+        setSpotDirection: function() {},
+        getPosition: function() {
+            return this.PointLight.getPosition();
+        },
+        getDiffuse: function() {
+            return this.PointLight.getDiffuse();
+        },
+        getSpecular: function() {
+            return this.PointLight.getSpecular();
+        },
+        getConstantAttenuation: function() {},
+        getLinearAttenuation: function() {},
+        getQuadraticAttenuation: function() {},
+        getCutoff: function() {
+            return this.spotCutoff;
+        },
+        getExponent: function() {
+            return this.spotExponent;
+        },
+        getDirection: function() {
+            return this.spotDirection;
+        }
+    });
     exports.Scene = Scene;
     exports.Renderer = Renderer;
     exports.PerspectiveCamera = PerspectiveCamera;
@@ -714,6 +894,9 @@
     exports.Gun0 = Gun0;
     exports.CustomMesh = CustomMesh;
     exports.Texture = Texture;
+    exports.DirectionalLight = DirectionalLight;
+    exports.PointLight = PointLight;
+    exports.SpotLight = SpotLight;
     Object.defineProperty(exports, "__esModule", {
         value: true
     });

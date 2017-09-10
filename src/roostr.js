@@ -20,4 +20,7 @@
  export { Gun0 }               from './geometries/gun0';
  export { CustomMesh }         from './geometries/customMesh';
  export { Texture }            from './texture';
+ export { DirectionalLight }   from './lights/directional';
+ export { PointLight }         from './lights/point';
+ export { SpotLight }          from './lights/spot';
  //export { Material }           from './material';

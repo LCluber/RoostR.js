@@ -2,11 +2,12 @@ Version 0.3.1 (soon)
 ------------------------------
  * Documentation
 
-Version 0.3.0 (September 3rd 2017)
+Version 0.3.0 (September 10th 2017)
 ------------------------------
  * Added activateBlendMode() and deactivateBlendMode() to the Mesh class 
  * Blend modes are now at material level instead of scene level
  * Added customMesh geometry to create custom shapes easily
+ * Added lights classes for a better lights management system
 
 Version 0.2.7 (August 27th 2017)
 ------------------------------
