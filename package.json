@@ -1,6 +1,6 @@
 {
     "name" : "RoostRjs",
-    "version" : "0.3.0",
+    "version" : "0.4.0",
     "description":"WebGL 3D engine",
     "keywords":["WebGL 3D engine"],
     "homepage":"http://roostrjs.lcluber.com",

@@ -429,6 +429,8 @@
         this.worldMatrix.identity();
         this.active = true;
         this.drawMethod = this.indices ? "drawElements" : "drawArrays";
+        this.programs = [];
+        this.nbPrograms = 0;
         this.materials = [];
         this.nbMaterials = 0;
         this.children = [];
@@ -454,10 +456,20 @@
             this.children.push(mesh);
             this.nbChildren++;
         },
-        addMaterial: function(vertexShader, fragmentShader) {
-            if (this.nbMaterials < this.nbSubMeshes) {
-                this.materials.push(createProgram(this.context, vertexShader, fragmentShader));
+        addProgram: function(vertexShader, fragmentShader, material) {
+            if (this.nbPrograms < this.nbSubMeshes) {
+                this.programs.push(createProgram(this.context, vertexShader, fragmentShader));
+                this.addMaterial(material);
                 this.createProgram();
+                this.nbPrograms++;
+                return true;
+            }
+            return false;
+        },
+        addMaterial: function(material) {
+            if (material && this.nbMaterials < this.nbSubMeshes) {
+                this.materials.push(material);
+                this.createMaterialUniformsProgram();
                 this.nbMaterials++;
                 return true;
             }
@@ -470,12 +482,12 @@
         setTexture: function(texture) {
             this.WebGLTexture = texture.WebGLTexture;
         },
-        addUniform: function(name, type, value) {
+        addCustomUniform: function(name, type, value) {
             if (!this.customUniforms.hasOwnProperty(name)) {
                 this.customUniforms[name] = new Uniform(type, value);
             }
         },
-        setUniform: function(name, value) {
+        setCustomUniform: function(name, value) {
             if (this.customUniforms.hasOwnProperty(name)) {
                 this.customUniforms[name].value = value;
             }
@@ -514,8 +526,16 @@
                 }
             }
         },
+        createMaterialUniformsProgram: function() {
+            var materialUniforms = this.materials[this.nbMaterials].uniforms;
+            for (var property in materialUniforms) {
+                if (materialUniforms.hasOwnProperty(property)) {
+                    this.addProgramUniform(property);
+                }
+            }
+        },
         createProgram: function() {
-            var program = this.materials[this.nbMaterials];
+            var program = this.programs[this.nbPrograms];
             this.createPositionsProgram();
             this.createNormalsProgram();
             this.createUvsProgram();
@@ -527,11 +547,11 @@
             this.sendScreenResolution(program);
         },
         addProgramAttribute: function(name) {
-            this.materials[this.nbMaterials][name] = this.context.getAttribLocation(this.materials[this.nbMaterials], "a" + ucfirst(name));
-            this.context.enableVertexAttribArray(this.materials[this.nbMaterials][name]);
+            this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], "a" + ucfirst(name));
+            this.context.enableVertexAttribArray(this.programs[this.nbPrograms][name]);
         },
         addProgramUniform: function(name) {
-            this.materials[this.nbMaterials][name] = this.context.getUniformLocation(this.materials[this.nbMaterials], "u" + ucfirst(name));
+            this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], "u" + ucfirst(name));
         },
         sendScreenResolution: function(program) {
             var viewport = this.context.getParameter(this.context.VIEWPORT);
@@ -546,6 +566,15 @@
             for (var property in this.customUniforms) {
                 if (this.customUniforms.hasOwnProperty(property)) {
                     var uniform = this.customUniforms[property];
+                    this.context[uniform.type](program[property], uniform.value);
+                }
+            }
+        },
+        sendMaterialUniforms: function(program, index) {
+            var materialUniforms = this.materials[index].uniforms;
+            for (var property in materialUniforms) {
+                if (materialUniforms.hasOwnProperty(property)) {
+                    var uniform = materialUniforms[property];
                     this.context[uniform.type](program[property], uniform.value);
                 }
             }
@@ -596,14 +625,18 @@
         render: function(camera, lights, time, blendMode) {
             if (this.isActive()) {
                 var program = null;
+                var material = null;
                 for (var i = 0; i < this.nbSubMeshes; i++) {
                     if (this.blendMode === blendMode) {
-                        if (this.materials[i]) {
-                            program = this.materials[i];
+                        if (this.programs[i]) {
+                            program = this.programs[i];
                         } else {
-                            program = this.materials[this.nbMaterials - 1];
+                            program = this.programs[this.nbPrograms - 1];
                         }
                         this.renderer.useProgram(program);
+                        if (this.materials[i]) {
+                            this.sendMaterialUniforms(program, i);
+                        }
                         this.sendPositions(program);
                         this.sendNormals(program);
                         this.sendUvs(program);
@@ -879,6 +912,52 @@
             return this.spotDirection;
         }
     });
+    function Material() {
+        this.ambient = TYPE6.Vector3.create(.5, .5, .5);
+        this.diffuse = TYPE6.Vector3.create(.6, .6, .6);
+        this.specular = TYPE6.Vector3.create(.8, .8, .8);
+        this.shininess = 8;
+        this.uniforms = {};
+        this.createUniforms();
+    }
+    Object.assign(Material.prototype, {
+        createUniforms: function() {
+            this.uniforms.materialAmbient = new Uniform("uniform3fv", this.ambient.toArray());
+            this.uniforms.materialDiffuse = new Uniform("uniform3fv", this.diffuse.toArray());
+            this.uniforms.materialSpecular = new Uniform("uniform3fv", this.specular.toArray());
+            this.uniforms.materialShininess = new Uniform("uniform1f", this.shininess);
+        },
+        setAmbient: function(r, g, b) {
+            this.ambient.setX(r);
+            this.ambient.setY(g);
+            this.ambient.setZ(b);
+        },
+        setDiffuse: function(r, g, b) {
+            this.diffuse.setX(r);
+            this.diffuse.setY(g);
+            this.diffuse.setZ(b);
+        },
+        setSpecular: function(r, g, b) {
+            this.specular.setX(r);
+            this.specular.setY(g);
+            this.specular.setZ(b);
+        },
+        setShininess: function(shininess) {
+            this.shininess = shininess;
+        },
+        getAmbient: function() {
+            return this.ambient;
+        },
+        getDiffuse: function() {
+            return this.diffuse;
+        },
+        getSpecular: function() {
+            return this.specular;
+        },
+        getShininess: function() {
+            return this.shininess;
+        }
+    });
     exports.Scene = Scene;
     exports.Renderer = Renderer;
     exports.PerspectiveCamera = PerspectiveCamera;
@@ -897,6 +976,7 @@
     exports.DirectionalLight = DirectionalLight;
     exports.PointLight = PointLight;
     exports.SpotLight = SpotLight;
+    exports.Material = Material;
     Object.defineProperty(exports, "__esModule", {
         value: true
     });

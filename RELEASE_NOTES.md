@@ -2,6 +2,10 @@ Version 0.3.1 (soon)
 ------------------------------
  * Documentation
 
+Version 0.4.0 (September 16th 2017)
+------------------------------
+ * Added material class
+
 Version 0.3.0 (September 10th 2017)
 ------------------------------
  * Added activateBlendMode() and deactivateBlendMode() to the Mesh class 

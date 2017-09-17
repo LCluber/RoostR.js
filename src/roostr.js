@@ -23,4 +23,4 @@
  export { DirectionalLight }   from './lights/directional';
  export { PointLight }         from './lights/point';
  export { SpotLight }          from './lights/spot';
- //export { Material }           from './material';
+ export { Material }           from './material';

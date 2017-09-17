@@ -59,19 +59,20 @@
     mesh = new ROOSTR.Mesh( new ROOSTR.VWing(), renderer.getContext() );
     childMesh = new ROOSTR.Mesh( new ROOSTR.Gun0(), renderer.getContext() );
     
-    childMesh.addUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
-    childMesh.addUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));
-    childMesh.addUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
-    
-    childMesh.addMaterial( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
-                        assetsLoader.getAsset('flat-shading_frag.glsl').response.data
+    childMesh.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
+    childMesh.addCustomUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));
+    childMesh.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
+    var material = new ROOSTR.Material();
+    childMesh.addProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
+                          assetsLoader.getAsset('flat-shading_frag.glsl').response.data,
+                          material 
                       );
     //childMesh.activateBlendMode();
     mesh.addChild(childMesh);
   
-    mesh.addUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
-    mesh.addUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));
-    mesh.addUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
+    mesh.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
+    mesh.addCustomUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));
+    mesh.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
     // childMesh2 = new ROOSTR.Mesh( new ROOSTR.Cube(), renderer.getContext() );
     // childMesh2.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
     //                     assetsLoader.getAsset('flat-shading_frag.glsl').response.data
@@ -80,13 +81,14 @@
     
     //mesh = new ROOSTR.Mesh( new ROOSTR.FullscreenQuad(), renderer.getContext() );
     //compile shader
-    mesh.addMaterial( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
-                        assetsLoader.getAsset('flat-shading_frag.glsl').response.data
-                      );
-    mesh.addMaterial( assetsLoader.getAsset('emissive_vert.glsl').response.data,
-                        assetsLoader.getAsset('emissive_frag.glsl').response.data
-                      );
-    
+    mesh.addProgram(  assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
+                      assetsLoader.getAsset('flat-shading_frag.glsl').response.data,
+                      material
+                    );
+    mesh.addProgram(  assetsLoader.getAsset('emissive_vert.glsl').response.data,
+                      assetsLoader.getAsset('emissive_frag.glsl').response.data,
+                      null
+                    );
     scene.addMesh(mesh);
     camera = new ROOSTR.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
     // var viewport = renderer.getContext().getParameter(renderer.getContext().VIEWPORT);
@@ -145,13 +147,13 @@
     mesh.rotationMatrix.rotateZBy(rot);
     mesh.modelMatrix.multiplyBy(mesh.rotationMatrix);
     
-    mesh.setUniform('lightPosition', scene.getLightsProperty('position'));
-    mesh.setUniform('lightDiffuse', scene.getLightsProperty('diffuse'));
-    mesh.setUniform('lightSpecular', scene.getLightsProperty('specular'));
+    mesh.setCustomUniform('lightPosition', scene.getLightsProperty('position'));
+    mesh.setCustomUniform('lightDiffuse', scene.getLightsProperty('diffuse'));
+    mesh.setCustomUniform('lightSpecular', scene.getLightsProperty('specular'));
     
-    childMesh.setUniform('lightPosition', scene.getLightsProperty('position'));
-    childMesh.setUniform('lightDiffuse', scene.getLightsProperty('diffuse'));
-    childMesh.setUniform('lightSpecular', scene.getLightsProperty('specular'));
+    childMesh.setCustomUniform('lightPosition', scene.getLightsProperty('position'));
+    childMesh.setCustomUniform('lightDiffuse', scene.getLightsProperty('diffuse'));
+    childMesh.setCustomUniform('lightSpecular', scene.getLightsProperty('specular'));
     
     scene.render(camera,time);
   }
