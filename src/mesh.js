@@ -100,7 +100,7 @@ Object.assign( Mesh.prototype, {
   },
   
   addProgram : function(vertexShader, fragmentShader, material){
-    if(this.nbPrograms < this.nbSubMeshes){
+    if(this.nbPrograms < this.nbSubMeshes) {
       
       this.programs.push(createProgram( this.context, vertexShader, fragmentShader ));
       

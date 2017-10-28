@@ -57,7 +57,7 @@
     scene.addLight(sun2);
     
     mesh = new ROOSTR.Mesh( new ROOSTR.VWing(), renderer.getContext() );
-    childMesh = new ROOSTR.Mesh( new ROOSTR.Gun0(), renderer.getContext() );
+    childMesh = new ROOSTR.Mesh( new ROOSTR.Cannon(), renderer.getContext() );
     
     childMesh.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
     childMesh.addCustomUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));

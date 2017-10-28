@@ -17,7 +17,7 @@
  export { Sphere }             from './geometries/sphere';
  export { Hemisphere }         from './geometries/hemisphere';
  export { VWing }              from './geometries/vwing';
- export { Gun0 }               from './geometries/gun0';
+ export { Cannon }             from './geometries/cannon';
  export { CustomMesh }         from './geometries/customMesh';
  export { Texture }            from './texture';
  export { DirectionalLight }   from './lights/directional';
