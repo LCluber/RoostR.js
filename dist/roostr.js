@@ -311,7 +311,6 @@
             _this.ratio = 0;
             _this.zNear = zNear;
             _this.zFar = zFar;
-            _this.context = context;
             _this.setProjectionMatrix(context.getParameter(context.VIEWPORT));
             _super.prototype.setViewMatrix.call(_this);
             return _this;

@@ -54,7 +54,6 @@ export declare class PerspectiveCamera extends Camera {
     ratio: number;
     zNear: number;
     zFar: number;
-    context: WebGLRenderingContext;
     constructor(fov: number, zNear: number, zFar: number, context: WebGLRenderingContext);
     setProjectionMatrix(viewport: Int32Array): void;
 }

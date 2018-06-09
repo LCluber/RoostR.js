@@ -9,20 +9,21 @@ section( id='source' class='container content-section text-center' )
       
       pre.
         function init() {
-
-          scene = new ROOSTR.Scene('canvas');
+          renderer = new ROOSTR.Renderer('canvas');
+          scene = new ROOSTR.Scene(renderer.getContext());
           
-          mesh = new ROOSTR.Mesh( new ROOSTR.Cube(), scene.getContext() );
+          mesh = new ROOSTR.Mesh( new ROOSTR.Cube(), renderer.getContext() );
+          var material = new ROOSTR.Material();
           //compile shader
-          mesh.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').response.data,
-                              assetsLoader.getAsset('flat-shading_frag.glsl').response.data
-                            );
+          mesh.addProgram(  assetsLoader.getAsset('flat-shading_vert.glsl').asset.response,
+                            assetsLoader.getAsset('flat-shading_frag.glsl').asset.response,
+                            material
+                          );
           
-          scene.add(mesh);
+          scene.addMesh(mesh);
           
-          camera = new ROOSTR.Camera( 45, 0.1, 1000, scene.getContext() );
-          camera.setPosition(TYPE6.Vector3.create(0.0,0.0,5.0));
-          camera.setViewMatrix();
+          camera = new ROOSTR.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
+          camera.setPosition(0.0,0.0,12.0);
       
           render(0);
         }
@@ -31,17 +32,17 @@ section( id='source' class='container content-section text-center' )
       
       pre.
         function animate(){
-          scene.clearFrame();
-          render(animation.getElapsedTime().getSecond());
-          animation.newFrame();
+          renderer.clearFrame();
+          render(animation.getTotal());
+          animation.requestNewFrame();
         }
         
         function render(time){
           var rot = rotationSpeed * time;
-          mesh.modelMatrix.rotateXBy(rot);
-          mesh.rotationMatrix.rotateYBy(rot);
-          mesh.modelMatrix.multiplyBy(mesh.rotationMatrix);
-          mesh.rotationMatrix.rotateZBy(rot);
-          mesh.modelMatrix.multiplyBy(mesh.rotationMatrix);
+          mesh.modelMatrix.rotateX(rot);
+          mesh.rotationMatrix.rotateY(rot);
+          mesh.modelMatrix.multiply(mesh.rotationMatrix);
+          mesh.rotationMatrix.rotateZ(rot);
+          mesh.modelMatrix.multiply(mesh.rotationMatrix);
           scene.render(camera,time);
         }
