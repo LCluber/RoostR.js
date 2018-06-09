@@ -2,11 +2,16 @@
 
 You just cloned RoostR.js : git clone https://github.com/LCluber/RoostR.js.git
 
+
 ### Install nodejs 4 on your server :
   - Windows and OSX : **https://nodejs.org/en/**
   - Linux master race : run
     - **curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -**
     - **sudo apt-get install -y nodejs**
+
+
+### Install bower :
+  - Run **npm install -g bower**
 
 
 ### Install ruby :

@@ -1,6 +1,6 @@
-Version 0.3.1 (soon)
+Version 0.5.0 (June 9th 2018)
 ------------------------------
- * Documentation
+ * Now written in Typescript. And can be used as a module.
 
 Version 0.4.0 (September 16th 2017)
 ------------------------------
@@ -8,7 +8,7 @@ Version 0.4.0 (September 16th 2017)
 
 Version 0.3.0 (September 10th 2017)
 ------------------------------
- * Added activateBlendMode() and deactivateBlendMode() to the Mesh class 
+ * Added activateBlendMode() and deactivateBlendMode() to the Mesh class
  * Blend modes are now at material level instead of scene level
  * Added customMesh geometry to create custom shapes easily
  * Added lights classes for a better lights management system
