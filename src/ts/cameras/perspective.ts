@@ -8,9 +8,9 @@ export class PerspectiveCamera extends Camera {
   zNear : number;
   zFar : number;
 
-  context : WebGLRenderingContext;
+  //context : WebGLRenderingContext;
 
-  constructor(fov: number, zNear: number, zFar: number, context: WebGLRenderingContext) {
+  constructor(fov: number, zNear: number, zFar: number, context : WebGLRenderingContext) {
 
     super(  new TYPE6.Vector3(),
             new TYPE6.Vector3(),
@@ -22,15 +22,15 @@ export class PerspectiveCamera extends Camera {
     this.zNear = zNear;
     this.zFar  = zFar;
 
-    this.context = context;
+    //this.context = context;
 
-    this.setProjectionMatrix();
+    this.setProjectionMatrix(context.getParameter(context.VIEWPORT));
     super.setViewMatrix();
 
   }
 
-  public setProjectionMatrix(): void {
-    let viewport = this.context.getParameter(this.context.VIEWPORT);
+  public setProjectionMatrix(viewport: Int32Array): void {
+    //let viewport = this.context.getParameter(this.context.VIEWPORT);
     this.ratio = viewport[2] / Math.max(1, viewport[3]);
     this.projectionMatrix.perspective(this.fov, this.ratio, this.zNear, this.zFar);
   }

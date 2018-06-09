@@ -77,16 +77,16 @@ export class SpotLight extends PointLight {
   //
   // }
 
-  public getCutoff(): number {
-    return this.cutoff;
-  }
-
-  public getExponent(): number {
-    return this.exponent;
-  }
-
-  public getDirection(): TYPE6.Vector3 {
-    return this.direction;
-  }
+  // public getCutoff(): number {
+  //   return this.cutoff;
+  // }
+  //
+  // public getExponent(): number {
+  //   return this.exponent;
+  // }
+  //
+  // public getDirection(): TYPE6.Vector3 {
+  //   return this.direction;
+  // }
 
 }

@@ -312,12 +312,11 @@
             _this.zNear = zNear;
             _this.zFar = zFar;
             _this.context = context;
-            _this.setProjectionMatrix();
+            _this.setProjectionMatrix(context.getParameter(context.VIEWPORT));
             _super.prototype.setViewMatrix.call(_this);
             return _this;
         }
-        PerspectiveCamera.prototype.setProjectionMatrix = function () {
-            var viewport = this.context.getParameter(this.context.VIEWPORT);
+        PerspectiveCamera.prototype.setProjectionMatrix = function (viewport) {
             this.ratio = viewport[2] / Math.max(1, viewport[3]);
             this.projectionMatrix.perspective(this.fov, this.ratio, this.zNear, this.zFar);
         };
@@ -928,15 +927,6 @@
             this.specular.y = y;
             this.specular.z = z;
         };
-        DirectionalLight.prototype.getPosition = function () {
-            return this.position;
-        };
-        DirectionalLight.prototype.getDiffuse = function () {
-            return this.diffuse;
-        };
-        DirectionalLight.prototype.getSpecular = function () {
-            return this.specular;
-        };
         return DirectionalLight;
     }());
 
@@ -966,15 +956,6 @@
         };
         PointLight.prototype.setQuadraticAttenuation = function () {
         };
-        PointLight.prototype.getConstantAttenuation = function () {
-            return this.constantAttenuation;
-        };
-        PointLight.prototype.getLinearAttenuation = function () {
-            return this.linearAttenuation;
-        };
-        PointLight.prototype.getQuadraticAttenuation = function () {
-            return this.quadraticAttenuation;
-        };
         return PointLight;
     }(DirectionalLight));
 
@@ -1003,15 +984,6 @@
         SpotLight.prototype.setExponent = function () {
         };
         SpotLight.prototype.setDirection = function () {
-        };
-        SpotLight.prototype.getCutoff = function () {
-            return this.cutoff;
-        };
-        SpotLight.prototype.getExponent = function () {
-            return this.exponent;
-        };
-        SpotLight.prototype.getDirection = function () {
-            return this.direction;
         };
         return SpotLight;
     }(PointLight));

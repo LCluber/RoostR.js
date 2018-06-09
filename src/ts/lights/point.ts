@@ -51,16 +51,16 @@ export class PointLight extends DirectionalLight {
   //   return this.DirectionalLight.getSpecular();
   // }
 
-  public getConstantAttenuation(): number {
-    return this.constantAttenuation;
-  }
-
-  public getLinearAttenuation(): number {
-    return this.linearAttenuation;
-  }
-
-  public getQuadraticAttenuation(): number {
-    return this.quadraticAttenuation;
-  }
+  // public getConstantAttenuation(): number {
+  //   return this.constantAttenuation;
+  // }
+  //
+  // public getLinearAttenuation(): number {
+  //   return this.linearAttenuation;
+  // }
+  //
+  // public getQuadraticAttenuation(): number {
+  //   return this.quadraticAttenuation;
+  // }
 
 }

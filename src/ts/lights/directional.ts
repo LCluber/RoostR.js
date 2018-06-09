@@ -51,16 +51,16 @@ export class DirectionalLight {
     this.specular.z = z;
   }
 
-  public getPosition(): TYPE6.Vector3 {
-    return this.position;
-  }
-
-  public getDiffuse(): TYPE6.Vector3 {
-    return this.diffuse;
-  }
-
-  public getSpecular(): TYPE6.Vector3 {
-    return this.specular;
-  }
+  // public getPosition(): TYPE6.Vector3 {
+  //   return this.position;
+  // }
+  //
+  // public getDiffuse(): TYPE6.Vector3 {
+  //   return this.diffuse;
+  // }
+  //
+  // public getSpecular(): TYPE6.Vector3 {
+  //   return this.specular;
+  // }
 
 }

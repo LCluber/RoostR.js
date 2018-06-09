@@ -56,7 +56,7 @@ export declare class PerspectiveCamera extends Camera {
     zFar: number;
     context: WebGLRenderingContext;
     constructor(fov: number, zNear: number, zFar: number, context: WebGLRenderingContext);
-    setProjectionMatrix(): void;
+    setProjectionMatrix(viewport: Int32Array): void;
 }
 
 export declare class Cannon {
@@ -199,9 +199,6 @@ export declare class DirectionalLight {
     setPosition(x: number, y: number, z: number): void;
     setDiffuse(x: number, y: number, z: number): void;
     setSpecular(x: number, y: number, z: number): void;
-    getPosition(): TYPE6.Vector3;
-    getDiffuse(): TYPE6.Vector3;
-    getSpecular(): TYPE6.Vector3;
 }
 
 export declare class PointLight extends DirectionalLight {
@@ -212,9 +209,6 @@ export declare class PointLight extends DirectionalLight {
     setConstantAttenuation(): void;
     setLinearAttenuation(): void;
     setQuadraticAttenuation(): void;
-    getConstantAttenuation(): number;
-    getLinearAttenuation(): number;
-    getQuadraticAttenuation(): number;
 }
 
 
@@ -226,9 +220,6 @@ export declare class SpotLight extends PointLight {
     setCutoff(): void;
     setExponent(): void;
     setDirection(): void;
-    getCutoff(): number;
-    getExponent(): number;
-    getDirection(): TYPE6.Vector3;
 }
 
 
