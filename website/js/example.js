@@ -45,7 +45,7 @@
     sun2.setPosition(-0.34, 0.66, 0.0);
     sun2.setDiffuse(0.0, 0.0, 1.0);
     scene.addLight(sun2);
-
+    
     mesh = new ROOSTR.Mesh( new ROOSTR.VWing(), renderer.getContext() );
     childMesh = new ROOSTR.Mesh( new ROOSTR.Cannon(), renderer.getContext() );
 

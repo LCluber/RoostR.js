@@ -147,8 +147,8 @@ export declare class MultiQuad {
     primitive: string;
     quad: IQuad;
     constructor(width: number, height: number, quantity: number);
-    private createQuads(length);
-    private createIndices(quadIndex);
+    private createQuads;
+    private createIndices;
 }
 
 export declare class Quad {
@@ -244,7 +244,7 @@ export declare class Material {
 
 export declare enum eDrawMethod {
     drawElements = "drawElements",
-    drawArrays = "drawArrays",
+    drawArrays = "drawArrays"
 }
 export interface IProgram extends WebGLProgram {
     vertexNormal: GLint;
@@ -297,9 +297,9 @@ export declare class Mesh {
     setTexture(img: HTMLImageElement): void;
     addCustomUniform(name: string, type: string, value: number | Array<number>): void;
     setCustomUniform(name: string, value: string): void;
-    private createProgram();
-    private addProgramAttribute(name);
-    private addProgramUniform(name);
+    private createProgram;
+    private addProgramAttribute;
+    private addProgramUniform;
     activateBlendMode(): void;
     deactivateBlendMode(): void;
     computeWorldMatrix(graph: SceneGraph): void;
@@ -327,7 +327,7 @@ export declare class MeshRenderer {
     context: WebGLRenderingContext;
     constructor(context: WebGLRenderingContext);
     defaultSettings(): void;
-    createBuffer(target: string, size: number | ArrayBufferView | ArrayBuffer, drawMethod: string): WebGLBuffer;
+    createBuffer(target: string, size: number | Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | ArrayBuffer | Uint8ClampedArray | Float32Array | Float64Array, drawMethod: string): WebGLBuffer;
     useProgram(program: WebGLProgram): void;
     bindBuffer(target: string, buffer: WebGLBuffer): void;
     vertexAttribPointer(index: number, size: number, type: string, normalized: boolean, stride: number, offset: number): void;
@@ -397,7 +397,7 @@ export declare class Lights {
     nbTypes: number;
     constructor();
     addLight(light: Light): void;
-    private ClearFlatArrays();
+    private ClearFlatArrays;
     flatten(): IFlatLights;
     getFlatArray(property: string): any;
 }
@@ -423,8 +423,8 @@ export declare class Scene {
     disableBlendMode(): void;
     getRendererBlendMode(): GLenum | Float32Array | GLint | WebGLBuffer | GLboolean | Array<GLboolean> | GLfloat | WebGLFramebuffer | Int32Array | GLuint | WebGLTexture;
     render(camera: Camera, time: number): void;
-    private computeWorldMatrices();
-    private renderBlended(camera, time);
+    private computeWorldMatrices;
+    private renderBlended;
 }
 
 export declare class SceneGraph {

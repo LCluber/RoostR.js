@@ -15,7 +15,7 @@ module.exports = function(grunt){
   var publicDir       = webDir + 'public/';
   var nodeDir         = 'node_modules/';
   var bowerDir        = 'bower_components/';
-
+  var docDir          = 'doc/';
 
   var banner    = '/** MIT License\n' +
     '* \n' +
@@ -62,6 +62,10 @@ module.exports = function(grunt){
                 compiledSrcDir + '*'
               ]
       },
+      doc:{
+        src: [  docDir + '*'
+              ]
+      },
       web:{
         src: [  webDir + 'static/*',
                 webDir + 'sass/build/*',
@@ -75,6 +79,16 @@ module.exports = function(grunt){
         ]
       }
     },
+    typedoc: {
+  		build: {
+  			options: {
+  				out: docDir,
+  				target: 'es6',
+          name: projectName + '.js - Documentation'
+  			},
+  			src: [srcDir + 'ts/*.ts']
+  		}
+  	},
     jshint: {
       options: {
         jshintrc: 'config/.jshintrc'
@@ -501,6 +515,7 @@ module.exports = function(grunt){
   grunt.loadNpmTasks( 'grunt-tslint' );
   grunt.loadNpmTasks( 'grunt-ts' );
   grunt.loadNpmTasks( 'grunt-rollup' );
+  grunt.loadNpmTasks( 'grunt-typedoc' );
 
   grunt.registerTask( 'lib',
                       'build the library in the dist/ folder',
@@ -518,8 +533,10 @@ module.exports = function(grunt){
                     );
 
   grunt.registerTask( 'doc',
-                      'build jsdoc in the doc/ folder',
-                      [ 'jsdoc' ]
+                      'Compile lib documentation',
+                      [ 'clean:doc',
+                        'typedoc'
+                       ]
                     );
 
   // grunt.registerTask( 'static',
@@ -570,6 +587,8 @@ module.exports = function(grunt){
                         grunt.task.run('lib');
                         //build site
                         grunt.task.run('website');
+                        //build documentation
+                        grunt.task.run('doc');
                       }
                     );
 

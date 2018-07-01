@@ -717,7 +717,7 @@
                     -width, -height, 0.0,
                     width, height, 0.0
                 ]),
-                indices: new Float32Array([0, 1, 2,
+                indices: new Int32Array([0, 1, 2,
                     0, 3, 1
                 ]),
                 uvs: new Float32Array([1.0, 0.0,

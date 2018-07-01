@@ -275,6 +275,7 @@ export class Mesh {
           }
 
           this.renderer.useProgram(program);
+          // materials
           if (this.materials[i]) {
             let materialUniforms = this.materials[i].uniforms;
             for(let property in materialUniforms){

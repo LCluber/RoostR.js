@@ -3,8 +3,8 @@ import { SubMesh } from './subMesh';
 
 export interface IQuad {
   vertices : Float32Array;
-  indices : Int32Array;
-  uvs : Float32Array;
+  indices  : Int32Array;
+  uvs      : Float32Array;
 }
 
 export class MultiQuad {
@@ -29,9 +29,9 @@ export class MultiQuad {
                                     -width, -height, 0.0,
                                      width,  height, 0.0
                                   ]),
-      indices : new Float32Array([ 0,1,2,
-                                   0,3,1
-                                 ]),
+      indices : new Int32Array([ 0,1,2,
+                                 0,3,1
+                              ]),
       uvs : new Float32Array([ 1.0, 0.0,
                                0.0, 1.0,
                                0.0, 0.0,
