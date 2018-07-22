@@ -1,4 +1,4 @@
-import * as TYPE6 from '../../../bower_components/Type6js/dist/type6';
+import {Vector3} from 'type6js';
 import { Camera } from './camera';
 
 export class PerspectiveCamera extends Camera {
@@ -12,9 +12,9 @@ export class PerspectiveCamera extends Camera {
 
   constructor(fov: number, zNear: number, zFar: number, context : WebGLRenderingContext) {
 
-    super(  new TYPE6.Vector3(),
-            new TYPE6.Vector3(),
-            new TYPE6.Vector3(0.0, 1.0, 0.0)
+    super(  new Vector3(),
+            new Vector3(),
+            new Vector3(0.0, 1.0, 0.0)
           );
 
     this.fov   = fov;

@@ -1,4 +1,4 @@
-import * as WEE from '../../../bower_components/Weejs/dist/wee';
+import {String} from 'weejs';
 
 import { DirectionalLight } from '../lights/directional';
 import { PointLight } from '../lights/point';
@@ -57,7 +57,7 @@ export class Lights {
   public addLight(light:Light): void {
     let type = light.type;
     this[type + 's'].push(light);
-    this['nb' + WEE.String.ucfirst(type) + 's']++;
+    this['nb' + String.ucfirst(type) + 's']++;
   }
 
   private ClearFlatArrays(): void {
@@ -72,7 +72,7 @@ export class Lights {
     this.ClearFlatArrays();
     for (var i = 0 ; i < this.nbTypes ; i++) {
       var type = this.types[i];
-      for (var j = 0 ; j < this['nb' + WEE.String.ucfirst(type)] ; j++) {
+      for (var j = 0 ; j < this['nb' + String.ucfirst(type)] ; j++) {
         for (var property in this.flatArrays) {
           if (this[type][j].hasOwnProperty(property) && this.flatArrays.hasOwnProperty(property)){
             var lightProperty = this[type][j][property];

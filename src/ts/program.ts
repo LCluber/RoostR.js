@@ -1,4 +1,4 @@
-import * as MOUETTE from '../../bower_components/Mouettejs/dist/mouette';
+import {Logger} from 'mouettejs';
 import { Shader } from './shader';
 
 export class Program {
@@ -15,7 +15,7 @@ export class Program {
 
     if(!context.getProgramParameter(program, context.LINK_STATUS)){
       //console.log(context.getProgramInfoLog(program));
-      MOUETTE.Logger.error('program creation failed : ' + context.getProgramInfoLog(program));
+      Logger.error('program creation failed : ' + context.getProgramInfoLog(program));
     }
 
     return program;

@@ -1,5 +1,5 @@
-import * as TYPE6 from '../../bower_components/Type6js/dist/type6';
-import * as WEE from '../../bower_components/Weejs/dist/wee';
+import {Matrix4x3} from 'type6js';
+import {String} from 'weejs';
 import { SceneGraph } from './scene/sceneGraph';
 import { Program } from './program';
 import { Texture } from './texture';
@@ -49,9 +49,9 @@ export class Mesh {
   normalBuffer   : WebGLBuffer;
   texCoordBuffer : WebGLBuffer;
 
-  modelMatrix    : TYPE6.Matrix4x3;
-  rotationMatrix : TYPE6.Matrix4x3;
-  worldMatrix    : TYPE6.Matrix4x3;
+  modelMatrix    : Matrix4x3;
+  rotationMatrix : Matrix4x3;
+  worldMatrix    : Matrix4x3;
 
   active : boolean;
 
@@ -93,9 +93,9 @@ export class Mesh {
     this.normalBuffer   = this.normals ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.normals), 'STATIC_DRAW') : null;
     this.texCoordBuffer = this.uvs ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.uvs), 'STATIC_DRAW') : null;
 
-    this.modelMatrix    = new TYPE6.Matrix4x3();
-    this.rotationMatrix = new TYPE6.Matrix4x3();
-    this.worldMatrix    = new TYPE6.Matrix4x3();
+    this.modelMatrix    = new Matrix4x3();
+    this.rotationMatrix = new Matrix4x3();
+    this.worldMatrix    = new Matrix4x3();
 
     this.worldMatrix.identity();
     //this.rotationMatrix.identity();
@@ -165,7 +165,7 @@ export class Mesh {
     return false;
   }
 
-  public setWorldMatrix(worldMatrix:TYPE6.Matrix4x3): void {
+  public setWorldMatrix(worldMatrix:Matrix4x3): void {
     this.worldMatrix.copy(worldMatrix).multiply(this.modelMatrix);
   }
 
@@ -226,13 +226,13 @@ export class Mesh {
 
   private addProgramAttribute(name:string): void {
     //var attribute = name + 'Attribute';
-    this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], 'a' + WEE.String.ucfirst(name));
+    this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], 'a' + String.ucfirst(name));
     this.context.enableVertexAttribArray(this.programs[this.nbPrograms][name]);
   }
 
   private addProgramUniform(name:string): void {
     //var attribute = name + 'Uniform';
-    this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], 'u' + WEE.String.ucfirst(name));
+    this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], 'u' + String.ucfirst(name));
   }
 
   public activateBlendMode(): void {

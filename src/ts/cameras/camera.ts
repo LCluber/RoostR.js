@@ -1,18 +1,18 @@
-import * as TYPE6 from '../../../bower_components/Type6js/dist/type6';
+import {Vector3,Matrix4x3,Matrix4x4} from 'type6js';
 
 export class Camera {
 
-  viewMatrix : TYPE6.Matrix4x3;
-  projectionMatrix : TYPE6.Matrix4x4;
+  viewMatrix : Matrix4x3;
+  projectionMatrix : Matrix4x4;
 
-  position : TYPE6.Vector3;
-  target   : TYPE6.Vector3;
-  up       : TYPE6.Vector3;
+  position : Vector3;
+  target   : Vector3;
+  up       : Vector3;
 
-  constructor(position: TYPE6.Vector3, target: TYPE6.Vector3, up: TYPE6.Vector3) {
+  constructor(position: Vector3, target: Vector3, up: Vector3) {
 
-    this.viewMatrix = new TYPE6.Matrix4x3();
-    this.projectionMatrix = new TYPE6.Matrix4x4();
+    this.viewMatrix = new Matrix4x3();
+    this.projectionMatrix = new Matrix4x4();
 
     this.position = position;
     this.target   = target;

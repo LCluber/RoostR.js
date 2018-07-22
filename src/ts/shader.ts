@@ -1,4 +1,4 @@
-import * as MOUETTE from '../../bower_components/Mouettejs/dist/mouette';
+import {Logger} from 'mouettejs';
 
 export type ShaderType = 'VERTEX_SHADER'|'FRAGMENT_SHADER';
 
@@ -11,7 +11,7 @@ export class Shader {
     if(!context.getShaderParameter(shader, context.COMPILE_STATUS)){
         //console.log(str);
         //console.log(context.getShaderInfoLog(shader));
-        MOUETTE.Logger.error('shader creation failed : ' + context.getShaderInfoLog(shader));
+        Logger.error('shader creation failed : ' + context.getShaderInfoLog(shader));
     }
     return shader;
   }

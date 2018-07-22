@@ -1,4 +1,4 @@
-import * as TYPE6 from '../../../bower_components/Type6js/dist/type6';
+import {Vector3} from 'type6js';
 import { Camera } from './camera';
 
 export class OrthographicCamera extends Camera {
@@ -13,9 +13,9 @@ export class OrthographicCamera extends Camera {
 
   constructor(left: number, right: number, top: number, bottom: number, near: number, far: number) {
 
-    super(  new TYPE6.Vector3(),
-            new TYPE6.Vector3(),
-            new TYPE6.Vector3(0.0, 1.0, 0.0)
+    super(  new Vector3(),
+            new Vector3(),
+            new Vector3(0.0, 1.0, 0.0)
           );
 
     this.left = left;

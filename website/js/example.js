@@ -6,13 +6,13 @@
   var rotationSpeed = 0.5;
   var camera = {};
 
-  var assetsLoader = new ORBIS.Loader(); // create an assets loader with its callbacks
-  var animation    = new FRAMERAT.Player(animate);
+  var assetsLoader = new Orbis.Loader(); // create an assets loader with its callbacks
+  var animation    = new Framerat.Player(animate);
 
   var renderer;
   var scene;
   var elapsedTime;
-  var modal = WEE.Dom.findById('myModal');
+  var modal = Wee.Dom.findById('myModal');
 
   function loadAssets(){
     assetsLoader.launch('./assets.json', './','progressBar', 'progressText').then(
@@ -33,27 +33,27 @@
 
   function init() {
 
-    renderer = new ROOSTR.Renderer('canvas');
-    scene = new ROOSTR.Scene(renderer.getContext());
+    renderer = new Roostr.Renderer('canvas');
+    scene = new Roostr.Scene(renderer.getContext());
 
-    sun = new ROOSTR.DirectionalLight();
+    sun = new Roostr.DirectionalLight();
     sun.setPosition(0.34, 0.66, 0.0);
     sun.setDiffuse(1.0, 0.0, 0.0);
     scene.addLight(sun);
     //
-    sun2 = new ROOSTR.DirectionalLight();
+    sun2 = new Roostr.DirectionalLight();
     sun2.setPosition(-0.34, 0.66, 0.0);
     sun2.setDiffuse(0.0, 0.0, 1.0);
     scene.addLight(sun2);
-    
-    mesh = new ROOSTR.Mesh( new ROOSTR.VWing(), renderer.getContext() );
-    childMesh = new ROOSTR.Mesh( new ROOSTR.Cannon(), renderer.getContext() );
+
+    mesh = new Roostr.Mesh( new Roostr.VWing(), renderer.getContext() );
+    childMesh = new Roostr.Mesh( new Roostr.Cannon(), renderer.getContext() );
 
     childMesh.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
     childMesh.addCustomUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));
     childMesh.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
 
-    var material = new ROOSTR.Material();
+    var material = new Roostr.Material();
     childMesh.addProgram( assetsLoader.getAsset('flat-shading_vert.glsl').asset.response,
                           assetsLoader.getAsset('flat-shading_frag.glsl').asset.response,
                           material
@@ -64,13 +64,13 @@
     mesh.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
     mesh.addCustomUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));
     mesh.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
-    // childMesh2 = new ROOSTR.Mesh( new ROOSTR.Cube(), renderer.getContext() );
+    // childMesh2 = new Roostr.Mesh( new Roostr.Cube(), renderer.getContext() );
     // childMesh2.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').asset.response,
     //                     assetsLoader.getAsset('flat-shading_frag.glsl').asset.response
     //                   );
     // mesh.addChild(childMesh2);
 
-    //mesh = new ROOSTR.Mesh( new ROOSTR.FullscreenQuad(), renderer.getContext() );
+    //mesh = new Roostr.Mesh( new Roostr.FullscreenQuad(), renderer.getContext() );
     //compile shader
     mesh.addProgram(  assetsLoader.getAsset('flat-shading_vert.glsl').asset.response,
                       assetsLoader.getAsset('flat-shading_frag.glsl').asset.response,
@@ -81,11 +81,11 @@
                       null
                     );
     scene.addMesh(mesh);
-    camera = new ROOSTR.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
+    camera = new Roostr.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
     // var viewport = renderer.getContext().getParameter(renderer.getContext().VIEWPORT);
     // var ratio = viewport[2] / Math.max(1, viewport[3]);
     // var distance = 5;
-    // camera = new ROOSTR.OrthographicCamera( -distance*ratio, distance*ratio, distance, -distance, 1, 100 );
+    // camera = new Roostr.OrthographicCamera( -distance*ratio, distance*ratio, distance, -distance, 1, 100 );
     camera.setPosition(0.0,0.0,12.0);
     //camera.setViewMatrix();
 
@@ -96,7 +96,7 @@
   	// mesh = new THREE.Mesh( geometry, material );
   	// scene.add( mesh );
     //
-  	//renderer = new ROOSTR.WebGLRenderer(scene.context);
+  	//renderer = new Roostr.WebGLRenderer(scene.context);
     //console.log(renderer);
   	// renderer.setSize( window.innerWidth, window.innerHeight );
     //
@@ -115,7 +115,7 @@
     animation.requestNewFrame();
   }
 
-  var translate = new TYPE6.Vector3(0.0,-0.56,-2.4525);
+  var translate = new Type6.Vector3(0.0,-0.56,-2.4525);
   function render(time){
     var rot = rotationSpeed * time;
 
@@ -146,7 +146,7 @@
 
   function playAnimation(){
     var state = animation.toggle();
-    var button = WEE.Dom.findById('play');
+    var button = Wee.Dom.findById('play');
     if(state === 'running') {
       button.innerHTML = "<span class='glyphicon glyphicon-pause'></span>";
     }else if (state === 'paused') {
@@ -156,18 +156,18 @@
 
   function stopAnimation () {
     animation.stop();
-    WEE.Dom.findById('play').innerHTML = "<span class='glyphicon glyphicon-play'></span>";
+    Wee.Dom.findById('play').innerHTML = "<span class='glyphicon glyphicon-play'></span>";
     majConsole();
     renderer.clearFrame();
   }
 
   function majTime() {
-    WEE.Dom.findById('time').innerHTML = formatTime(TYPE6.Utils.round(animation.getTotal(), 2));
+    Wee.Dom.findById('time').innerHTML = formatTime(Type6.Utils.round(animation.getTotal(), 2));
   }
 
   function majFPS() {
-    WEE.Dom.findById('fps').innerHTML = formatFPS(Math.round(animation.getFPS()));
-    //WEE.Dom.findById('fps').innerHTML = animation.getFramePerSecond() + ' fps - ' + animation.getFormatedDelta() + ' ms';
+    Wee.Dom.findById('fps').innerHTML = formatFPS(Math.round(animation.getFPS()));
+    //Wee.Dom.findById('fps').innerHTML = animation.getFramePerSecond() + ' fps - ' + animation.getFormatedDelta() + ' ms';
   }
 
   function formatTime(value){

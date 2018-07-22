@@ -1,6 +1,6 @@
 
 //var canvas = require('./canvas');
-import * as WEE from '../../../bower_components/Weejs/dist/wee';
+import {Dom} from 'weejs';
 
 export class Renderer {
 
@@ -8,7 +8,7 @@ export class Renderer {
   context: WebGLRenderingContext;
 
   constructor(canvasID:string) {
-    this.canvas = WEE.Dom.findById(canvasID) as HTMLCanvasElement;
+    this.canvas = Dom.findById(canvasID) as HTMLCanvasElement;
     // default resolution
     this.canvas.width = 1280;
     this.canvas.height = 720;

@@ -9,11 +9,11 @@ section( id='source' class='container content-section text-center' )
       
       pre.
         function init() {
-          renderer = new ROOSTR.Renderer('canvas');
-          scene = new ROOSTR.Scene(renderer.getContext());
+          renderer = new Roostr.Renderer('canvas');
+          scene = new Roostr.Scene(renderer.getContext());
           
-          mesh = new ROOSTR.Mesh( new ROOSTR.Cube(), renderer.getContext() );
-          var material = new ROOSTR.Material();
+          mesh = new Roostr.Mesh( new Roostr.Cube(), renderer.getContext() );
+          var material = new Roostr.Material();
           //compile shader
           mesh.addProgram(  assetsLoader.getAsset('flat-shading_vert.glsl').asset.response,
                             assetsLoader.getAsset('flat-shading_frag.glsl').asset.response,
@@ -22,7 +22,7 @@ section( id='source' class='container content-section text-center' )
           
           scene.addMesh(mesh);
           
-          camera = new ROOSTR.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
+          camera = new Roostr.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
           camera.setPosition(0.0,0.0,12.0);
       
           render(0);

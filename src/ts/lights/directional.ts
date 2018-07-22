@@ -1,18 +1,18 @@
-import * as TYPE6 from '../../../bower_components/Type6js/dist/type6';
+import {Vector3} from 'type6js';
 
 export type Light = 'directional'|'point'|'spot';
 
 export class DirectionalLight {
 
-  position : TYPE6.Vector3;
-  diffuse  : TYPE6.Vector3;
-  specular : TYPE6.Vector3;
+  position : Vector3;
+  diffuse  : Vector3;
+  specular : Vector3;
   type     : Light;
 
   constructor() {
-    this.position = new TYPE6.Vector3();
-    this.diffuse  = new TYPE6.Vector3(0.6,0.6,0.6);
-    this.specular = new TYPE6.Vector3(0.8,0.8,0.8);
+    this.position = new Vector3();
+    this.diffuse  = new Vector3(0.6,0.6,0.6);
+    this.specular = new Vector3(0.8,0.8,0.8);
     this.type     = 'directional';
   }
   // struct lightSource
@@ -51,15 +51,15 @@ export class DirectionalLight {
     this.specular.z = z;
   }
 
-  // public getPosition(): TYPE6.Vector3 {
+  // public getPosition(): Vector3 {
   //   return this.position;
   // }
   //
-  // public getDiffuse(): TYPE6.Vector3 {
+  // public getDiffuse(): Vector3 {
   //   return this.diffuse;
   // }
   //
-  // public getSpecular(): TYPE6.Vector3 {
+  // public getSpecular(): Vector3 {
   //   return this.specular;
   // }
 
