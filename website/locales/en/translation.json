@@ -1,6 +1,6 @@
 {
   "title": "RoostR.js",
-  "menu" : { 
+  "menu" : {
     "menu"          : "Menu",
     "home"          : "Home",
     "about"         : "About",
@@ -22,7 +22,7 @@
     "code" : {
       "h2" : "Code",
       "h3" : "Javascript",
-      "p1" : "Engine initialization",
+      "p1" : "Initialize engine",
       "p2" : "Animate"
     },
     "download" : {
