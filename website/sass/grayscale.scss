@@ -10,7 +10,7 @@ a {
   &:focus,
   &:hover
   {
-    color: $linkColorHover;
+    color: $linkColor;
     text-decoration: none;
   }
 }
@@ -78,6 +78,12 @@ pre{
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
+    &:focus,
+    &:hover
+    {
+      color: $linkColor;
+      text-decoration: none;
+    }
 }
 
 .light {
@@ -90,8 +96,7 @@ pre{
   background-color: $navbarBGColor;
   text-transform: uppercase;
   .navbar-toggle {
-    // background: #fcfcfc;
-    // background: rgba(255, 255, 255, 0.2);
+    // background: #fff;
     &:active,
     &:focus
     {
@@ -105,7 +110,7 @@ pre{
     }
   }
   a {
-    color: $fontColor;
+    color: #fff;
   }
   .nav {
     li {
@@ -117,8 +122,9 @@ pre{
         &:focus,
         &:hover
         {
-          background-color: transparent;
-          color: $linkColorHover;
+          // background-color: transparent;
+          color: #fff;
+          background-color: rgba(255,255,255,.2);
           outline: none;
         }
         &:active {
@@ -143,6 +149,7 @@ pre{
     &.top-nav-collapse {
       background: $navbarBGColor;
       padding: 0;
+      border-bottom: 1px solid rgba(255,255,255,.3);
     }
   }
 }
