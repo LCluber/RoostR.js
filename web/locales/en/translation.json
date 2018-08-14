@@ -4,7 +4,7 @@
     "menu"          : "Menu",
     "home"          : "Home",
     "about"         : "About",
-    "example"       : "Example",
+    "example"       : "Examples",
     "code"          : "Code",
     "download"      : "Download",
     "documentation" : "Documentation",
@@ -13,11 +13,11 @@
   "section" : {
     "home" : {
       "h1" : "RoostR.js",
-      "description" : "An open source WebGL 3D engine written in Javascript.<br/>To help you develop HTML5 / WebGL apps for desktop and mobile browsers."
+      "description" : "An open source WebGL 3D engine written in TypeScript.<br/>To help you develop HTML5 / WebGL apps for desktop and mobile browsers."
     },
     "about" : {
       "h2" : "About",
-      "text" : "<p>The purpose of this library is to provide a simple and easy to use 3D engine.</p><p>Check <a href=\"#example\" class=\"page-scroll\">Example</a> and <a href=\"#source\" class=\"page-scroll\">Code</a> section for more information on how to use RoostR.js.<br/>There is also a <a href=\"doc/index.html\" target=\"_blank\" class=\"page-scroll\">documentation</a> if you need to go deeper.</p><p> You can help develop RoostR.js on <a href=\"https://github.com/LCluber\" target=\"_blank\">Github</a>.</p>"
+      "text" : "<p>The purpose of this library is to provide a simple and easy to use 3D engine.</p><p>Check <a href=\"#example\" class=\"page-scroll\">Examples</a> and <a href=\"#source\" class=\"page-scroll\">Code</a> section for more information on how to use RoostR.js.<br/>There is also a <a href=\"doc/index.html\" target=\"_blank\" class=\"page-scroll\">documentation</a> if you need to go deeper.</p><p> You can help develop RoostR.js on <a href=\"https://github.com/LCluber\" target=\"_blank\">Github</a>.</p>"
     },
     "code" : {
       "h2" : "Code",

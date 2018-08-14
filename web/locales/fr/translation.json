@@ -1,9 +1,9 @@
 {
-  "menu" : { 
+  "menu" : {
     "menu"          : "Menu",
     "home"          : "Accueil",
     "about"         : "Présentation",
-    "example"       : "Exemple",
+    "example"       : "Exemples",
     "code"          : "Code",
     "download"      : "Téléchargement",
     "documentation" : "Documentation",
@@ -11,7 +11,7 @@
   },
   "section" : {
     "home" : {
-      "description" : "Moteur 3D développé en Javascript."
+      "description" : "Moteur 3D développé en TypeScript."
     },
     "about" : {
       "h2" : "Présentation"
