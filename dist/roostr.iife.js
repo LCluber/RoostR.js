@@ -2312,15 +2312,14 @@ var Roostr = (function (exports) {
     * http://mouettejs.lcluber.com
     */
 
-    var LEVELS = [{ id: 1, name: 'debug' }, { id: 2, name: 'info' }, { id: 3, name: 'time' }, { id: 4, name: 'timeEnd' }, { id: 5, name: 'warn' }, { id: 6, name: 'error' }, { id: 99, name: 'off' }];
+    var LEVELS = [{ id: 1, name: 'info' }, { id: 2, name: 'trace' }, { id: 3, name: 'warn' }, { id: 4, name: 'error' }, { id: 99, name: 'off' }];
 
     var Message = function () {
-        function Message(levelName, text) {
+        function Message(levelName, content) {
             _classCallCheck$2(this, Message);
 
             this.setLevel(levelName);
-            this.text = text;
-            this.html = '<span class="' + this.level.name + '">' + this.text + '</span><br>';
+            this.content = content;
         }
 
         _createClass$2(Message, [{
@@ -2332,6 +2331,11 @@ var Roostr = (function (exports) {
             key: 'getLevelId',
             value: function getLevelId() {
                 return this.level.id;
+            }
+        }, {
+            key: 'display',
+            value: function display() {
+                console[this.level.name](this.content);
             }
         }, {
             key: 'findLevel',
@@ -2384,14 +2388,14 @@ var Roostr = (function (exports) {
                 return Logger._level.name;
             }
         }], [{
-            key: 'debug',
-            value: function debug(text) {
-                Logger.log('debug', text);
-            }
-        }, {
             key: 'info',
             value: function info(text) {
                 Logger.log('info', text);
+            }
+        }, {
+            key: 'trace',
+            value: function trace(text) {
+                Logger.log('trace', text);
             }
         }, {
             key: 'time',
@@ -2410,23 +2414,18 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'log',
-            value: function log(levelName, text) {
-                Logger.addMessage(levelName, text);
-                Logger.logMessage();
+            value: function log(levelName, content) {
+                Logger.addMessage(levelName, content);
+                var message = this.messages[this.nbMessages - 1];
+                if (this._level.id <= message.getLevelId()) {
+                    message.display();
+                }
             }
         }, {
             key: 'addMessage',
-            value: function addMessage(levelName, text) {
-                this.messages.push(new Message(levelName, text));
+            value: function addMessage(levelName, content) {
+                this.messages.push(new Message(levelName, content));
                 this.nbMessages++;
-            }
-        }, {
-            key: 'logMessage',
-            value: function logMessage() {
-                var message = this.messages[this.nbMessages - 1];
-                if (this._level.id <= message.getLevelId()) {
-                    this.target.innerHTML += message.html;
-                }
             }
         }, {
             key: 'findLevel',
