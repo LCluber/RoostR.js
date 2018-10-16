@@ -42,7 +42,6 @@
     "i18next-express-middleware": "1.0.2",
     "i18next-node-fs-backend": "0.1.3",
     "morgan": "1.8.1",
-    "mouettejs": "git://github.com/LCluber/Mouette.js.git",
     "pug": "2.0.0-beta11",
     "serve-favicon": "2.4.0",
     "@lcluber/type6js": "1.0.1",
