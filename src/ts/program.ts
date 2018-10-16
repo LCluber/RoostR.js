@@ -1,4 +1,4 @@
-import {Logger} from 'mouettejs';
+import {Logger} from '@lcluber/mouettejs';
 import { Shader } from './shader';
 
 export class Program {

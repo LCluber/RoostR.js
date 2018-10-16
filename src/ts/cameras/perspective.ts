@@ -1,4 +1,4 @@
-import {Vector3} from 'type6js';
+import {Vector3} from '@lcluber/type6js';
 import { Camera } from './camera';
 
 export class PerspectiveCamera extends Camera {

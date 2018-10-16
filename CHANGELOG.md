@@ -1,3 +1,8 @@
+Version 0.5.3 (October 16th 2018)
+-----------------------------
+ * RoostR.js published on NPM at @lcluber/roostrjs.
+ * Updated README.md with NPM installation procedure.
+
 Version 0.5.2 (July 22th 2018)
 ------------------------------
  * Library exported as ES6 and IIFE modules instead of UMD.

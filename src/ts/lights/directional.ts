@@ -1,4 +1,4 @@
-import {Vector3} from 'type6js';
+import {Vector3} from '@lcluber/type6js';
 
 export type Light = 'directional'|'point'|'spot';
 

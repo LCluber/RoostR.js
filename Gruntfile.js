@@ -4,11 +4,12 @@ module.exports = function(grunt){
   var resolve = require('rollup-plugin-node-resolve');
 
   require('time-grunt')(grunt);
+  const sass = require('node-sass');
 
   var projectName = 'Roostr';
   var projectNameLC = projectName.toLowerCase();
 
-  var port      = 3007;
+  var port      = 3000;
   var host      = 'localhost';
 
   var srcDir          = 'src/';
@@ -97,10 +98,11 @@ module.exports = function(grunt){
       web: [ webDir + 'js/*.js'],
     },
     sass: {
+      options: {
+        implementation: sass,
+        sourceMap: true
+      },
       dist: {
-        options: {
-          trace:true
-        },
         files: [{
           expand: true,
           cwd: webDir + 'sass/',
@@ -181,9 +183,9 @@ module.exports = function(grunt){
             })
           ],
           external: [
-            'weejs',
-            'mouettejs',
-            'type6js'
+            '@lcluber/weejs',
+            '@lcluber/mouettejs',
+            '@lcluber/type6js'
           ]
         },
         files: [ {
@@ -300,11 +302,12 @@ module.exports = function(grunt){
           banner: ''
         },
         src: [  nodeDir   + 'jquery/dist/jquery.min.js',
+                nodeDir   + '@fortawesome/fontawesome-free/js/all.min.js',
                 nodeDir   + 'bootstrap/dist/js/bootstrap.min.js',
-                nodeDir   + 'weejs/dist/wee.iife.min.js',
-                nodeDir   + 'type6js/dist/type6.iife.min.js',
-                nodeDir   + 'orbisjs/dist/orbis.iife.min.js',
-                nodeDir   + 'frameratjs/dist/framerat.iife.min.js',
+                nodeDir   + '@lcluber/weejs/dist/wee.iife.min.js',
+                nodeDir   + '@lcluber/type6js/dist/type6.iife.min.js',
+                nodeDir   + '@lcluber/orbisjs/dist/orbis.iife.min.js',
+                nodeDir   + '@lcluber/frameratjs/dist/framerat.iife.min.js',
                 distDir   + projectNameLC + '.iife.min.js',
                 publicDir + 'js/main.min.js'
             ],
@@ -316,9 +319,7 @@ module.exports = function(grunt){
           stripBanners: true,
           banner: ''
         },
-        src: [nodeDir + 'font-awesome/css/font-awesome.min.css',
-              nodeDir + 'bootstrap/dist/css/bootstrap.min.css',
-              nodeDir + 'mouettejs/dist/mouette.css',
+        src: [nodeDir + 'bootstrap/dist/css/bootstrap.min.css',
               publicDir + 'css/style.min.css'
             ],
         dest: publicDir + 'css/style.min.css'
@@ -338,23 +339,9 @@ module.exports = function(grunt){
       }
     },
     copy: {
-      mouette:{
-        expand: true,
-        cwd: nodeDir + 'mouettejs/dist/',
-        src: ['*.htm'],
-        dest: webDir + 'views/',
-        filter: 'isFile'
-      },
       fonts:{
         expand: true,
         cwd: nodeDir + 'bootstrap/dist/',
-        src: ['fonts/**/*'],
-        dest: publicDir,
-        filter: 'isFile'
-      },
-      fontAwesome:{
-        expand: true,
-        cwd: nodeDir + 'font-awesome/',
         src: ['fonts/**/*'],
         dest: publicDir,
         filter: 'isFile'
@@ -415,7 +402,6 @@ module.exports = function(grunt){
   grunt.loadNpmTasks( 'grunt-contrib-csslint' );
   grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
   grunt.loadNpmTasks( 'grunt-contrib-concat' );
-  grunt.loadNpmTasks( 'grunt-contrib-sass' );
   grunt.loadNpmTasks( 'grunt-contrib-htmlmin' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-strip-code' );
@@ -426,6 +412,7 @@ module.exports = function(grunt){
   grunt.loadNpmTasks( 'grunt-ts' );
   grunt.loadNpmTasks( 'grunt-rollup' );
   grunt.loadNpmTasks( 'grunt-typedoc' );
+  grunt.loadNpmTasks( 'grunt-sass' );
 
   grunt.registerTask( 'lib',
                       'build the library in the dist/ folder',
@@ -462,7 +449,6 @@ module.exports = function(grunt){
                       [ 'clean:websass',
                         'sass',
                         'cssmin',
-                        'copy:mouette',
                         'concat:webcss'
                        ]
                     );
@@ -479,8 +465,7 @@ module.exports = function(grunt){
   grunt.registerTask( 'webmisc',
                       'Compile website misc',
                       [ 'clean:webmisc',
-                        'copy:fonts',
-                        'copy:fontAwesome'
+                        'copy:fonts'
                        ]
                     );
 

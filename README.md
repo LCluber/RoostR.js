@@ -1,10 +1,6 @@
 ## Synopsis
 
-RoostR is An open source WebGL 3D engine written in Javascript. To help you develop HTML5 / WebGL apps for desktop and mobile browsers.
-
-## Code Example
-
-[See a basic example on the dedicated website](http://roostrjs.lcluber.com/#example).
+[RoostR.js](http://roostrjs.lcluber.com) is An open source WebGL 3D engine written in TypeScript. To help you develop HTML5 / WebGL apps for desktop and mobile browsers.
 
 ## Motivation
 
@@ -12,19 +8,33 @@ The main purpose of this library is to provide a simple way to develop 3D apps f
 
 ## Installation
 
-To use **RoostR** download it **[here](http://roostrjs.lcluber.com/#download)** and learn how to use it **[there](http://roostrjs.lcluber.com)**.
+```bash
+$ npm install @lcluber/roostrjs
+```
+Or download it **[here](http://roostrjs.lcluber.com/#download)**.
 
+## Demo
+
+See a basic example **[here](http://roostrjs.lcluber.com/#example)**.
+
+## Usage
+
+Learn how to use it **[here](http://roostrjs.lcluber.com/#source)**.
+
+## API Reference
+
+Read the documentation **[here](http://roostrjs.lcluber.com/doc/)**.
 
 ## Contributors
 
 There is still a lot of work to do on this project and I would be glad to get all the help you can provide.
-To contribute you can clone the project on **[GitHub](https://github.com/LCluber/RoostR.js)** and see  **INSTALL.md** for detailed installation walkthrough of the project.
+To contribute you can clone the project on **[GitHub](https://github.com/LCluber/RoostR.js)** and see  **NOTICE.md** for detailed installation walkthrough of the project.
 
 ## License
 
 MIT License
 
-Copyright (c) 2017 Ludovic CLUBER
+Copyright (c) 2015 Ludovic CLUBER
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

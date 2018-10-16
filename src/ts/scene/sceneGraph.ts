@@ -1,4 +1,4 @@
-import {Matrix4x3} from 'type6js';
+import {Matrix4x3} from '@lcluber/type6js';
 
 export class SceneGraph {
 

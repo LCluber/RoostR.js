@@ -1,6 +1,6 @@
 
 //var canvas = require('./canvas');
-import {Dom} from 'weejs';
+import {Dom} from '@lcluber/weejs';
 
 export class Renderer {
 

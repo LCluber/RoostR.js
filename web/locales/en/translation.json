@@ -27,9 +27,10 @@
     },
     "download" : {
       "h2" : "Download RoostR.js",
-      "min" : "RoostR.min.js",
+      "min" : "Standalone IIFE",
+      "npm" : "Install with ",
       "zip" : "RoostRjs.zip",
-      "github" : "Clone from Github"
+      "github" : "Clone from Github "
     },
     "contact" : {
       "h2" : "Contact me",
@@ -37,6 +38,6 @@
       "website" : "lcluber.com"
     }
   },
-  "github":"Github",
+  "github":" Github",
   "twitter":"Twitter"
 }

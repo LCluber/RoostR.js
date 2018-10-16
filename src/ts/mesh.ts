@@ -1,5 +1,5 @@
-import {Matrix4x3} from 'type6js';
-import {String} from 'weejs';
+import {Matrix4x3} from '@lcluber/type6js';
+import {String} from '@lcluber/weejs';
 import { SceneGraph } from './scene/sceneGraph';
 import { Program } from './program';
 import { Texture } from './texture';

@@ -1,4 +1,4 @@
-import {Vector3} from 'type6js';
+import {Vector3} from '@lcluber/type6js';
 
 import { Uniform } from './uniform';
 

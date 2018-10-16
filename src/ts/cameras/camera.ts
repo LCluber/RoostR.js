@@ -1,4 +1,4 @@
-import {Vector3,Matrix4x3,Matrix4x4} from 'type6js';
+import {Vector3,Matrix4x3,Matrix4x4} from '@lcluber/type6js';
 
 export class Camera {
 

@@ -1,4 +1,4 @@
-import {String} from 'weejs';
+import {String} from '@lcluber/weejs';
 
 import { DirectionalLight } from '../lights/directional';
 import { PointLight } from '../lights/point';

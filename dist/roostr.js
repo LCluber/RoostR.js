@@ -23,9 +23,9 @@
 * http://roostrjs.lcluber.com
 */
 
-import { Matrix4x3, Matrix4x4, Vector3 } from 'type6js';
-import { Dom, String } from 'weejs';
-import { Logger } from 'mouettejs';
+import { Matrix4x3, Matrix4x4, Vector3 } from '@lcluber/type6js';
+import { Dom, String } from '@lcluber/weejs';
+import { Logger } from '@lcluber/mouettejs';
 
 class SceneRenderer {
     constructor(context) {

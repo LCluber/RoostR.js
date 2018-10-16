@@ -1,4 +1,4 @@
-import {Logger} from 'mouettejs';
+import {Logger} from '@lcluber/mouettejs';
 
 export type ShaderType = 'VERTEX_SHADER'|'FRAGMENT_SHADER';
 
