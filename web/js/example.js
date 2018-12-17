@@ -1,5 +1,6 @@
 
   var shader = {};
+  var meshes = {};
   var lights = [];
   var mesh = {};
   var childMesh = {};
@@ -13,6 +14,12 @@
   var scene;
   var elapsedTime;
   var modal = Wee.Dom.findById('myModal');
+
+  var cameraDefaultPosition = {
+    cube       : new Type6.Vector3(0.0, 0.0, 5.0),
+    sphere     : new Type6.Vector3(0.0, 0.0, 4.0),
+    vwing      : new Type6.Vector3(0.0, 0.0,12.0)
+  };
 
   function loadAssets(){
     assetsLoader.launch('./assets.json', './','progressBar', 'progressText').then(
@@ -31,22 +38,39 @@
     modal.style.display = 'none';
   }
 
+  function appendMeshesList(){
+    var select = Wee.Dom.findById("meshes");
+    for(var property in meshes ) {
+      if(meshes.hasOwnProperty(property)) {
+        Wee.Dom.addHTMLElement( select, 'option',{ textContent:property,
+                                                   value:property
+                                                  }
+                              );
+      }
+    }
+  }
+
   function init() {
 
     renderer = new Roostr.Renderer('canvas');
     scene = new Roostr.Scene(renderer.getContext());
 
     sun = new Roostr.DirectionalLight();
-    sun.setPosition(0.34, 0.66, 0.0);
-    sun.setDiffuse(1.0, 0.0, 0.0);
+    sun.setPosition(new Type6.Vector3(0.34, 0.66, 0.0));
+    sun.setDiffuse(new Type6.Vector3(1.0, 0.0, 0.0));
     scene.addLight(sun);
     //
     sun2 = new Roostr.DirectionalLight();
-    sun2.setPosition(-0.34, 0.66, 0.0);
-    sun2.setDiffuse(0.0, 0.0, 1.0);
+    sun2.setPosition(new Type6.Vector3(-0.34, 0.66, 0.0));
+    sun2.setDiffuse(new Type6.Vector3(0.0, 0.0, 1.0));
     scene.addLight(sun2);
 
-    mesh = new Roostr.Mesh( new Roostr.VWing(), renderer.getContext() );
+    meshes.vwing  = new Roostr.Mesh( new Roostr.VWing(),  renderer.getContext() );
+    meshes.cube   = new Roostr.Mesh( new Roostr.Cube(),   renderer.getContext() );
+    meshes.sphere = new Roostr.Mesh( new Roostr.Sphere(), renderer.getContext() );
+
+    appendMeshesList();
+
     childMesh = new Roostr.Mesh( new Roostr.Cannon(), renderer.getContext() );
 
     childMesh.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
@@ -54,42 +78,44 @@
     childMesh.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
 
     var material = new Roostr.Material();
-    childMesh.addProgram( assetsLoader.getAsset('flat-shading_vert.glsl').asset.response,
-                          assetsLoader.getAsset('flat-shading_frag.glsl').asset.response,
-                          material
-                      );
+    var vertShader = assetsLoader.getAsset('flat-shading_vert.glsl').asset.response;
+    var fragShader = assetsLoader.getAsset('flat-shading_frag.glsl').asset.response;
+    childMesh.addProgram( vertShader, fragShader, material );
     // childMesh.activateBlendMode();
-    mesh.addChild(childMesh);
+    meshes.vwing.addChild(childMesh);
     //
-    mesh.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
-    mesh.addCustomUniform('lightDiffuse', 'uniform3fv', scene.getLightsProperty('diffuse'));
-    mesh.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
-    // childMesh2 = new Roostr.Mesh( new Roostr.Cube(), renderer.getContext() );
-    // childMesh2.createProgram( assetsLoader.getAsset('flat-shading_vert.glsl').asset.response,
-    //                     assetsLoader.getAsset('flat-shading_frag.glsl').asset.response
-    //                   );
-    // mesh.addChild(childMesh2);
-
-    //mesh = new Roostr.Mesh( new Roostr.FullscreenQuad(), renderer.getContext() );
+    meshes.vwing.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
+    meshes.vwing.addCustomUniform('lightDiffuse', 'uniform3fv',  scene.getLightsProperty('diffuse'));
+    meshes.vwing.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
+    
+    meshes.cube.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
+    meshes.cube.addCustomUniform('lightDiffuse', 'uniform3fv',  scene.getLightsProperty('diffuse'));
+    meshes.cube.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
+    
+    meshes.sphere.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
+    meshes.sphere.addCustomUniform('lightDiffuse', 'uniform3fv',  scene.getLightsProperty('diffuse'));
+    meshes.sphere.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
+    
     //compile shader
-    mesh.addProgram(  assetsLoader.getAsset('flat-shading_vert.glsl').asset.response,
-                      assetsLoader.getAsset('flat-shading_frag.glsl').asset.response,
-                      material
-                    );
-    mesh.addProgram(  assetsLoader.getAsset('emissive_vert.glsl').asset.response,
+    meshes.vwing.addProgram( vertShader, fragShader, material );
+    meshes.vwing.addProgram( assetsLoader.getAsset('emissive_vert.glsl').asset.response,
                       assetsLoader.getAsset('emissive_frag.glsl').asset.response,
                       null
                     );
-    scene.addMesh(mesh);
+                    
+    meshes.cube.addProgram( vertShader, fragShader, material );                
+    meshes.sphere.addProgram( vertShader, fragShader, material );
+                    
+    //scene.addMesh(meshes.vwing);
     camera = new Roostr.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
+    //camera.setPosition(new Type6.Vector3(0.0,0.0,12.0));
     // var viewport = renderer.getContext().getParameter(renderer.getContext().VIEWPORT);
     // var ratio = viewport[2] / Math.max(1, viewport[3]);
     // var distance = 5;
     // camera = new Roostr.OrthographicCamera( -distance*ratio, distance*ratio, distance, -distance, 1, 100 );
-    camera.setPosition(0.0,0.0,12.0);
     //camera.setViewMatrix();
 
-    render(0);
+    loadMesh('vwing');
   	// geometry = new THREE.BoxGeometry( 200, 200, 200 );
   	// material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
     //
@@ -103,7 +129,7 @@
   	// document.body.appendChild( renderer.domElement );
 
     //console.log(scene);
-
+    //render(0);
   }
 
   function animate(){
@@ -118,9 +144,10 @@
   var translate = new Type6.Vector3(0.0,-0.56,-2.4525);
   function render(time){
     var rot = rotationSpeed * time;
-
-    childMesh.modelMatrix.identity();
-    childMesh.modelMatrix.translate(translate);
+    var meshName = Wee.Dom.findById('meshes').value;
+    var mesh = meshes[meshName];
+    // childMesh.modelMatrix.identity();
+    // childMesh.modelMatrix.translate(translate);
 
     // translateX = -2.5;
     // translateY = 0.0;
@@ -133,15 +160,32 @@
     mesh.rotationMatrix.rotateZ(rot);
     mesh.modelMatrix.multiply(mesh.rotationMatrix);
 
-    // mesh.setCustomUniform('lightPosition', scene.getLightsProperty('position'));
-    // mesh.setCustomUniform('lightDiffuse', scene.getLightsProperty('diffuse'));
-    // mesh.setCustomUniform('lightSpecular', scene.getLightsProperty('specular'));
+    // meshes.vwing.setCustomUniform('lightPosition', scene.getLightsProperty('position'));
+    // meshes.vwing.setCustomUniform('lightDiffuse', scene.getLightsProperty('diffuse'));
+    // meshes.vwing.setCustomUniform('lightSpecular', scene.getLightsProperty('specular'));
     //
     // childMesh.setCustomUniform('lightPosition', scene.getLightsProperty('position'));
     // childMesh.setCustomUniform('lightDiffuse', scene.getLightsProperty('diffuse'));
     // childMesh.setCustomUniform('lightSpecular', scene.getLightsProperty('specular'));
 
     scene.render(camera,time);
+  }
+
+  
+  function loadMesh(meshName){
+    if(meshes.hasOwnProperty(meshName)){
+      stopAnimation();
+      scene.clearMeshes();
+      for(var property in meshes) {
+        if(meshes.hasOwnProperty(property)) {
+          if(property === meshName) {
+            scene.addMesh(meshes[property]);
+            camera.setPosition(cameraDefaultPosition[property]);
+          }
+        }
+      }
+      render(0);
+    }
   }
 
   function playAnimation(){
@@ -157,7 +201,7 @@
   function stopAnimation () {
     animation.stop();
     Wee.Dom.findById('play').innerHTML = "<span class='glyphicon glyphicon-play'></span>";
-    majConsole();
+    // majConsole();
     renderer.clearFrame();
   }
 

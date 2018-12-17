@@ -28,18 +28,18 @@ export class Camera {
     );
   }
 
-  public setPosition(x:number,y:number,z:number): void {
-    this.position.set(x,y,z);
+  public setPosition(vector3:Vector3): void {
+    this.position.copy(vector3);
     this.setViewMatrix();
   }
 
-  public setTarget(x:number,y:number,z:number): void {
-    this.target.set(x,y,z);
+  public setTarget(vector3:Vector3): void {
+    this.target.copy(vector3);
     this.setViewMatrix();
   }
 
-  public setUp(x:number,y:number,z:number): void {
-    this.up.set(x,y,z);
+  public setUp(vector3:Vector3): void {
+    this.up.copy(vector3);
     this.setViewMatrix();
   }
 

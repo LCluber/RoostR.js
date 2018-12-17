@@ -11,9 +11,9 @@ import { Camera } from '../cameras/camera';
 export type Light = DirectionalLight | PointLight | SpotLight;
 
 export class Scene {
-  public meshes    : Array<Mesh>;
-  public nbMeshes  : number;
-  public lights    : Lights;
+  public  meshes   : Array<Mesh>;
+  public  nbMeshes : number;
+  public  lights   : Lights;
   private context  : WebGLRenderingContext;
   private renderer : SceneRenderer;
   private graph    : SceneGraph;
@@ -32,10 +32,15 @@ export class Scene {
     this.nbMeshes++;
   }
 
-  public addLight( light: Light ) {
+  public addLight( light: Light ): void {
     this.lights.addLight(light);
     //this.lights.push(light);
     //this.nbLights++;
+  }
+
+  public clearMeshes(): void {
+    this.meshes = [];
+    this.nbMeshes = 0;
   }
 
   public getLightsProperty (property: string): Array<number> {

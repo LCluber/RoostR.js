@@ -175,6 +175,10 @@ class Scene {
     addLight(light) {
         this.lights.addLight(light);
     }
+    clearMeshes() {
+        this.meshes = [];
+        this.nbMeshes = 0;
+    }
     getLightsProperty(property) {
         return this.lights.getFlatArray(property);
     }
@@ -262,16 +266,16 @@ class Camera {
     setViewMatrix() {
         this.viewMatrix.lookAtRH(this.position, this.target, this.up);
     }
-    setPosition(x, y, z) {
-        this.position.set(x, y, z);
+    setPosition(vector3) {
+        this.position.copy(vector3);
         this.setViewMatrix();
     }
-    setTarget(x, y, z) {
-        this.target.set(x, y, z);
+    setTarget(vector3) {
+        this.target.copy(vector3);
         this.setViewMatrix();
     }
-    setUp(x, y, z) {
-        this.up.set(x, y, z);
+    setUp(vector3) {
+        this.up.copy(vector3);
         this.setViewMatrix();
     }
     getViewMatrix() {
@@ -849,20 +853,14 @@ class DirectionalLight {
         this.specular = new Vector3(0.8, 0.8, 0.8);
         this.type = 'directional';
     }
-    setPosition(x, y, z) {
-        this.position.x = x;
-        this.position.y = y;
-        this.position.z = z;
+    setPosition(vector3) {
+        this.position.copy(vector3);
     }
-    setDiffuse(x, y, z) {
-        this.diffuse.x = x;
-        this.diffuse.y = y;
-        this.diffuse.z = z;
+    setDiffuse(vector3) {
+        this.diffuse.copy(vector3);
     }
-    setSpecular(x, y, z) {
-        this.specular.x = x;
-        this.specular.y = y;
-        this.specular.z = z;
+    setSpecular(vector3) {
+        this.specular.copy(vector3);
     }
 }
 

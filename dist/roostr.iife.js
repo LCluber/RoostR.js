@@ -1135,7 +1135,7 @@ var Roostr = (function (exports) {
             value: function copy(vector3) {
                 this.x = vector3.x;
                 this.y = vector3.y;
-                this.y = vector3.z;
+                this.z = vector3.z;
                 return this;
             }
         }, {
@@ -2099,6 +2099,10 @@ var Roostr = (function (exports) {
         Scene.prototype.addLight = function (light) {
             this.lights.addLight(light);
         };
+        Scene.prototype.clearMeshes = function () {
+            this.meshes = [];
+            this.nbMeshes = 0;
+        };
         Scene.prototype.getLightsProperty = function (property) {
             return this.lights.getFlatArray(property);
         };
@@ -2191,16 +2195,16 @@ var Roostr = (function (exports) {
         Camera.prototype.setViewMatrix = function () {
             this.viewMatrix.lookAtRH(this.position, this.target, this.up);
         };
-        Camera.prototype.setPosition = function (x, y, z) {
-            this.position.set(x, y, z);
+        Camera.prototype.setPosition = function (vector3) {
+            this.position.copy(vector3);
             this.setViewMatrix();
         };
-        Camera.prototype.setTarget = function (x, y, z) {
-            this.target.set(x, y, z);
+        Camera.prototype.setTarget = function (vector3) {
+            this.target.copy(vector3);
             this.setViewMatrix();
         };
-        Camera.prototype.setUp = function (x, y, z) {
-            this.up.set(x, y, z);
+        Camera.prototype.setUp = function (vector3) {
+            this.up.copy(vector3);
             this.setViewMatrix();
         };
         Camera.prototype.getViewMatrix = function () {
@@ -3305,20 +3309,14 @@ var Roostr = (function (exports) {
             this.specular = new Vector3(0.8, 0.8, 0.8);
             this.type = 'directional';
         }
-        DirectionalLight.prototype.setPosition = function (x, y, z) {
-            this.position.x = x;
-            this.position.y = y;
-            this.position.z = z;
+        DirectionalLight.prototype.setPosition = function (vector3) {
+            this.position.copy(vector3);
         };
-        DirectionalLight.prototype.setDiffuse = function (x, y, z) {
-            this.diffuse.x = x;
-            this.diffuse.y = y;
-            this.diffuse.z = z;
+        DirectionalLight.prototype.setDiffuse = function (vector3) {
+            this.diffuse.copy(vector3);
         };
-        DirectionalLight.prototype.setSpecular = function (x, y, z) {
-            this.specular.x = x;
-            this.specular.y = y;
-            this.specular.z = z;
+        DirectionalLight.prototype.setSpecular = function (vector3) {
+            this.specular.copy(vector3);
         };
         return DirectionalLight;
     }();

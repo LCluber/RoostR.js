@@ -1,5 +1,5 @@
-import {Matrix4x3} from '@lcluber/type6js';
-import {String} from '@lcluber/weejs';
+import { Matrix4x3 } from '@lcluber/type6js';
+import { String } from '@lcluber/weejs';
 import { SceneGraph } from './scene/sceneGraph';
 import { Program } from './program';
 import { Texture } from './texture';
@@ -7,8 +7,7 @@ import { Uniform }       from './uniform';
 import { MeshRenderer }  from './renderer/mesh';
 import { SubMesh }  from './geometry/submesh';
 import { Material }  from './material';
-import { Lights, IFlatLights } from './scene/lights';
-import { Camera } from './cameras/camera';
+import { IFlatLights } from './scene/lights';
 
 export enum eDrawMethod { drawElements = 'drawElements', drawArrays = 'drawArrays' };
 
@@ -265,7 +264,7 @@ export class Mesh {
     if(this.isActive()) {
 
       let program = null;
-      let material = null;
+      // let material = null;
       for(let i = 0 ; i < this.nbSubMeshes ; i++) {
         if(this.blendMode === blendMode){
           if (this.programs[i]) {

@@ -1,3 +1,9 @@
+Version 0.5.4 (December 16th 2018)
+-----------------------------
+ * Added clearMeshes() method to Scene class.
+ * setPosition(), setTarget() and setUp() methods in Camera class now uses Vector3 as parameter.
+ * setPosition(), setDiffuse() and setSpecular() methods in directionalLight class now uses Vector3 as parameter.
+
 Version 0.5.3 (October 16th 2018)
 -----------------------------
  * RoostR.js published on NPM at @lcluber/roostrjs.

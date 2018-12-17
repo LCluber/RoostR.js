@@ -33,22 +33,16 @@ export class DirectionalLight {
   //   vec3(0.0, 0.0, 0.0)
   // );
 
-  public setPosition(x: number,y: number,z: number): void {
-    this.position.x = x;
-    this.position.y = y;
-    this.position.z = z;
+  public setPosition(vector3:Vector3): void {
+    this.position.copy(vector3);
   }
 
-  public setDiffuse(x: number,y: number,z: number): void {
-    this.diffuse.x = x;
-    this.diffuse.y = y;
-    this.diffuse.z = z;
+  public setDiffuse(vector3:Vector3): void {
+    this.diffuse.copy(vector3);
   }
 
-  public setSpecular(x: number,y: number,z: number): void {
-    this.specular.x = x;
-    this.specular.y = y;
-    this.specular.z = z;
+  public setSpecular(vector3:Vector3): void {
+    this.specular.copy(vector3);
   }
 
   // public getPosition(): Vector3 {

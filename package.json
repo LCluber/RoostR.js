@@ -1,6 +1,6 @@
 {
   "name": "@lcluber/roostrjs",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "WebGL 3D engine written in TypeScript",
   "keywords": [
     "WebGL 3D engine"
@@ -44,7 +44,7 @@
     "morgan": "1.8.1",
     "pug": "2.0.0-beta11",
     "serve-favicon": "2.4.0",
-    "@lcluber/type6js": "1.0.1",
+    "@lcluber/type6js": "1.0.3",
     "@lcluber/weejs": "0.1.10",
     "@lcluber/mouettejs": "0.2.7"
   },
