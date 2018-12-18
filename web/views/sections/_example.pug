@@ -9,13 +9,10 @@ section( id='example' class='container content-section text-center' )
             span( class="glyphicon glyphicon-play" )
         li
           button( type="button" class="btn btn-default" onclick='stopAnimation()' title='Stop')
-            span( class="glyphicon glyphicon-stop" )  
+            span( class="glyphicon glyphicon-stop" )
         li
-          div( class="form-group row")
-            label(class="col-xs-3 col-form-label") Mesh
-            div( class="col-xs-9")
-              select( id="meshes" onchange="loadMesh(this.value)" class="form-control" ) 
-        
+          select( id="meshes" onchange="loadMesh(this.value)" class="form-control" ) 
+    
       canvas( id='canvas' )
         
       div( class="col-sm-4" )

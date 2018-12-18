@@ -45,7 +45,7 @@
     "pug": "2.0.0-beta11",
     "serve-favicon": "2.4.0",
     "@lcluber/type6js": "1.0.3",
-    "@lcluber/weejs": "0.1.10",
+    "@lcluber/weejs": "0.1.17",
     "@lcluber/mouettejs": "0.2.7"
   },
   "devDependencies": {

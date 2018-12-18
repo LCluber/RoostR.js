@@ -81,31 +81,34 @@
     var vertShader = assetsLoader.getAsset('flat-shading_vert.glsl').asset.response;
     var fragShader = assetsLoader.getAsset('flat-shading_frag.glsl').asset.response;
     childMesh.addProgram( vertShader, fragShader, material );
+    var translate = new Type6.Vector3(0.0,-0.56,-2.4525);
+    childMesh.modelMatrix.identity();
+    childMesh.modelMatrix.translate(translate);
     // childMesh.activateBlendMode();
     meshes.vwing.addChild(childMesh);
-    //
+
     meshes.vwing.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
     meshes.vwing.addCustomUniform('lightDiffuse', 'uniform3fv',  scene.getLightsProperty('diffuse'));
     meshes.vwing.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
-    
+
     meshes.cube.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
     meshes.cube.addCustomUniform('lightDiffuse', 'uniform3fv',  scene.getLightsProperty('diffuse'));
     meshes.cube.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
-    
+
     meshes.sphere.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
     meshes.sphere.addCustomUniform('lightDiffuse', 'uniform3fv',  scene.getLightsProperty('diffuse'));
     meshes.sphere.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
-    
+
     //compile shader
     meshes.vwing.addProgram( vertShader, fragShader, material );
     meshes.vwing.addProgram( assetsLoader.getAsset('emissive_vert.glsl').asset.response,
                       assetsLoader.getAsset('emissive_frag.glsl').asset.response,
                       null
                     );
-                    
-    meshes.cube.addProgram( vertShader, fragShader, material );                
+
+    meshes.cube.addProgram( vertShader, fragShader, material );
     meshes.sphere.addProgram( vertShader, fragShader, material );
-                    
+
     //scene.addMesh(meshes.vwing);
     camera = new Roostr.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );
     //camera.setPosition(new Type6.Vector3(0.0,0.0,12.0));
@@ -171,7 +174,7 @@
     scene.render(camera,time);
   }
 
-  
+
   function loadMesh(meshName){
     if(meshes.hasOwnProperty(meshName)){
       stopAnimation();
