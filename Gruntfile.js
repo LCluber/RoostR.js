@@ -292,7 +292,7 @@ module.exports = function(grunt){
           stripBanners: false,
           banner: banner
         },
-        src: srcDir + '**/*.d.ts',
+        src: compiledES6Dir + '**/*.d.ts',
         dest: distDir + projectNameLC + '.d.ts'
       },
       webjs: {
