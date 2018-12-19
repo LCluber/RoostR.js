@@ -1,6 +1,7 @@
 Version 0.5.4 (December 16th 2018)
 -----------------------------
  * Added clearMeshes() method to Scene class.
+ * Added clearPrograms() method to Mesh class.
  * setPosition(), setTarget() and setUp() methods in Camera class now uses Vector3 as parameter.
  * setPosition(), setDiffuse() and setSpecular() methods in directionalLight class now uses Vector3 as parameter.
 

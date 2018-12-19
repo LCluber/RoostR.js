@@ -148,6 +148,12 @@ export class Mesh {
     }
     return false;
   }
+  
+  public clearPrograms(){
+    this.programs = [];
+    this.nbPrograms = 0;
+    this.materials = [];
+  }
 
   public addMaterial(material:Material): boolean {
 
@@ -184,7 +190,7 @@ export class Mesh {
     }
   }
 
-  private createProgram(/*vertexShader, fragmentShader*/): void {
+  private createProgram(): void {
     let program = this.programs[this.nbPrograms];
     this.addProgramAttribute('vertexPosition');
     if (this.normals) {

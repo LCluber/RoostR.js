@@ -349,7 +349,7 @@ class Program {
 class Texture {
     static create(img, context) {
         let webGLTexture = context.createTexture();
-        context.bindTexture(context.TEXTURE_2D, WebGLTexture);
+        context.bindTexture(context.TEXTURE_2D, webGLTexture);
         context.pixelStorei(context.UNPACK_FLIP_Y_WEBGL, true);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.LINEAR);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.LINEAR);
@@ -459,6 +459,11 @@ class Mesh {
             return true;
         }
         return false;
+    }
+    clearPrograms() {
+        this.programs = [];
+        this.nbPrograms = 0;
+        this.materials = [];
     }
     addMaterial(material) {
         if (material && this.materials.length < this.nbSubMeshes) {

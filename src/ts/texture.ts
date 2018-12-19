@@ -5,7 +5,7 @@ export class Texture {
 
   static create ( img:HTMLImageElement, context:WebGLRenderingContext ): WebGLTexture {
     let webGLTexture = context.createTexture();
-    context.bindTexture(context.TEXTURE_2D, WebGLTexture);
+    context.bindTexture(context.TEXTURE_2D, webGLTexture);
     context.pixelStorei(context.UNPACK_FLIP_Y_WEBGL, true);
     context.texParameteri(  context.TEXTURE_2D,
                             context.TEXTURE_MAG_FILTER,
