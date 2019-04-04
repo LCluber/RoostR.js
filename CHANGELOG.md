@@ -1,3 +1,7 @@
+Version 0.5.5 (April 04th 2019)
+-----------------------------
+ * Improved typings.
+
 Version 0.5.4 (December 16th 2018)
 -----------------------------
  * Added clearMeshes() method to Scene class.

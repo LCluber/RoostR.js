@@ -58,38 +58,33 @@ export declare class PerspectiveCamera extends Camera {
     setProjectionMatrix(viewport: Int32Array): void;
 }
 
-export declare class Cannon {
-    vertices: Array<number>;
-    indices: Array<number>;
-    normals: Array<number>;
-    subMeshes: Array<SubMesh>;
+export declare class BasicMesh {
+    vertices: number[];
+    indices: number[];
+    normals: number[];
+    subMeshes: SubMesh[];
     itemSize: number;
-    nbSubMeshes: number;
     primitive: string;
     constructor();
 }
 
-export declare class Cube {
-    vertices: Array<number>;
-    indices: Array<number>;
-    normals: Array<number>;
-    subMeshes: Array<SubMesh>;
-    itemSize: number;
-    nbSubMeshes: number;
-    primitive: string;
+export declare class Cannon extends BasicMesh {
+    constructor();
+}
+
+export declare class Cube extends BasicMesh {
     constructor(size: number);
 }
 
 export declare class CustomMesh {
-    vertices: Float32Array;
-    indices: Int32Array;
-    normals: Float32Array;
-    uvs: Float32Array;
-    subMeshes: Array<SubMesh>;
+    vertices: Float32Array | null;
+    indices: Int32Array | null;
+    normals: Float32Array | null;
+    uvs: Float32Array | null;
+    subMeshes: SubMesh[];
     itemSize: number;
-    nbSubMeshes: number;
     primitive: string;
-    primitives: Array<string>;
+    primitives: string[];
     constructor();
     setVertices(array: Float32Array): void;
     setIndices(array: Int32Array): void;
@@ -101,35 +96,22 @@ export declare class CustomMesh {
     setPrimitive(primitive: string): boolean;
 }
 
-export declare class FullscreenQuad {
-    vertices: Array<number>;
-    uvs: Array<number>;
-    subMeshes: Array<SubMesh>;
-    itemSize: number;
-    nbSubMeshes: number;
-    primitive: string;
+export declare class FullscreenQuad extends BasicMesh {
+    uvs: number[];
     constructor();
 }
 
-export declare class Hemisphere {
-    vertices: Array<number>;
-    indices: Array<number>;
-    normals: Array<number>;
-    subMeshes: Array<SubMesh>;
-    itemSize: number;
-    nbSubMeshes: number;
-    primitive: string;
+export declare class Hemisphere extends BasicMesh {
     constructor();
 }
 
 export declare class Line {
-    vertices: Array<number>;
+    vertices: number[];
     thickness: number;
-    subMeshes: Array<SubMesh>;
+    subMeshes: SubMesh[];
     itemSize: number;
-    nbSubMeshes: number;
     primitive: string;
-    constructor(vertices: Array<number>, thickness: number);
+    constructor(vertices: number[], thickness: number);
 }
 
 export interface IQuad {
@@ -137,38 +119,25 @@ export interface IQuad {
     indices: Int32Array;
     uvs: Float32Array;
 }
-export declare class MultiQuad {
-    vertices: Array<number>;
-    indices: Array<number>;
-    uvs: Array<number>;
-    subMeshes: Array<SubMesh>;
-    itemSize: number;
-    nbSubMeshes: number;
-    primitive: string;
+export declare class MultiQuad extends BasicMesh {
+    uvs: number[];
     quad: IQuad;
-    constructor(width: number, height: number, quantity: number);
-    private createQuads;
+    constructor(width: number, height: number);
+    createQuads(length: number): void;
     private createIndices;
 }
 
-export declare class Quad {
-    vertices: Array<number>;
-    uvs: Array<number>;
-    subMeshes: Array<SubMesh>;
+
+export declare class Quad extends BasicMesh {
+    vertices: number[];
+    uvs: number[];
+    subMeshes: SubMesh[];
     itemSize: number;
-    nbSubMeshes: number;
     primitive: string;
     constructor(width: number, height: number);
 }
 
-export declare class Sphere {
-    vertices: Array<number>;
-    indices: Array<number>;
-    normals: Array<number>;
-    subMeshes: Array<SubMesh>;
-    itemSize: number;
-    nbSubMeshes: number;
-    primitive: string;
+export declare class Sphere extends BasicMesh {
     constructor();
 }
 export declare class SubMesh {
@@ -177,18 +146,44 @@ export declare class SubMesh {
     constructor(start: number, count: number);
 }
 
-export declare class VWing {
-    vertices: Array<number>;
-    indices: Array<number>;
-    normals: Array<number>;
-    subMeshes: Array<SubMesh>;
-    itemSize: number;
-    nbSubMeshes: number;
-    primitive: string;
+export declare class VWing extends BasicMesh {
     constructor();
 }
 
-export declare type Light = 'directional' | 'point' | 'spot';
+export interface ICustomUniforms {
+    [key: string]: Uniform;
+}
+export interface IMaterialUniforms {
+    materialAmbient: Uniform;
+    materialDiffuse: Uniform;
+    materialSpecular: Uniform;
+    materialShininess: Uniform;
+}
+export interface IProgram extends WebGLProgram {
+    vertexNormal: GLint;
+    vertexPosition: GLint;
+    textureCoord: GLint;
+    sampler: WebGLUniformLocation;
+    modelMatrix: WebGLUniformLocation;
+    projectionMatrix: WebGLUniformLocation;
+    viewMatrix: WebGLUniformLocation;
+    time: WebGLUniformLocation;
+    screenResolution: WebGLUniformLocation;
+}
+export interface IFlatLights {
+    position: number[];
+    diffuse: number[];
+    specular: number[];
+    constantAttenuation: number[];
+    linearAttenuation: number[];
+    quadraticAttenuation: number[];
+    cutoff: number[];
+    exponent: number[];
+    direction: number[];
+    type: number[];
+}
+
+
 export declare class DirectionalLight {
     position: Vector3;
     diffuse: Vector3;
@@ -222,12 +217,6 @@ export declare class SpotLight extends PointLight {
 }
 
 
-export interface IMaterialUniforms {
-    materialAmbient: Uniform;
-    materialDiffuse: Uniform;
-    materialSpecular: Uniform;
-    materialShininess: Uniform;
-}
 export declare class Material {
     ambient: Vector3;
     diffuse: Vector3;
@@ -246,43 +235,32 @@ export declare enum eDrawMethod {
     drawElements = "drawElements",
     drawArrays = "drawArrays"
 }
-export interface IProgram extends WebGLProgram {
-    vertexNormal: GLint;
-    vertexPosition: GLint;
-    textureCoord: GLint;
-    sampler: WebGLUniformLocation;
-    modelMatrix: WebGLUniformLocation;
-    projectionMatrix: WebGLUniformLocation;
-    viewMatrix: WebGLUniformLocation;
-    time: WebGLUniformLocation;
-    screenResolution: WebGLUniformLocation;
-}
 export declare class Mesh {
-    vertices: Array<number>;
-    indices: Array<number>;
-    normals: Array<number>;
-    uvs: Array<number>;
-    itemSize: number;
-    subMeshes: Array<SubMesh>;
+    vertices: number[] | null;
+    indices: number[] | null;
+    normals: number[] | null;
+    uvs: number[] | null;
+    itemSize: number | null;
+    subMeshes: SubMesh[];
     nbSubMeshes: number;
-    primitive: string;
-    customUniforms: object;
+    primitive: string | null;
+    customUniforms: ICustomUniforms;
     context: WebGLRenderingContext;
     renderer: MeshRenderer;
-    WebGLTexture: WebGLTexture;
-    vertexBuffer: WebGLBuffer;
-    indexBuffer: WebGLBuffer;
-    normalBuffer: WebGLBuffer;
-    texCoordBuffer: WebGLBuffer;
+    WebGLTexture: WebGLTexture | null;
+    vertexBuffer: WebGLBuffer | null;
+    indexBuffer: WebGLBuffer | null;
+    normalBuffer: WebGLBuffer | null;
+    texCoordBuffer: WebGLBuffer | null;
     modelMatrix: Matrix4x3;
     rotationMatrix: Matrix4x3;
     worldMatrix: Matrix4x3;
     active: boolean;
     drawMethod: eDrawMethod;
-    programs: Array<IProgram>;
+    programs: IProgram[];
     nbPrograms: number;
-    materials: Array<Material>;
-    children: Array<Mesh>;
+    materials: Material[];
+    children: Mesh[];
     blendMode: boolean;
     zOrder: number;
     constructor(mesh: Mesh, context: WebGLRenderingContext);
@@ -297,7 +275,7 @@ export declare class Mesh {
     setWorldMatrix(worldMatrix: Matrix4x3): void;
     setTexture(img: HTMLImageElement): void;
     addCustomUniform(name: string, type: string, value: number | Array<number>): void;
-    setCustomUniform(name: string, value: string): void;
+    setCustomUniform(name: string, value: number | number[]): void;
     private createProgram;
     private addProgramAttribute;
     private addProgramUniform;
@@ -307,7 +285,7 @@ export declare class Mesh {
     render(projectionMatrix: Float32Array, viewMatrix: Float32Array, lights: IFlatLights, time: number, blendMode: boolean): void;
 }
 export declare class Program {
-    static create(context: WebGLRenderingContext, vertexShader: string, fragmentShader: string): WebGLProgram;
+    static create(context: WebGLRenderingContext, vertexShader: string, fragmentShader: string): WebGLProgram | null;
 }
 export declare class Renderer {
     canvas: HTMLCanvasElement;
@@ -321,14 +299,14 @@ export declare class Renderer {
     setViewport(width: number, height: number): void;
     setClearColor(red: number, green: number, blue: number, alpha: number): void;
     clearFrame(): void;
-    getContext(): WebGLRenderingContext;
+    getContext(): WebGLRenderingContext | null;
 }
 
 export declare class MeshRenderer {
     context: WebGLRenderingContext;
     constructor(context: WebGLRenderingContext);
     defaultSettings(): void;
-    createBuffer(target: string, size: number | Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | ArrayBuffer | Uint8ClampedArray | Float32Array | Float64Array, drawMethod: string): WebGLBuffer;
+    createBuffer(target: string, size: ArrayBuffer | ArrayBufferView | null, drawMethod: string): WebGLBuffer | null;
     useProgram(program: WebGLProgram): void;
     bindBuffer(target: string, buffer: WebGLBuffer): void;
     vertexAttribPointer(index: number, size: number, type: string, normalized: boolean, stride: number, offset: number): void;
@@ -373,31 +351,19 @@ export declare class SceneRenderer {
 
 
 
-export declare type Light = DirectionalLight | PointLight | SpotLight;
-export interface IFlatLights {
-    position: Array<number>;
-    diffuse: Array<number>;
-    specular: Array<number>;
-    constantAttenuation: Array<number>;
-    linearAttenuation: Array<number>;
-    quadraticAttenuation: Array<number>;
-    cutoff: Array<number>;
-    exponent: Array<number>;
-    direction: Array<number>;
-    type: Array<number>;
-}
+
 export declare class Lights {
-    directionals: Array<DirectionalLight>;
-    points: Array<PointLight>;
-    spots: Array<SpotLight>;
+    directionals: DirectionalLight[];
+    points: PointLight[];
+    spots: SpotLight[];
     nbDirectionals: number;
     nbPoints: number;
     nbSpots: number;
     flatArrays: IFlatLights;
-    types: Array<string>;
+    types: string[];
     nbTypes: number;
     constructor();
-    addLight(light: Light): void;
+    addLight(light: DirectionalLight | PointLight | SpotLight): void;
     private ClearFlatArrays;
     flatten(): IFlatLights;
     getFlatArray(property: string): any;
@@ -408,9 +374,8 @@ export declare class Lights {
 
 
 
-export declare type Light = DirectionalLight | PointLight | SpotLight;
 export declare class Scene {
-    meshes: Array<Mesh>;
+    meshes: Mesh[];
     nbMeshes: number;
     lights: Lights;
     private context;
@@ -418,12 +383,12 @@ export declare class Scene {
     private graph;
     constructor(context: WebGLRenderingContext);
     addMesh(mesh: Mesh): void;
-    addLight(light: Light): void;
+    addLight(light: DirectionalLight | PointLight | SpotLight): void;
     clearMeshes(): void;
-    getLightsProperty(property: string): Array<number>;
+    getLightsProperty(property: string): number[];
     enableBlendMode(equation: string, source: string, destination: string): void;
     disableBlendMode(): void;
-    getRendererBlendMode(): GLenum | Float32Array | GLint | WebGLBuffer | GLboolean | Array<GLboolean> | GLfloat | WebGLFramebuffer | Int32Array | GLuint | WebGLTexture;
+    getRendererBlendMode(): GLenum | Float32Array | GLint | WebGLBuffer | GLboolean | GLboolean[] | GLfloat | WebGLFramebuffer | Int32Array | GLuint | WebGLTexture;
     render(camera: Camera, time: number): void;
     private computeWorldMatrices;
     private renderBlended;
@@ -433,20 +398,21 @@ export declare class SceneGraph {
     model: Array<Matrix4x3>;
     nbModel: number;
     modelStackTop: number;
-    constructor(context: WebGLRenderingContext);
+    constructor();
     pushModelMatrix(modelMatrix: Matrix4x3): void;
     popModelMatrix(): void;
     getWorldMatrix(): Matrix4x3;
 }
 export declare type ShaderType = 'VERTEX_SHADER' | 'FRAGMENT_SHADER';
 export declare class Shader {
-    static create(context: WebGLRenderingContext, str: string, type: ShaderType): WebGLShader;
+    static create(context: WebGLRenderingContext, str: string, type: ShaderType): WebGLShader | null;
 }
 export declare class Texture {
-    static create(img: HTMLImageElement, context: WebGLRenderingContext): WebGLTexture;
+    static create(img: HTMLImageElement, context: WebGLRenderingContext): WebGLTexture | null;
 }
+export declare type Light = 'directional' | 'point' | 'spot';
 export declare class Uniform {
     type: string;
-    value: number | Array<number>;
-    constructor(type: string, value: number | Array<number>);
+    value: number | number[];
+    constructor(type: string, value: number | number[]);
 }

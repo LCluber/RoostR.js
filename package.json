@@ -1,6 +1,6 @@
 {
   "name": "@lcluber/roostrjs",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "WebGL 3D engine written in TypeScript",
   "keywords": [
     "WebGL 3D engine"
@@ -44,9 +44,9 @@
     "morgan": "1.8.1",
     "pug": "2.0.0-beta11",
     "serve-favicon": "2.4.0",
-    "@lcluber/type6js": "1.0.3",
-    "@lcluber/weejs": "0.1.17",
-    "@lcluber/mouettejs": "0.2.7"
+    "@lcluber/type6js": "1.0.5",
+    "@lcluber/weejs": "0.2.7",
+    "@lcluber/mouettejs": "0.2.11"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.3.1",
@@ -80,10 +80,10 @@
     "jquery-easing": "0.0.1",
     "rollup-plugin-babel": "3.0.4",
     "rollup-plugin-node-resolve": "3.3.0",
-    "node-sass": "4.9.3",
+    "node-sass": "4.11.0",
     "time-grunt": "1.4.0",
     "tslint": "5.9.1",
-    "typedoc": "0.11.1",
-    "typescript": "2.9.2"
+    "typedoc": "0.14.2",
+    "typescript": "3.4.1"
   }
 }

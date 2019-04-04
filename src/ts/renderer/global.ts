@@ -12,7 +12,7 @@ export class Renderer {
     // default resolution
     this.canvas.width = 1280;
     this.canvas.height = 720;
-    this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl",{alpha:false});
+    this.context = <WebGLRenderingContext>this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl",{alpha:false});
 
     this.defaultSettings();
   }
@@ -80,7 +80,7 @@ export class Renderer {
     this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
   }
 
-  public getContext(): WebGLRenderingContext {
+  public getContext(): WebGLRenderingContext | null {
     return this.context;
 	}
 

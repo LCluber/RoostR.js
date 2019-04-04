@@ -6,7 +6,7 @@ export class SceneGraph {
   nbModel : number;
   modelStackTop : number;
 
-  constructor(context:WebGLRenderingContext){
+  constructor(/*context:WebGLRenderingContext*/){
     this.model = [ new Matrix4x3() ]; //model matrices
     this.model[0].identity();
     this.nbModel = this.model.length;

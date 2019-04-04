@@ -1,13 +1,7 @@
 import {Vector3} from '@lcluber/type6js';
 
 import { Uniform } from './uniform';
-
-export interface IMaterialUniforms{
-  materialAmbient : Uniform;
-  materialDiffuse : Uniform;
-  materialSpecular : Uniform;
-  materialShininess : Uniform;
-}
+import { IMaterialUniforms } from './interfaces';
 
 export class Material {
 

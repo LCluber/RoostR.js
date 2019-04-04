@@ -38,7 +38,7 @@ export class MeshRenderer {
   // specifying the binding point (target). Possible values:
   // gl.ARRAY_BUFFER: Buffer containing vertex attributes, such as vertex coordinates, texture coordinate data, or vertex color data.
   // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
-  public createBuffer( target: string, size: number | Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | ArrayBuffer | Uint8ClampedArray | Float32Array | Float64Array, drawMethod: string ): WebGLBuffer {
+  public createBuffer( target: string, size: ArrayBuffer | ArrayBufferView | null, drawMethod: string ): WebGLBuffer | null {
     let buffer = this.context.createBuffer();
     //binds a given WebGLBuffer to a target
     this.context.bindBuffer(this.context[target], buffer);

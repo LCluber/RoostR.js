@@ -3,15 +3,15 @@ import { SubMesh } from './subMesh';
 
 export class CustomMesh {
 
-  vertices    : Float32Array;
-  indices     : Int32Array;
-  normals     : Float32Array;
-  uvs         : Float32Array;
-  subMeshes   : Array<SubMesh>;
+  vertices    : Float32Array | null;
+  indices     : Int32Array | null;
+  normals     : Float32Array | null;
+  uvs         : Float32Array | null;
+  subMeshes   : SubMesh[];
   itemSize    : number;
-  nbSubMeshes : number;
+  // nbSubMeshes : number;
   primitive   : string;
-  primitives  : Array<string>
+  primitives  : string[];
 
   constructor() {
     this.vertices  = /*mesh.vertices ? this.copyArray(mesh.vertices) :*/ null;

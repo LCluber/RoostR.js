@@ -3,10 +3,10 @@
 
 export class Texture {
 
-  static create ( img:HTMLImageElement, context:WebGLRenderingContext ): WebGLTexture {
+  static create ( img:HTMLImageElement, context:WebGLRenderingContext ): WebGLTexture | null {
     let webGLTexture = context.createTexture();
     context.bindTexture(context.TEXTURE_2D, webGLTexture);
-    context.pixelStorei(context.UNPACK_FLIP_Y_WEBGL, true);
+    context.pixelStorei(context.UNPACK_FLIP_Y_WEBGL, 1/*true*/);
     context.texParameteri(  context.TEXTURE_2D,
                             context.TEXTURE_MAG_FILTER,
                             context.LINEAR

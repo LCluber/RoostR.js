@@ -7,46 +7,34 @@ import { Uniform }       from './uniform';
 import { MeshRenderer }  from './renderer/mesh';
 import { SubMesh }  from './geometry/submesh';
 import { Material }  from './material';
-import { IFlatLights } from './scene/lights';
+import { IProgram, ICustomUniforms, IFlatLights } from './interfaces';
 
 export enum eDrawMethod { drawElements = 'drawElements', drawArrays = 'drawArrays' };
 
-export interface IProgram extends WebGLProgram {
-  vertexNormal      : GLint;
-  vertexPosition    : GLint;
-  textureCoord      : GLint;
-  sampler           : WebGLUniformLocation;
-  modelMatrix       : WebGLUniformLocation;
-  projectionMatrix  : WebGLUniformLocation;
-  viewMatrix        : WebGLUniformLocation;
-  time              : WebGLUniformLocation;
-  screenResolution  : WebGLUniformLocation;
-}
-
 export class Mesh {
 
-  vertices    : Array<number>;
-  indices     : Array<number>;
-  normals     : Array<number>;
-  uvs         : Array<number>;
-  itemSize    : number;
-  subMeshes   : Array<SubMesh>;
+  vertices    : number[] | null;
+  indices     : number[] | null;
+  normals     : number[] | null;
+  uvs         : number[] | null;
+  itemSize    : number | null;
+  subMeshes   : SubMesh[];
   nbSubMeshes : number;
 
-  primitive   : string;
+  primitive   : string | null;
 
-  customUniforms : object;
+  customUniforms : ICustomUniforms;
 
   context : WebGLRenderingContext;
 
   renderer : MeshRenderer;
 
-  WebGLTexture : WebGLTexture;
+  WebGLTexture : WebGLTexture | null;
 
-  vertexBuffer   : WebGLBuffer;
-  indexBuffer    : WebGLBuffer;
-  normalBuffer   : WebGLBuffer;
-  texCoordBuffer : WebGLBuffer;
+  vertexBuffer   : WebGLBuffer | null;
+  indexBuffer    : WebGLBuffer | null;
+  normalBuffer   : WebGLBuffer | null;
+  texCoordBuffer : WebGLBuffer | null;
 
   modelMatrix    : Matrix4x3;
   rotationMatrix : Matrix4x3;
@@ -56,12 +44,12 @@ export class Mesh {
 
   drawMethod : eDrawMethod;
 
-  programs : Array<IProgram>;
+  programs : IProgram[];
   nbPrograms : number;
 
-  materials : Array<Material>;
+  materials : Material[];
 
-  children : Array<Mesh>;
+  children : Mesh[];
 
   blendMode : boolean;
 
@@ -87,7 +75,7 @@ export class Mesh {
 
     this.WebGLTexture = null;
 
-    this.vertexBuffer   = this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.vertices), 'STATIC_DRAW');
+    this.vertexBuffer   = this.vertices ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.vertices), 'STATIC_DRAW') : null;
     this.indexBuffer    = this.indices ? this.renderer.createBuffer('ELEMENT_ARRAY_BUFFER', new Uint16Array(this.indices), 'STATIC_DRAW') : null;
     this.normalBuffer   = this.normals ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.normals), 'STATIC_DRAW') : null;
     this.texCoordBuffer = this.uvs ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.uvs), 'STATIC_DRAW') : null;
@@ -148,7 +136,7 @@ export class Mesh {
     }
     return false;
   }
-  
+
   public clearPrograms(){
     this.programs = [];
     this.nbPrograms = 0;
@@ -184,7 +172,7 @@ export class Mesh {
     }
   }
 
-  public setCustomUniform(name: string, value: string): void {
+  public setCustomUniform(name: string, value: number|number[]): void {
     if (this.customUniforms.hasOwnProperty(name)){
       this.customUniforms[name].value = value;
     }
@@ -269,15 +257,11 @@ export class Mesh {
                 ): void {
     if(this.isActive()) {
 
-      let program = null;
+      let program = this.programs[0];
       // let material = null;
       for(let i = 0 ; i < this.nbSubMeshes ; i++) {
         if(this.blendMode === blendMode){
-          if (this.programs[i]) {
-            program = this.programs[i];
-          } else {
-            program = this.programs[this.nbPrograms - 1];
-          }
+          program = this.programs[i] || this.programs[this.nbPrograms - 1] ;
 
           this.renderer.useProgram(program);
           // materials
@@ -292,19 +276,19 @@ export class Mesh {
           }
           // positions
           if(this.indices) {
-            this.renderer.bindBuffer('ELEMENT_ARRAY_BUFFER', this.indexBuffer);
+            this.renderer.bindBuffer('ELEMENT_ARRAY_BUFFER', <WebGLBuffer>this.indexBuffer);
           }
-          this.renderer.bindBuffer('ARRAY_BUFFER', this.vertexBuffer);
-          this.renderer.vertexAttribPointer(program.vertexPosition, this.itemSize, 'FLOAT', false, 0, 0);
+          this.renderer.bindBuffer('ARRAY_BUFFER', <WebGLBuffer>this.vertexBuffer);
+          this.renderer.vertexAttribPointer(program.vertexPosition, <number>this.itemSize, 'FLOAT', false, 0, 0);
 
           // normals
           if (this.normals) {
-            this.renderer.vertexAttribPointer(program.vertexNormal, this.itemSize, 'FLOAT', false, 0, 0);
+            this.renderer.vertexAttribPointer(program.vertexNormal, <number>this.itemSize, 'FLOAT', false, 0, 0);
           }
 
           // uvs
           if (this.uvs && this.WebGLTexture) {
-            this.renderer.bindBuffer('ARRAY_BUFFER', this.texCoordBuffer );
+            this.renderer.bindBuffer('ARRAY_BUFFER', <WebGLBuffer>this.texCoordBuffer );
             this.renderer.vertexAttribPointer(program.textureCoord, 2, 'FLOAT', false, 0, 0);
           }
 
@@ -331,7 +315,7 @@ export class Mesh {
             }
           }
 
-          this.renderer[this.drawMethod](this.primitive, this.subMeshes[i]);
+          this.renderer[this.drawMethod](<string>this.primitive, this.subMeshes[i]);
         }
       }
 

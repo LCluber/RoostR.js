@@ -3,32 +3,19 @@ import {String} from '@lcluber/weejs';
 import { DirectionalLight } from '../lights/directional';
 import { PointLight } from '../lights/point';
 import { SpotLight } from '../lights/spot';
+import { IFlatLights } from '../interfaces';
 
-export type Light = DirectionalLight | PointLight | SpotLight;
-
-export interface IFlatLights{
-  position : Array<number>;
-  diffuse : Array<number>;
-  specular : Array<number>;
-  constantAttenuation : Array<number>;
-  linearAttenuation : Array<number>;
-  quadraticAttenuation : Array<number>;
-  cutoff : Array<number>;
-  exponent : Array<number>;
-  direction : Array<number>;
-  type : Array<number>
-}
 
 export class Lights {
 
-  directionals : Array<DirectionalLight>;
-  points : Array<PointLight>;
-  spots : Array<SpotLight>;
+  directionals : DirectionalLight[];
+  points : PointLight[];
+  spots : SpotLight[];
   nbDirectionals : number;
   nbPoints : number;
   nbSpots : number;
   flatArrays : IFlatLights;
-  types : Array<string>;
+  types : string[];
   nbTypes : number;
 
   constructor(){
@@ -54,7 +41,7 @@ export class Lights {
     this.nbTypes = 3;
   }
 
-  public addLight(light:Light): void {
+  public addLight(light:DirectionalLight | PointLight | SpotLight): void {
     let type = light.type;
     this[type + 's'].push(light);
     this['nb' + String.ucfirst(type) + 's']++;

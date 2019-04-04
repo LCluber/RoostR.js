@@ -1,16 +1,12 @@
-
+import { BasicMesh } from './basic';
 import { SubMesh } from './subMesh';
 
-export class FullscreenQuad {
+export class FullscreenQuad extends BasicMesh {
 
-  vertices    : Array<number>;
-  uvs         : Array<number>;
-  subMeshes   : Array<SubMesh>;
-  itemSize    : number;
-  nbSubMeshes : number;
-  primitive   : string;
+  uvs: number[];
 
   constructor() {
+    super();
     this.vertices = [  1.0,-1.0,
                       -1.0,-1.0,
                        1.0, 1.0,

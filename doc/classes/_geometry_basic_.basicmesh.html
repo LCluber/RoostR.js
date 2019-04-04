@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>VWing | Roostr.js - Documentation</title>
+	<title>BasicMesh | Roostr.js - Documentation</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_geometry_vwing_.html">&quot;geometry/vwing&quot;</a>
+					<a href="../modules/_geometry_basic_.html">&quot;geometry/basic&quot;</a>
 				</li>
 				<li>
-					<a href="_geometry_vwing_.vwing.html">VWing</a>
+					<a href="_geometry_basic_.basicmesh.html">BasicMesh</a>
 				</li>
 			</ul>
-			<h1>Class VWing</h1>
+			<h1>Class BasicMesh</h1>
 		</div>
 	</div>
 </header>
@@ -73,10 +73,31 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_geometry_basic_.basicmesh.html" class="tsd-signature-type">BasicMesh</a>
+						<span class="target">BasicMesh</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">VWing</span>
+								<a href="_geometry_fullscreenquad_.fullscreenquad.html" class="tsd-signature-type">FullscreenQuad</a>
+							</li>
+							<li>
+								<a href="_geometry_quad_.quad.html" class="tsd-signature-type">Quad</a>
+							</li>
+							<li>
+								<a href="_geometry_multiquad_.multiquad.html" class="tsd-signature-type">MultiQuad</a>
+							</li>
+							<li>
+								<a href="_geometry_cube_.cube.html" class="tsd-signature-type">Cube</a>
+							</li>
+							<li>
+								<a href="_geometry_sphere_.sphere.html" class="tsd-signature-type">Sphere</a>
+							</li>
+							<li>
+								<a href="_geometry_hemisphere_.hemisphere.html" class="tsd-signature-type">Hemisphere</a>
+							</li>
+							<li>
+								<a href="_geometry_vwing_.vwing.html" class="tsd-signature-type">VWing</a>
+							</li>
+							<li>
+								<a href="_geometry_cannon_.cannon.html" class="tsd-signature-type">Cannon</a>
 							</li>
 						</ul>
 					</li>
@@ -89,18 +110,18 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="_geometry_vwing_.vwing.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-external"><a href="_geometry_basic_.basicmesh.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited tsd-is-external">
+						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="_geometry_vwing_.vwing.html#indices" class="tsd-kind-icon">indices</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="_geometry_vwing_.vwing.html#itemsize" class="tsd-kind-icon">item<wbr>Size</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="_geometry_vwing_.vwing.html#normals" class="tsd-kind-icon">normals</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="_geometry_vwing_.vwing.html#primitive" class="tsd-kind-icon">primitive</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="_geometry_vwing_.vwing.html#submeshes" class="tsd-kind-icon">sub<wbr>Meshes</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="_geometry_vwing_.vwing.html#vertices" class="tsd-kind-icon">vertices</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="_geometry_basic_.basicmesh.html#indices" class="tsd-kind-icon">indices</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="_geometry_basic_.basicmesh.html#itemsize" class="tsd-kind-icon">item<wbr>Size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="_geometry_basic_.basicmesh.html#normals" class="tsd-kind-icon">normals</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="_geometry_basic_.basicmesh.html#primitive" class="tsd-kind-icon">primitive</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="_geometry_basic_.basicmesh.html#submeshes" class="tsd-kind-icon">sub<wbr>Meshes</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="_geometry_basic_.basicmesh.html#vertices" class="tsd-kind-icon">vertices</a></li>
 							</ul>
 						</section>
 					</div>
@@ -108,88 +129,81 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new VWing<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_geometry_vwing_.vwing.html" class="tsd-signature-type">VWing</a></li>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Basic<wbr>Mesh<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_geometry_basic_.basicmesh.html" class="tsd-signature-type">BasicMesh</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_geometry_basic_.basicmesh.html">BasicMesh</a>.<a href="_geometry_basic_.basicmesh.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/LCluber/RoostR.js/blob/f2f6507/src/ts/geometry/vwing.ts#L4">geometry/vwing.ts:4</a></li>
+									<li>Defined in <a href="https://github.com/LCluber/RoostR.js/blob/f2f6507/src/ts/geometry/basic.ts#L12">geometry/basic.ts:12</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_geometry_vwing_.vwing.html" class="tsd-signature-type">VWing</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_geometry_basic_.basicmesh.html" class="tsd-signature-type">BasicMesh</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
 					<a name="indices" class="tsd-anchor"></a>
 					<h3>indices</h3>
 					<div class="tsd-signature tsd-kind-icon">indices<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_geometry_basic_.basicmesh.html">BasicMesh</a>.<a href="_geometry_basic_.basicmesh.html#indices">indices</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/LCluber/RoostR.js/blob/f2f6507/src/ts/geometry/basic.ts#L7">geometry/basic.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
 					<a name="itemsize" class="tsd-anchor"></a>
 					<h3>item<wbr>Size</h3>
 					<div class="tsd-signature tsd-kind-icon">item<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_geometry_basic_.basicmesh.html">BasicMesh</a>.<a href="_geometry_basic_.basicmesh.html#itemsize">itemSize</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/LCluber/RoostR.js/blob/f2f6507/src/ts/geometry/basic.ts#L10">geometry/basic.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
 					<a name="normals" class="tsd-anchor"></a>
 					<h3>normals</h3>
 					<div class="tsd-signature tsd-kind-icon">normals<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_geometry_basic_.basicmesh.html">BasicMesh</a>.<a href="_geometry_basic_.basicmesh.html#normals">normals</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/LCluber/RoostR.js/blob/f2f6507/src/ts/geometry/basic.ts#L8">geometry/basic.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
 					<a name="primitive" class="tsd-anchor"></a>
 					<h3>primitive</h3>
 					<div class="tsd-signature tsd-kind-icon">primitive<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_geometry_basic_.basicmesh.html">BasicMesh</a>.<a href="_geometry_basic_.basicmesh.html#primitive">primitive</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/LCluber/RoostR.js/blob/f2f6507/src/ts/geometry/basic.ts#L12">geometry/basic.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
 					<a name="submeshes" class="tsd-anchor"></a>
 					<h3>sub<wbr>Meshes</h3>
 					<div class="tsd-signature tsd-kind-icon">sub<wbr>Meshes<span class="tsd-signature-symbol">:</span> <a href="_geometry_submesh_.submesh.html" class="tsd-signature-type">SubMesh</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_geometry_basic_.basicmesh.html">BasicMesh</a>.<a href="_geometry_basic_.basicmesh.html#submeshes">subMeshes</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/LCluber/RoostR.js/blob/f2f6507/src/ts/geometry/basic.ts#L9">geometry/basic.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
 					<a name="vertices" class="tsd-anchor"></a>
 					<h3>vertices</h3>
 					<div class="tsd-signature tsd-kind-icon">vertices<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_geometry_basic_.basicmesh.html">BasicMesh</a>.<a href="_geometry_basic_.basicmesh.html#vertices">vertices</a></p>
 						<ul>
 							<li>Defined in <a href="https://github.com/LCluber/RoostR.js/blob/f2f6507/src/ts/geometry/basic.ts#L6">geometry/basic.ts:6</a></li>
 						</ul>
@@ -204,7 +218,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module tsd-is-external">
-						<a href="../modules/_geometry_vwing_.html">"geometry/vwing"</a>
+						<a href="../modules/_geometry_basic_.html">"geometry/basic"</a>
 					</li>
 				</ul>
 			</nav>
@@ -213,28 +227,28 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-is-external">
-						<a href="_geometry_vwing_.vwing.html" class="tsd-kind-icon">VWing</a>
+						<a href="_geometry_basic_.basicmesh.html" class="tsd-kind-icon">Basic<wbr>Mesh</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
-								<a href="_geometry_vwing_.vwing.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
+								<a href="_geometry_basic_.basicmesh.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="_geometry_vwing_.vwing.html#indices" class="tsd-kind-icon">indices</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+								<a href="_geometry_basic_.basicmesh.html#indices" class="tsd-kind-icon">indices</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="_geometry_vwing_.vwing.html#itemsize" class="tsd-kind-icon">item<wbr>Size</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+								<a href="_geometry_basic_.basicmesh.html#itemsize" class="tsd-kind-icon">item<wbr>Size</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="_geometry_vwing_.vwing.html#normals" class="tsd-kind-icon">normals</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+								<a href="_geometry_basic_.basicmesh.html#normals" class="tsd-kind-icon">normals</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="_geometry_vwing_.vwing.html#primitive" class="tsd-kind-icon">primitive</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+								<a href="_geometry_basic_.basicmesh.html#primitive" class="tsd-kind-icon">primitive</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="_geometry_vwing_.vwing.html#submeshes" class="tsd-kind-icon">sub<wbr>Meshes</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+								<a href="_geometry_basic_.basicmesh.html#submeshes" class="tsd-kind-icon">sub<wbr>Meshes</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="_geometry_vwing_.vwing.html#vertices" class="tsd-kind-icon">vertices</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+								<a href="_geometry_basic_.basicmesh.html#vertices" class="tsd-kind-icon">vertices</a>
 							</li>
 						</ul>
 					</li>
