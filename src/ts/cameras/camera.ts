@@ -20,7 +20,7 @@ export class Camera {
 
   }
 
-  public setViewMatrix(): void {
+  protected setViewMatrix(): void {
     this.viewMatrix.lookAtRH(
       this.position,
       this.target,
@@ -28,26 +28,26 @@ export class Camera {
     );
   }
 
-  public setPosition(vector3:Vector3): void {
+  protected setPosition(vector3:Vector3): void {
     this.position.copy(vector3);
     this.setViewMatrix();
   }
 
-  public setTarget(vector3:Vector3): void {
+  protected setTarget(vector3:Vector3): void {
     this.target.copy(vector3);
     this.setViewMatrix();
   }
 
-  public setUp(vector3:Vector3): void {
+  protected setUp(vector3:Vector3): void {
     this.up.copy(vector3);
     this.setViewMatrix();
   }
 
-  public getViewMatrix(): Float32Array {
+  protected getViewMatrix(): Float32Array {
     return this.viewMatrix.toArray();
   }
 
-  public getProjectionMatrix(): Float32Array {
+  protected getProjectionMatrix(): Float32Array {
     return this.projectionMatrix.toArray();
   }
 
