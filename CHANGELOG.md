@@ -1,3 +1,11 @@
+Version 0.5.7 (January 04th 2019)
+-----------------------------
+ * Updated typings for Angular
+
+Version 0.5.6 (December 22th 2019)
+-----------------------------
+ * Updated dependencies.
+
 Version 0.5.5 (April 04th 2019)
 -----------------------------
  * Improved typings.

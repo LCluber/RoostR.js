@@ -2,13 +2,29 @@
   var shader = {};
   var meshes = {};
   var lights = [];
-  var mesh = {};
+  // var mesh = {};
   var childMesh = {};
   var rotationSpeed = 0.5;
   var camera = {};
 
-  var assetsLoader = new Orbis.Loader(); // create an assets loader with its callbacks
-  var animation    = new Framerat.Player(animate);
+  var assetsLoader = new Orbis.Loader(
+    {
+      "shaders":{
+        "folder": "shaders",
+        "files"	: [
+          {"name":"flat-shading_vert.glsl"},
+          {"name":"flat-shading_frag.glsl"},
+          {"name":"emissive_vert.glsl"},
+          {"name":"emissive_frag.glsl"}
+        ]
+      }
+    },
+    "./",
+    "progressBar",
+    "progressText"
+  );
+
+  var animation = new Framerat.Player(animate);
 
   var renderer;
   var scene;
@@ -22,9 +38,9 @@
   };
 
   function loadAssets(){
-    assetsLoader.launch('./assets.json', './','progressBar', 'progressText').then(
+    assetsLoader.launch().then(
       function(){
-        console.log('complete');
+        // console.log('complete');
         //console.log(assetsLoader.assets);
         init();
         closeModal();
@@ -78,8 +94,8 @@
     childMesh.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
 
     var material = new Roostr.Material();
-    var vertShader = assetsLoader.getAsset('flat-shading_vert.glsl').asset.response;
-    var fragShader = assetsLoader.getAsset('flat-shading_frag.glsl').asset.response;
+    var vertShader = assetsLoader.getAsset('flat-shading_vert.glsl').xhr.response;
+    var fragShader = assetsLoader.getAsset('flat-shading_frag.glsl').xhr.response;
     childMesh.addProgram( vertShader, fragShader, material );
     var translate = new Type6.Vector3(0.0,-0.56,-2.4525);
     childMesh.modelMatrix.identity();
@@ -101,8 +117,8 @@
 
     //compile shader
     meshes.vwing.addProgram( vertShader, fragShader, material );
-    meshes.vwing.addProgram( assetsLoader.getAsset('emissive_vert.glsl').asset.response,
-                      assetsLoader.getAsset('emissive_frag.glsl').asset.response,
+    meshes.vwing.addProgram( assetsLoader.getAsset('emissive_vert.glsl').xhr.response,
+                      assetsLoader.getAsset('emissive_frag.glsl').xhr.response,
                       null
                     );
 
@@ -141,7 +157,6 @@
     //renderer.render(time);
     majTime();
     majFPS();
-    animation.requestNewFrame();
   }
 
   var translate = new Type6.Vector3(0.0,-0.56,-2.4525);

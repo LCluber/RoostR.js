@@ -1,8 +1,61 @@
 import { Uniform } from './uniform';
+import { SubMesh } from './geometry/subMesh';
+import { MeshRenderer }  from './renderer/mesh';
+import { eDrawMethod } from './mesh';
+import { Material }  from './material';
+import { Matrix4x3 } from '@lcluber/type6js';
 
-// export interface WebGLRenderingContext {
-//   [key: string]: any;
-// }
+export interface IGeometry {
+  vertices    : number[] | null;
+  indices     : number[] | null;
+  normals     : number[] | null;
+  subMeshes   : SubMesh[];
+  itemSize    : number | null;
+  primitive   : string | null;
+  uvs?        : number[] | null;
+  nbSubMeshes? : number;
+  quad? : {
+    vertices: number[] | null;
+    indices: number[] | null;
+    uvs? : number[] | null;
+  };
+}
+
+export interface IMesh extends IGeometry {
+  // vertices    : number[] | null;
+  // indices     : number[] | null;
+  // normals     : number[] | null;
+  // subMeshes   : SubMesh[];
+  // itemSize    : number | null;
+  // primitive   : string | null;
+  // uvs?        : number[] | null;
+  // nbSubMeshes? : number;
+  customUniforms? : ICustomUniforms;
+  context? : WebGLRenderingContext;
+  renderer? : MeshRenderer;
+  WebGLTexture? : WebGLTexture | null;
+  vertexBuffer?   : WebGLBuffer | null;
+  indexBuffer?   : WebGLBuffer | null;
+  normalBuffer?   : WebGLBuffer | null;
+  texCoordBuffer? : WebGLBuffer | null;
+  modelMatrix?    : Matrix4x3;
+  rotationMatrix? : Matrix4x3;
+  worldMatrix?    : Matrix4x3;
+  active? : boolean;
+  drawMethod? : eDrawMethod;
+  programs? : IProgram[];
+  nbPrograms? : number;
+  materials? : Material[];
+  children? : IMesh[];
+  blendMode? : boolean;
+  zOrder? : number;
+  // quad? : {
+  //   vertices: number[] | null;
+  //   indices: number[] | null;
+  //   uvs? : number[] | null;
+  // };
+  // [key: string]: Uniform;
+}
 
 export interface ICustomUniforms {
   [key: string]: Uniform;

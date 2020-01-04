@@ -24,7 +24,7 @@
 */
 
 import { Matrix4x3, Matrix4x4, Vector3 } from '@lcluber/type6js';
-import { Dom, String } from '@lcluber/weejs';
+import { Dom } from '@lcluber/weejs';
 import { Logger } from '@lcluber/mouettejs';
 
 class SceneRenderer {
@@ -119,10 +119,13 @@ class Lights {
         this.types = ['spots', 'points', 'directionals'];
         this.nbTypes = 3;
     }
+    ucfirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
     addLight(light) {
         let type = light.type;
         this[type + 's'].push(light);
-        this['nb' + String.ucfirst(type) + 's']++;
+        this['nb' + this.ucfirst(type) + 's']++;
     }
     ClearFlatArrays() {
         for (var property in this.flatArrays) {
@@ -135,7 +138,7 @@ class Lights {
         this.ClearFlatArrays();
         for (var i = 0; i < this.nbTypes; i++) {
             var type = this.types[i];
-            for (var j = 0; j < this['nb' + String.ucfirst(type)]; j++) {
+            for (var j = 0; j < this['nb' + this.ucfirst(type)]; j++) {
                 for (var property in this.flatArrays) {
                     if (this[type][j].hasOwnProperty(property) && this.flatArrays.hasOwnProperty(property)) {
                         var lightProperty = this[type][j][property];
@@ -326,12 +329,13 @@ class Shader {
             context.shaderSource(shader, str);
             context.compileShader(shader);
             if (!context.getShaderParameter(shader, context.COMPILE_STATUS)) {
-                Logger.error('shader creation failed : ' + context.getShaderInfoLog(shader));
+                this.log.error('shader creation failed : ' + context.getShaderInfoLog(shader));
             }
         }
         return shader;
     }
 }
+Shader.log = Logger.addGroup("RoostR");
 
 class Program {
     static create(context, vertexShader, fragmentShader) {
@@ -347,12 +351,13 @@ class Program {
             }
             context.linkProgram(program);
             if (!context.getProgramParameter(program, context.LINK_STATUS)) {
-                Logger.error('program creation failed : ' + context.getProgramInfoLog(program));
+                this.log.error('program creation failed : ' + context.getProgramInfoLog(program));
             }
         }
         return program;
     }
 }
+Program.log = Logger.addGroup("RoostR");
 
 class Texture {
     static create(img, context) {
@@ -530,11 +535,11 @@ class Mesh {
         this.nbPrograms++;
     }
     addProgramAttribute(name) {
-        this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], 'a' + String.ucfirst(name));
+        this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], 'a' + this.ucfirst(name));
         this.context.enableVertexAttribArray(this.programs[this.nbPrograms][name]);
     }
     addProgramUniform(name) {
-        this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], 'u' + String.ucfirst(name));
+        this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], 'u' + this.ucfirst(name));
     }
     activateBlendMode() {
         this.blendMode = true;
@@ -600,6 +605,9 @@ class Mesh {
                 child.render(projectionMatrix, viewMatrix, lights, time, blendMode);
             }
         }
+    }
+    ucfirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 }
 

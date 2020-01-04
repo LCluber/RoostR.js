@@ -43,11 +43,11 @@ export class Camera {
     this.setViewMatrix();
   }
 
-  protected getViewMatrix(): Float32Array {
+  public getViewMatrix(): Float32Array {
     return this.viewMatrix.toArray();
   }
 
-  protected getProjectionMatrix(): Float32Array {
+  public getProjectionMatrix(): Float32Array {
     return this.projectionMatrix.toArray();
   }
 

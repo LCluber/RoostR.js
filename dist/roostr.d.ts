@@ -22,7 +22,7 @@
 *
 * http://roostrjs.lcluber.com
 */
-
+import { Vector3, Matrix4x3, Matrix4x4 } from '@lcluber/type6js';
 export declare class Camera {
     viewMatrix: Matrix4x3;
     projectionMatrix: Matrix4x4;
@@ -30,10 +30,10 @@ export declare class Camera {
     target: Vector3;
     up: Vector3;
     constructor(position: Vector3, target: Vector3, up: Vector3);
-    setViewMatrix(): void;
-    setPosition(vector3: Vector3): void;
-    setTarget(vector3: Vector3): void;
-    setUp(vector3: Vector3): void;
+    protected setViewMatrix(): void;
+    protected setPosition(vector3: Vector3): void;
+    protected setTarget(vector3: Vector3): void;
+    protected setUp(vector3: Vector3): void;
     getViewMatrix(): Float32Array;
     getProjectionMatrix(): Float32Array;
 }
@@ -58,7 +58,8 @@ export declare class PerspectiveCamera extends Camera {
     setProjectionMatrix(viewport: Int32Array): void;
 }
 
-export declare class BasicMesh {
+
+export declare class BasicMesh implements IGeometry {
     vertices: number[];
     indices: number[];
     normals: number[];
@@ -150,6 +151,43 @@ export declare class VWing extends BasicMesh {
     constructor();
 }
 
+
+export interface IGeometry {
+    vertices: number[] | null;
+    indices: number[] | null;
+    normals: number[] | null;
+    subMeshes: SubMesh[];
+    itemSize: number | null;
+    primitive: string | null;
+    uvs?: number[] | null;
+    nbSubMeshes?: number;
+    quad?: {
+        vertices: number[] | null;
+        indices: number[] | null;
+        uvs?: number[] | null;
+    };
+}
+export interface IMesh extends IGeometry {
+    customUniforms?: ICustomUniforms;
+    context?: WebGLRenderingContext;
+    renderer?: MeshRenderer;
+    WebGLTexture?: WebGLTexture | null;
+    vertexBuffer?: WebGLBuffer | null;
+    indexBuffer?: WebGLBuffer | null;
+    normalBuffer?: WebGLBuffer | null;
+    texCoordBuffer?: WebGLBuffer | null;
+    modelMatrix?: Matrix4x3;
+    rotationMatrix?: Matrix4x3;
+    worldMatrix?: Matrix4x3;
+    active?: boolean;
+    drawMethod?: eDrawMethod;
+    programs?: IProgram[];
+    nbPrograms?: number;
+    materials?: Material[];
+    children?: IMesh[];
+    blendMode?: boolean;
+    zOrder?: number;
+}
 export interface ICustomUniforms {
     [key: string]: Uniform;
 }
@@ -183,7 +221,6 @@ export interface IFlatLights {
     type: number[];
 }
 
-
 export declare class DirectionalLight {
     position: Vector3;
     diffuse: Vector3;
@@ -205,7 +242,6 @@ export declare class PointLight extends DirectionalLight {
     setQuadraticAttenuation(): void;
 }
 
-
 export declare class SpotLight extends PointLight {
     cutoff: number;
     exponent: number;
@@ -215,7 +251,6 @@ export declare class SpotLight extends PointLight {
     setExponent(): void;
     setDirection(): void;
 }
-
 
 export declare class Material {
     ambient: Vector3;
@@ -227,15 +262,11 @@ export declare class Material {
 }
 
 
-
-
-
-
 export declare enum eDrawMethod {
     drawElements = "drawElements",
     drawArrays = "drawArrays"
 }
-export declare class Mesh {
+export declare class Mesh implements IMesh {
     vertices: number[] | null;
     indices: number[] | null;
     normals: number[] | null;
@@ -263,7 +294,7 @@ export declare class Mesh {
     children: Mesh[];
     blendMode: boolean;
     zOrder: number;
-    constructor(mesh: Mesh, context: WebGLRenderingContext);
+    constructor(mesh: IMesh, context: WebGLRenderingContext);
     setActive(): void;
     setInactive(): void;
     toggleActive(): boolean;
@@ -283,8 +314,10 @@ export declare class Mesh {
     deactivateBlendMode(): void;
     computeWorldMatrix(graph: SceneGraph): void;
     render(projectionMatrix: Float32Array, viewMatrix: Float32Array, lights: IFlatLights, time: number, blendMode: boolean): void;
+    private ucfirst;
 }
 export declare class Program {
+    private static log;
     static create(context: WebGLRenderingContext, vertexShader: string, fragmentShader: string): WebGLProgram | null;
 }
 export declare class Renderer {
@@ -363,6 +396,7 @@ export declare class Lights {
     types: string[];
     nbTypes: number;
     constructor();
+    private ucfirst;
     addLight(light: DirectionalLight | PointLight | SpotLight): void;
     private ClearFlatArrays;
     flatten(): IFlatLights;
@@ -405,6 +439,7 @@ export declare class SceneGraph {
 }
 export declare type ShaderType = 'VERTEX_SHADER' | 'FRAGMENT_SHADER';
 export declare class Shader {
+    private static log;
     static create(context: WebGLRenderingContext, str: string, type: ShaderType): WebGLShader | null;
 }
 export declare class Texture {

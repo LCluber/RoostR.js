@@ -329,7 +329,7 @@ module.exports = function(grunt){
       options: {
         //import { IBase64Service } from '../services/base64.service';
         // /// <reference path="../config/typings/index.d.ts" />
-        patterns: [ /import.*';/g,
+        patterns: [ /import { .* } from '\..*';/g,
                     /export { .* } from '.*';/g,
                     /\/\/\/ <reference path=.*\/>/g
                   ]
@@ -426,8 +426,8 @@ module.exports = function(grunt){
                         'rollup:iife',
                         'uglify:libIife',
                         //declaration
-                        'concat:declaration',
-                        'strip_code:declaration'
+                        //'concat:declaration',
+                        //'strip_code:declaration'
                         //'replace:declaration'
                       ]
                     );

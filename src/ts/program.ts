@@ -1,7 +1,9 @@
-import {Logger} from '@lcluber/mouettejs';
+import { Logger, Group } from '@lcluber/mouettejs';
 import { Shader } from './shader';
 
 export class Program {
+
+  private static log: Group = Logger.addGroup("RoostR");
 
   static create( context: WebGLRenderingContext, vertexShader:string, fragmentShader:string ): WebGLProgram | null {
     //find vert and frag shader before deleting lines and tabs.
@@ -20,7 +22,7 @@ export class Program {
     
       if(!context.getProgramParameter(program, context.LINK_STATUS)){
         //console.log(context.getProgramInfoLog(program));
-        Logger.error('program creation failed : ' + context.getProgramInfoLog(program));
+        this.log.error('program creation failed : ' + context.getProgramInfoLog(program));
       }
     }
 

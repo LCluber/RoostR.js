@@ -1,7 +1,7 @@
-
+import { IGeometry } from '../interfaces';
 import { SubMesh } from './subMesh';
 
-export class BasicMesh {
+export class BasicMesh implements IGeometry {
 
   vertices    : number[];
   indices     : number[];

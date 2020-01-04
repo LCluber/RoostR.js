@@ -12,7 +12,7 @@ export class Renderer {
     // default resolution
     this.canvas.width = 1280;
     this.canvas.height = 720;
-    this.context = <WebGLRenderingContext>this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl",{alpha:false});
+    this.context = <WebGLRenderingContext>this.canvas.getContext("webgl") || <WebGLRenderingContext>this.canvas.getContext("experimental-webgl",{alpha:false});
 
     this.defaultSettings();
   }

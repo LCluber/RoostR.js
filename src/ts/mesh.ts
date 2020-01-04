@@ -1,5 +1,4 @@
 import { Matrix4x3 } from '@lcluber/type6js';
-import { String } from '@lcluber/weejs';
 import { SceneGraph } from './scene/sceneGraph';
 import { Program } from './program';
 import { Texture } from './texture';
@@ -7,11 +6,11 @@ import { Uniform }       from './uniform';
 import { MeshRenderer }  from './renderer/mesh';
 import { SubMesh }  from './geometry/submesh';
 import { Material }  from './material';
-import { IProgram, ICustomUniforms, IFlatLights } from './interfaces';
+import { IProgram, ICustomUniforms, IFlatLights, IMesh } from './interfaces';
 
 export enum eDrawMethod { drawElements = 'drawElements', drawArrays = 'drawArrays' };
 
-export class Mesh {
+export class Mesh implements IMesh {
 
   vertices    : number[] | null;
   indices     : number[] | null;
@@ -22,7 +21,7 @@ export class Mesh {
   nbSubMeshes : number;
 
   primitive   : string | null;
-
+  
   customUniforms : ICustomUniforms;
 
   context : WebGLRenderingContext;
@@ -56,7 +55,7 @@ export class Mesh {
   zOrder : number;
 
 
-  constructor(mesh: Mesh, context:WebGLRenderingContext) {
+  constructor(mesh: IMesh, context:WebGLRenderingContext) {
     this.vertices    = mesh.vertices ? mesh.vertices : null;
     this.indices     = mesh.indices ? mesh.indices : null;
     this.normals     = mesh.normals ? mesh.normals : null;
@@ -219,13 +218,13 @@ export class Mesh {
 
   private addProgramAttribute(name:string): void {
     //var attribute = name + 'Attribute';
-    this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], 'a' + String.ucfirst(name));
+    this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], 'a' + this.ucfirst(name));
     this.context.enableVertexAttribArray(this.programs[this.nbPrograms][name]);
   }
 
   private addProgramUniform(name:string): void {
     //var attribute = name + 'Uniform';
-    this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], 'u' + String.ucfirst(name));
+    this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], 'u' + this.ucfirst(name));
   }
 
   public activateBlendMode(): void {
@@ -329,6 +328,10 @@ export class Mesh {
       }
 
     }
+  }
+
+  private ucfirst(string: string): string {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
 }
