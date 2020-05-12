@@ -1,34 +1,20 @@
-import * as WEE from '../../../bower_components/Weejs/dist/wee';
 
 import { DirectionalLight } from '../lights/directional';
 import { PointLight } from '../lights/point';
 import { SpotLight } from '../lights/spot';
+import { IFlatLights } from '../interfaces';
 
-export type Light = DirectionalLight | PointLight | SpotLight;
-
-export interface IFlatLights{
-  position : Array<number>;
-  diffuse : Array<number>;
-  specular : Array<number>;
-  constantAttenuation : Array<number>;
-  linearAttenuation : Array<number>;
-  quadraticAttenuation : Array<number>;
-  cutoff : Array<number>;
-  exponent : Array<number>;
-  direction : Array<number>;
-  type : Array<number>
-}
 
 export class Lights {
 
-  directionals : Array<DirectionalLight>;
-  points : Array<PointLight>;
-  spots : Array<SpotLight>;
+  directionals : DirectionalLight[];
+  points : PointLight[];
+  spots : SpotLight[];
   nbDirectionals : number;
   nbPoints : number;
   nbSpots : number;
   flatArrays : IFlatLights;
-  types : Array<string>;
+  types : string[];
   nbTypes : number;
 
   constructor(){
@@ -54,10 +40,14 @@ export class Lights {
     this.nbTypes = 3;
   }
 
-  public addLight(light:Light): void {
+  private ucfirst(string: string): string {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  public addLight(light:DirectionalLight | PointLight | SpotLight): void {
     let type = light.type;
     this[type + 's'].push(light);
-    this['nb' + WEE.String.ucfirst(type) + 's']++;
+    this['nb' + this.ucfirst(type) + 's']++;
   }
 
   private ClearFlatArrays(): void {
@@ -72,7 +62,7 @@ export class Lights {
     this.ClearFlatArrays();
     for (var i = 0 ; i < this.nbTypes ; i++) {
       var type = this.types[i];
-      for (var j = 0 ; j < this['nb' + WEE.String.ucfirst(type)] ; j++) {
+      for (var j = 0 ; j < this['nb' + this.ucfirst(type)] ; j++) {
         for (var property in this.flatArrays) {
           if (this[type][j].hasOwnProperty(property) && this.flatArrays.hasOwnProperty(property)){
             var lightProperty = this[type][j][property];

@@ -1,25 +1,19 @@
-
+import { BasicMesh } from './basic';
 import { SubMesh } from './subMesh';
 
 export interface IQuad {
   vertices : Float32Array;
-  indices : Int32Array;
-  uvs : Float32Array;
+  indices  : Int32Array;
+  uvs      : Float32Array;
 }
 
-export class MultiQuad {
+export class MultiQuad extends BasicMesh{
 
-  vertices    : Array<number>;
-  indices     : Array<number>;
-  uvs     : Array<number>;
-  subMeshes   : Array<SubMesh>;
-  itemSize    : number;
-  nbSubMeshes : number;
-  primitive   : string;
+  uvs  : number[];
+  quad : IQuad;
 
-  quad        : IQuad;
-
-  constructor(width: number, height: number, quantity: number) {
+  constructor(width: number, height: number/*, quantity: number*/) {
+    super();
     width = width ? width * 0.5 : 1.0;
     height = height ? height * 0.5 : 1.0;
 
@@ -29,9 +23,9 @@ export class MultiQuad {
                                     -width, -height, 0.0,
                                      width,  height, 0.0
                                   ]),
-      indices : new Float32Array([ 0,1,2,
-                                   0,3,1
-                                 ]),
+      indices : new Int32Array([ 0,1,2,
+                                 0,3,1
+                              ]),
       uvs : new Float32Array([ 1.0, 0.0,
                                0.0, 1.0,
                                0.0, 0.0,
@@ -46,11 +40,9 @@ export class MultiQuad {
     this.subMeshes = [
       new SubMesh( 0, 4)
     ];
-    this.itemSize = 3;
-    this.primitive = 'TRIANGLE';
   }
 
-  private createQuads(length: number): void {
+  public createQuads(length: number): void {
     for (var i = 0 ; i < length ; i++) {
       this.vertices.push.apply(this.vertices, this.quad.vertices);
       this.indices.push.apply(this.indices, this.createIndices(i));
@@ -59,8 +51,8 @@ export class MultiQuad {
 
   }
 
-  private createIndices(quadIndex: number): Array<number> {
-    var indices = [];
+  private createIndices(quadIndex: number): number[] {
+    var indices: number[] = [];
     for(var i = 0 ; i < 6 ; i++) {
       indices.push(this.quad.indices[i] + quadIndex * 4);
     }

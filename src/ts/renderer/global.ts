@@ -1,6 +1,6 @@
 
 //var canvas = require('./canvas');
-import * as WEE from '../../../bower_components/Weejs/dist/wee';
+import {Dom} from '@lcluber/weejs';
 
 export class Renderer {
 
@@ -8,11 +8,11 @@ export class Renderer {
   context: WebGLRenderingContext;
 
   constructor(canvasID:string) {
-    this.canvas = WEE.Dom.findById(canvasID) as HTMLCanvasElement;
+    this.canvas = Dom.findById(canvasID) as HTMLCanvasElement;
     // default resolution
     this.canvas.width = 1280;
     this.canvas.height = 720;
-    this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl",{alpha:false});
+    this.context = <WebGLRenderingContext>this.canvas.getContext("webgl") || <WebGLRenderingContext>this.canvas.getContext("experimental-webgl",{alpha:false});
 
     this.defaultSettings();
   }
@@ -80,7 +80,7 @@ export class Renderer {
     this.context.clear(this.context.COLOR_BUFFER_BIT | this.context.DEPTH_BUFFER_BIT);
   }
 
-  public getContext(): WebGLRenderingContext {
+  public getContext(): WebGLRenderingContext | null {
     return this.context;
 	}
 

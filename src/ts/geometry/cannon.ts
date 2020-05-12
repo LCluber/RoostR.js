@@ -1,17 +1,11 @@
 
 import { SubMesh } from './subMesh';
+import { BasicMesh } from './basic';
 
-export class Cannon {
-
-  vertices    : Array<number>;
-  indices     : Array<number>;
-  normals     : Array<number>;
-  subMeshes   : Array<SubMesh>;
-  itemSize    : number;
-  nbSubMeshes : number;
-  primitive   : string;
+export class Cannon extends BasicMesh {
 
   constructor() {
+    super();
     //this.position = [0,-0.56,-2.4525];
     this.vertices = [ 0,-0.4,0.1885,0.7,0,-0.9849,0,-0.4,-0.9849,0,0.4,-0.9849,0.7,0,0.4525,0,0.4,0.9293,0,0,-0.8408,0,0.4,-0.9849,0,0,1.9525,0,0.4,0.9293,0.7,0,0.4525,0,0,-0.8408,0,0.3,-1.1203,0.6,0,-1.1203,0,0.11,-2.8486,0.2351,0,-3.0108,0,-0.11,-3.0108,0,-0.3,-1.1203,0,0,-0.8408,0.7,0,0.4525,0,-0.4,0.1885,-0.7,0,-0.9849,-0.7,0,0.4525,0,0.4,-0.9849,-0.7,0,0.4525,0,0.4,0.9293,0,0,-0.8408,-0.6,0,-1.1203,-0.2351,0,-3.0108,0,0,-0.8408,-0.7,0,0.4525,0,-0.4,0.1885,0.7,0,0.4525,-0.7,0,0.4525
                     ];
@@ -22,8 +16,6 @@ export class Cannon {
     this.subMeshes = [
       new SubMesh( 0, 90)
     ];
-    this.itemSize = 3;
-    this.primitive = 'TRIANGLES';
   }
 
 }

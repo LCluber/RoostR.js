@@ -1,22 +1,22 @@
-import * as TYPE6 from '../../../bower_components/Type6js/dist/type6';
+import {Matrix4x3} from '@lcluber/type6js';
 
 export class SceneGraph {
 
-  model: Array<TYPE6.Matrix4x3>;
+  model: Array<Matrix4x3>;
   nbModel : number;
   modelStackTop : number;
 
-  constructor(context:WebGLRenderingContext){
-    this.model = [ new TYPE6.Matrix4x3() ]; //model matrices
+  constructor(/*context:WebGLRenderingContext*/){
+    this.model = [ new Matrix4x3() ]; //model matrices
     this.model[0].identity();
     this.nbModel = this.model.length;
     this.modelStackTop = 0;
   }
 
-  public pushModelMatrix(modelMatrix:TYPE6.Matrix4x3): void {
+  public pushModelMatrix(modelMatrix:Matrix4x3): void {
     this.modelStackTop++;
     if (this.modelStackTop === this.nbModel) {
-      this.model.push(new TYPE6.Matrix4x3());
+      this.model.push(new Matrix4x3());
       this.nbModel++;
     }
     this.model[this.modelStackTop].copy(modelMatrix);
@@ -26,7 +26,7 @@ export class SceneGraph {
     this.modelStackTop--;
   }
 
-  public getWorldMatrix(): TYPE6.Matrix4x3 {
+  public getWorldMatrix(): Matrix4x3 {
     return this.model[this.modelStackTop];
   }
 

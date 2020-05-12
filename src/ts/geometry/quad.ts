@@ -1,16 +1,17 @@
-
+import { BasicMesh } from './basic';
 import { SubMesh } from './subMesh';
 
-export class Quad {
+export class Quad extends BasicMesh {
 
-  vertices    : Array<number>;
-  uvs     : Array<number>;
-  subMeshes   : Array<SubMesh>;
+  vertices    : number[];
+  uvs         : number[];
+  subMeshes   : SubMesh[];
   itemSize    : number;
-  nbSubMeshes : number;
+  // nbSubMeshes : number;
   primitive   : string;
 
   constructor(width: number, height: number) {
+    super();
     width = width ? width * 0.5 : 1.0;
     height = height ? height * 0.5 : 1.0;
     // this.vertices = [  1.0,-1.0, 0.0,

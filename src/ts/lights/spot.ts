@@ -1,4 +1,4 @@
-import * as TYPE6 from '../../../bower_components/Type6js/dist/type6';
+import {Vector3} from '@lcluber/type6js';
 
 import { PointLight } from './point';
 
@@ -6,14 +6,14 @@ export class SpotLight extends PointLight {
 
   cutoff : number;
   exponent : number;
-  direction : TYPE6.Vector3;
+  direction : Vector3;
 
   constructor() {
     super();
 
     this.cutoff = 180;
     this.exponent = 0;
-    this.direction = new TYPE6.Vector3(1.0,0.0,0.0);
+    this.direction = new Vector3(1.0,0.0,0.0);
     this.type = 'spot';
   }
 
@@ -85,7 +85,7 @@ export class SpotLight extends PointLight {
   //   return this.exponent;
   // }
   //
-  // public getDirection(): TYPE6.Vector3 {
+  // public getDirection(): Vector3 {
   //   return this.direction;
   // }
 

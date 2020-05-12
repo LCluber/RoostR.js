@@ -8,12 +8,11 @@ import { PointLight } from '../lights/point';
 import { SpotLight } from '../lights/spot';
 import { Camera } from '../cameras/camera';
 
-export type Light = DirectionalLight | PointLight | SpotLight;
 
 export class Scene {
-  public meshes    : Array<Mesh>;
-  public nbMeshes  : number;
-  public lights    : Lights;
+  public  meshes   : Mesh[];
+  public  nbMeshes : number;
+  public  lights   : Lights;
   private context  : WebGLRenderingContext;
   private renderer : SceneRenderer;
   private graph    : SceneGraph;
@@ -24,7 +23,7 @@ export class Scene {
     this.lights = new Lights();
     this.context = context;
     this.renderer = new SceneRenderer(this.context);
-    this.graph = new SceneGraph(context);
+    this.graph = new SceneGraph();
   }
 
   public addMesh( mesh: Mesh ): void {
@@ -32,13 +31,18 @@ export class Scene {
     this.nbMeshes++;
   }
 
-  public addLight( light: Light ) {
+  public addLight( light: DirectionalLight | PointLight | SpotLight ): void {
     this.lights.addLight(light);
     //this.lights.push(light);
     //this.nbLights++;
   }
 
-  public getLightsProperty (property: string): Array<number> {
+  public clearMeshes(): void {
+    this.meshes = [];
+    this.nbMeshes = 0;
+  }
+
+  public getLightsProperty (property: string): number[] {
     return this.lights.getFlatArray(property);
   }
 
@@ -50,7 +54,7 @@ export class Scene {
     this.renderer.disableBlendMode();
   }
 
-  public getRendererBlendMode (): GLenum|Float32Array|GLint|WebGLBuffer|GLboolean|Array<GLboolean>|GLfloat|WebGLFramebuffer|Int32Array|GLuint|WebGLTexture {
+  public getRendererBlendMode (): GLenum|Float32Array|GLint|WebGLBuffer|GLboolean|GLboolean[]|GLfloat|WebGLFramebuffer|Int32Array|GLuint|WebGLTexture {
     return this.renderer.getParameter(this.context.BLEND);
   }
 
@@ -88,7 +92,7 @@ export class Scene {
       //if (this.meshes[i].blendMode) {
         mesh.render(  camera.getProjectionMatrix(),
                       camera.getViewMatrix(),
-                      this.lights.flatten(), 
+                      this.lights.flatten(),
                       time,
                       true
                     );
