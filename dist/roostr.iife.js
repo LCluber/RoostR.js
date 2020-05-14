@@ -148,8 +148,8 @@ var Roostr = (function (exports) {
                 return (1 - ratio) * x + ratio * y;
             }
         }, {
-            key: 'sign',
-            value: function sign(x) {
+            key: 'getSign',
+            value: function getSign(x) {
                 return x ? x < 0 ? -1 : 1 : 0;
             }
         }, {
@@ -169,43 +169,23 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'lerp',
-            value: function lerp(normal, min, max) {
-                return (max - min) * normal + min;
+            value: function lerp(min, max, amount) {
+                return (max - min) * amount + min;
             }
         }, {
             key: 'map',
             value: function map(x, sourceMin, sourceMax, destMin, destMax) {
-                return this.lerp(this.normalize(x, sourceMin, sourceMax), destMin, destMax);
+                return this.lerp(destMin, destMax, this.normalize(x, sourceMin, sourceMax));
             }
         }, {
-            key: 'isEven',
-            value: function isEven(x) {
-                return !(x & 1);
-            }
-        }, {
-            key: 'isOdd',
-            value: function isOdd(x) {
-                return x & 1;
-            }
-        }, {
-            key: 'isOrigin',
-            value: function isOrigin(x) {
-                return x === 0 ? true : false;
-            }
-        }, {
-            key: 'isPositive',
-            value: function isPositive(x) {
-                return x >= 0 ? true : false;
-            }
-        }, {
-            key: 'isNegative',
-            value: function isNegative(x) {
-                return x < 0 ? true : false;
-            }
-        }, {
-            key: 'contains',
-            value: function contains(x, min, max) {
+            key: 'isIn',
+            value: function isIn(x, min, max) {
                 return x >= min && x <= max;
+            }
+        }, {
+            key: 'isOut',
+            value: function isOut(x, min, max) {
+                return x < min || x > max;
             }
         }]);
 
@@ -249,32 +229,29 @@ var Roostr = (function (exports) {
         }, {
             key: 'setSinePrecision',
             value: function setSinePrecision(value) {
-                if (value < this.sineLoops.length) {
+                if (value >= 0 && value <= this.maxDecimals) {
                     this.sineDecimals = value;
                     return value;
                 }
-                this.sineDecimals = 2;
-                return 2;
+                return this.sineDecimals = this.maxDecimals;
             }
         }, {
             key: 'setCosinePrecision',
             value: function setCosinePrecision(value) {
-                if (value < Trigonometry.cosineLoops.length) {
+                if (value >= 0 && value <= this.maxDecimals) {
                     this.cosineDecimals = value;
                     return value;
                 }
-                this.cosineDecimals = 2;
-                return 2;
+                return this.cosineDecimals = this.maxDecimals;
             }
         }, {
             key: 'setArctanPrecision',
             value: function setArctanPrecision(value) {
-                if (value < Trigonometry.arctanLoops.length) {
-                    this.cosineDecimals = value;
+                if (value >= 0 && value <= this.maxDecimals) {
+                    this.arctanDecimals = value;
                     return value;
                 }
-                this.arctanDecimals = 2;
-                return 2;
+                return this.arctanDecimals = this.maxDecimals;
             }
         }, {
             key: 'degreeToRadian',
@@ -338,11 +315,6 @@ var Roostr = (function (exports) {
                 }
             }
         }, {
-            key: 'arctan2Vector2',
-            value: function arctan2Vector2(vector2) {
-                return this.arctan2(vector2.x, vector2.y);
-            }
-        }, {
             key: 'arctan',
             value: function arctan(angle) {
                 var loops = Trigonometry.arctanLoops[this.arctanDecimals];
@@ -399,6 +371,7 @@ var Roostr = (function (exports) {
     Trigonometry.sineDecimals = 2;
     Trigonometry.cosineDecimals = 2;
     Trigonometry.arctanDecimals = 2;
+    Trigonometry.maxDecimals = 8;
     Trigonometry.factorialArray = [];
     Trigonometry.init();
 
@@ -408,23 +381,23 @@ var Roostr = (function (exports) {
         }
 
         _createClass(Time, null, [{
-            key: 'millisecondToSecond',
-            value: function millisecondToSecond(millisecond) {
+            key: 'millisecToSec',
+            value: function millisecToSec(millisecond) {
                 return millisecond * 0.001;
             }
         }, {
-            key: 'secondToMilliecond',
-            value: function secondToMilliecond(second) {
+            key: 'secToMillisec',
+            value: function secToMillisec(second) {
                 return second * 1000;
             }
         }, {
-            key: 'millisecondToFramePerSecond',
-            value: function millisecondToFramePerSecond(millisecond) {
+            key: 'millisecToFps',
+            value: function millisecToFps(millisecond) {
                 return 1000 / millisecond;
             }
         }, {
-            key: 'framePerSecondToMillisecond',
-            value: function framePerSecondToMillisecond(refreshRate) {
+            key: 'fpsToMillisec',
+            value: function fpsToMillisec(refreshRate) {
                 return 1000 / refreshRate;
             }
         }]);
@@ -539,26 +512,16 @@ var Roostr = (function (exports) {
         _createClass(Vector2, [{
             key: 'isOrigin',
             value: function isOrigin() {
-                return Utils.isOrigin(this.x) && Utils.isOrigin(this.y) ? true : false;
-            }
-        }, {
-            key: 'isNotOrigin',
-            value: function isNotOrigin() {
-                return !Utils.isOrigin(this.x) || !Utils.isOrigin(this.y) ? true : false;
+                return this.x === 0 && this.y === 0 ? true : false;
             }
         }, {
             key: 'isPositive',
             value: function isPositive() {
-                return Utils.isPositive(this.x) && Utils.isPositive(this.y) ? true : false;
+                return this.x >= 0 && this.y >= 0 ? true : false;
             }
         }, {
-            key: 'isNegative',
-            value: function isNegative() {
-                return Utils.isNegative(this.x) && Utils.isNegative(this.y) ? true : false;
-            }
-        }, {
-            key: 'fromArray',
-            value: function fromArray(array, offset) {
+            key: 'setFromArray',
+            value: function setFromArray(array, offset) {
                 if (offset === undefined) {
                     offset = 0;
                 }
@@ -574,7 +537,7 @@ var Roostr = (function (exports) {
         }, {
             key: 'toString',
             value: function toString() {
-                return '(x = ' + this.x + ';y = ' + this.y + ')';
+                return '(x = ' + this.x + '; y = ' + this.y + ')';
             }
         }, {
             key: 'set',
@@ -590,9 +553,9 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'copy',
-            value: function copy(vector2) {
-                this.x = vector2.x;
-                this.y = vector2.y;
+            value: function copy(v) {
+                this.x = v.x;
+                this.y = v.y;
                 return this;
             }
         }, {
@@ -603,8 +566,8 @@ var Roostr = (function (exports) {
                 return this;
             }
         }, {
-            key: 'setAngle',
-            value: function setAngle(angle) {
+            key: 'setFromAngle',
+            value: function setFromAngle(angle) {
                 if (angle) {
                     var length = this.getMagnitude();
                     this.x = Trigonometry.cosine(angle) * length;
@@ -620,7 +583,9 @@ var Roostr = (function (exports) {
         }, {
             key: 'getMagnitude',
             value: function getMagnitude() {
-                return Math.sqrt(this.getSquaredMagnitude());
+                var square = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+                return square ? this.getSquaredMagnitude() : Math.sqrt(this.getSquaredMagnitude());
             }
         }, {
             key: 'getSquaredMagnitude',
@@ -629,19 +594,13 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'getDistance',
-            value: function getDistance(vector2) {
-                this.subtract(vector2);
-                var magnitude = this.getMagnitude();
-                this.add(vector2);
+            value: function getDistance(v) {
+                var square = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+                this.subtract(v);
+                var magnitude = this.getMagnitude(square);
+                this.add(v);
                 return magnitude;
-            }
-        }, {
-            key: 'getSquaredDistance',
-            value: function getSquaredDistance(vector2) {
-                this.subtract(vector2);
-                var squaredMagnitude = this.getSquaredMagnitude();
-                this.add(vector2);
-                return squaredMagnitude;
             }
         }, {
             key: 'quadraticBezier',
@@ -659,9 +618,9 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'add',
-            value: function add(vector2) {
-                this.x += vector2.x;
-                this.y += vector2.y;
+            value: function add(v) {
+                this.x += v.x;
+                this.y += v.y;
                 return this;
             }
         }, {
@@ -673,23 +632,16 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'addScaledVector',
-            value: function addScaledVector(vector2, scalar) {
-                this.x += vector2.x * scalar;
-                this.y += vector2.y * scalar;
-                return this;
-            }
-        }, {
-            key: 'addVectors',
-            value: function addVectors(v1, v2) {
-                this.x = v1.x + v2.x;
-                this.y = v1.y + v2.y;
+            value: function addScaledVector(v, scalar) {
+                this.x += v.x * scalar;
+                this.y += v.y * scalar;
                 return this;
             }
         }, {
             key: 'subtract',
-            value: function subtract(vector2) {
-                this.x -= vector2.x;
-                this.y -= vector2.y;
+            value: function subtract(v) {
+                this.x -= v.x;
+                this.y -= v.y;
                 return this;
             }
         }, {
@@ -701,16 +653,9 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'subtractScaledVector',
-            value: function subtractScaledVector(vector2, scalar) {
-                this.x -= vector2.x * scalar;
-                this.y -= vector2.y * scalar;
-                return this;
-            }
-        }, {
-            key: 'subtractVectors',
-            value: function subtractVectors(v1, v2) {
-                this.x = v1.x - v2.x;
-                this.y = v1.y - v2.y;
+            value: function subtractScaledVector(v, scalar) {
+                this.x -= v.x * scalar;
+                this.y -= v.y * scalar;
                 return this;
             }
         }, {
@@ -721,52 +666,31 @@ var Roostr = (function (exports) {
                 return this;
             }
         }, {
-            key: 'scaleVector',
-            value: function scaleVector(v1, value) {
-                this.x = v1.x * value;
-                this.y = v1.y * value;
-                return this;
-            }
-        }, {
             key: 'multiply',
-            value: function multiply(vector2) {
-                this.x *= vector2.x;
-                this.y *= vector2.y;
+            value: function multiply(v) {
+                this.x *= v.x;
+                this.y *= v.y;
                 return this;
             }
         }, {
             key: 'multiplyScaledVector',
-            value: function multiplyScaledVector(vector2, scalar) {
-                this.x *= vector2.x * scalar;
-                this.y *= vector2.y * scalar;
-                return this;
-            }
-        }, {
-            key: 'multiplyVectors',
-            value: function multiplyVectors(v1, v2) {
-                this.x = v1.x * v2.x;
-                this.y = v1.y * v2.y;
+            value: function multiplyScaledVector(v, scalar) {
+                this.x *= v.x * scalar;
+                this.y *= v.y * scalar;
                 return this;
             }
         }, {
             key: 'divide',
-            value: function divide(vector2) {
-                this.x /= vector2.x;
-                this.y /= vector2.y;
+            value: function divide(v) {
+                this.x /= v.x;
+                this.y /= v.y;
                 return this;
             }
         }, {
             key: 'divideScaledVector',
-            value: function divideScaledVector(vector2, scalar) {
-                this.x /= vector2.x * scalar;
-                this.y /= vector2.y * scalar;
-                return this;
-            }
-        }, {
-            key: 'divideVectors',
-            value: function divideVectors(v1, v2) {
-                this.x = v1.x / v2.x;
-                this.y = v1.y / v2.y;
+            value: function divideScaledVector(v, scalar) {
+                this.x /= v.x * scalar;
+                this.y /= v.y * scalar;
                 return this;
             }
         }, {
@@ -778,16 +702,16 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'max',
-            value: function max(vector2) {
-                this.x = Math.max(this.x, vector2.x);
-                this.y = Math.max(this.y, vector2.y);
+            value: function max(v) {
+                this.x = Math.max(this.x, v.x);
+                this.y = Math.max(this.y, v.y);
                 return this;
             }
         }, {
             key: 'min',
-            value: function min(vector2) {
-                this.x = Math.min(this.x, vector2.x);
-                this.y = Math.min(this.y, vector2.y);
+            value: function min(v) {
+                this.x = Math.min(this.x, v.x);
+                this.y = Math.min(this.y, v.y);
                 return this;
             }
         }, {
@@ -805,13 +729,13 @@ var Roostr = (function (exports) {
                 return this;
             }
         }, {
-            key: 'maxAxis',
-            value: function maxAxis() {
+            key: 'getMaxAxis',
+            value: function getMaxAxis() {
                 return this.y > this.x ? 'y' : 'x';
             }
         }, {
-            key: 'minAxis',
-            value: function minAxis() {
+            key: 'getMinAxis',
+            value: function getMinAxis() {
                 return this.y < this.x ? 'y' : 'x';
             }
         }, {
@@ -834,12 +758,6 @@ var Roostr = (function (exports) {
                 return this;
             }
         }, {
-            key: 'normalizeVector',
-            value: function normalizeVector(v) {
-                this.copy(v);
-                return this.normalize();
-            }
-        }, {
             key: 'absolute',
             value: function absolute() {
                 this.x = Math.abs(this.x);
@@ -847,24 +765,10 @@ var Roostr = (function (exports) {
                 return this;
             }
         }, {
-            key: 'absoluteVector',
-            value: function absoluteVector(v) {
-                this.x = Math.abs(v.x);
-                this.y = Math.abs(v.y);
-                return this;
-            }
-        }, {
             key: 'opposite',
             value: function opposite() {
                 this.x = -this.x;
                 this.y = -this.y;
-                return this;
-            }
-        }, {
-            key: 'oppositeVector',
-            value: function oppositeVector(v) {
-                this.x = -v.x;
-                this.y = -v.y;
                 return this;
             }
         }, {
@@ -876,15 +780,15 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'lerp',
-            value: function lerp(normal, min, max) {
-                this.x = Utils.lerp(normal, min.x, max.x);
-                this.y = Utils.lerp(normal, min.y, max.y);
+            value: function lerp(min, max, amount) {
+                this.x = Utils.lerp(min.x, max.x, amount);
+                this.y = Utils.lerp(min.y, max.y, amount);
                 return this;
             }
         }, {
             key: 'dotProduct',
-            value: function dotProduct(vector2) {
-                return this.x * vector2.x + this.y * vector2.y;
+            value: function dotProduct(v) {
+                return this.x * v.x + this.y * v.y;
             }
         }]);
 
@@ -912,32 +816,37 @@ var Roostr = (function (exports) {
             value: function copy(circle) {
                 this.position.copy(circle.position);
                 this.radius = circle.radius;
+                return this;
             }
         }, {
             key: 'set',
             value: function set(positionX, positionY, radius) {
                 this.position.set(positionX, positionY);
                 this.radius = radius;
+                return this;
             }
         }, {
             key: 'setPositionXY',
             value: function setPositionXY(positionX, positionY) {
                 this.position.set(positionX, positionY);
+                return this;
             }
         }, {
             key: 'setPositionFromVector',
             value: function setPositionFromVector(position) {
                 this.position.copy(position);
+                return this;
             }
         }, {
             key: 'scale',
             value: function scale(scalar) {
                 this.radius *= scalar;
+                return this;
             }
         }, {
-            key: 'contains',
-            value: function contains(vector) {
-                return vector.getSquaredDistance(this.position) <= this.radius * this.radius;
+            key: 'isIn',
+            value: function isIn(v) {
+                return v.getDistance(this.position, true) <= this.radius * this.radius;
             }
         }, {
             key: 'draw',
@@ -1000,22 +909,26 @@ var Roostr = (function (exports) {
             value: function copy(rectangle) {
                 this.setSizeFromVector(rectangle.size);
                 this.setPositionFromVector(rectangle.position);
+                return this;
             }
         }, {
             key: 'set',
             value: function set(positionX, positionY, sizeX, sizeY) {
                 this.setSizeXY(sizeX, sizeY);
                 this.setPositionXY(positionX, positionY);
+                return this;
             }
         }, {
             key: 'setPositionX',
             value: function setPositionX(x) {
                 this.setPosition('x', x);
+                return this;
             }
         }, {
             key: 'setPositionY',
             value: function setPositionY(y) {
                 this.setPosition('y', y);
+                return this;
             }
         }, {
             key: 'setPosition',
@@ -1029,22 +942,26 @@ var Roostr = (function (exports) {
             value: function setPositionXY(positionX, positionY) {
                 this.position.set(positionX, positionY);
                 this.setCorners();
+                return this;
             }
         }, {
             key: 'setPositionFromVector',
             value: function setPositionFromVector(position) {
                 this.position.copy(position);
                 this.setCorners();
+                return this;
             }
         }, {
             key: 'setSizeX',
             value: function setSizeX(width) {
                 this.setSize('x', width);
+                return this;
             }
         }, {
             key: 'setSizeY',
             value: function setSizeY(height) {
                 this.setSize('y', height);
+                return this;
             }
         }, {
             key: 'setSize',
@@ -1060,6 +977,7 @@ var Roostr = (function (exports) {
                 this.size.set(width, height);
                 this.setHalfSize();
                 this.setCorners();
+                return this;
             }
         }, {
             key: 'setSizeFromVector',
@@ -1067,6 +985,7 @@ var Roostr = (function (exports) {
                 this.size.copy(size);
                 this.setHalfSize();
                 this.setCorners();
+                return this;
             }
         }, {
             key: 'setCorners',
@@ -1081,9 +1000,9 @@ var Roostr = (function (exports) {
                 this.halfSize.halve();
             }
         }, {
-            key: 'contains',
-            value: function contains(vector) {
-                return Utils.contains(vector.x, this.topLeftCorner.x, this.bottomRightCorner.x) && Utils.contains(vector.y, this.topLeftCorner.y, this.bottomRightCorner.y);
+            key: 'isIn',
+            value: function isIn(vector) {
+                return Utils.isIn(vector.x, this.topLeftCorner.x, this.bottomRightCorner.x) && Utils.isIn(vector.y, this.topLeftCorner.y, this.bottomRightCorner.y);
             }
         }, {
             key: 'draw',
@@ -1115,8 +1034,18 @@ var Roostr = (function (exports) {
         }
 
         _createClass(Vector3, [{
-            key: 'fromArray',
-            value: function fromArray(array, offset) {
+            key: 'isOrigin',
+            value: function isOrigin() {
+                return this.x === 0 && this.y === 0 && this.z === 0 ? true : false;
+            }
+        }, {
+            key: 'isPositive',
+            value: function isPositive() {
+                return this.x >= 0 && this.y >= 0 && this.z >= 0 ? true : false;
+            }
+        }, {
+            key: 'setFromArray',
+            value: function setFromArray(array, offset) {
                 if (offset === undefined) {
                     offset = 0;
                 }
@@ -1133,7 +1062,7 @@ var Roostr = (function (exports) {
         }, {
             key: 'toString',
             value: function toString() {
-                return '(x = ' + this.x + ';y = ' + this.y + ';z = ' + this.z + ')';
+                return '(x = ' + this.x + '; y = ' + this.y + '; z = ' + this.z + ')';
             }
         }, {
             key: 'set',
@@ -1150,10 +1079,10 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'copy',
-            value: function copy(vector3) {
-                this.x = vector3.x;
-                this.y = vector3.y;
-                this.z = vector3.z;
+            value: function copy(v) {
+                this.x = v.x;
+                this.y = v.y;
+                this.z = v.z;
                 return this;
             }
         }, {
@@ -1167,7 +1096,9 @@ var Roostr = (function (exports) {
         }, {
             key: 'getMagnitude',
             value: function getMagnitude() {
-                return Math.sqrt(this.getSquaredMagnitude());
+                var square = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+                return square ? this.getSquaredMagnitude() : Math.sqrt(this.getSquaredMagnitude());
             }
         }, {
             key: 'getSquaredMagnitude',
@@ -1176,26 +1107,20 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'getDistance',
-            value: function getDistance(vector3) {
-                this.subtract(vector3);
-                var magnitude = this.getMagnitude();
-                this.add(vector3);
+            value: function getDistance(v) {
+                var square = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+                this.subtract(v);
+                var magnitude = this.getMagnitude(square);
+                this.add(v);
                 return magnitude;
             }
         }, {
-            key: 'getSquaredDistance',
-            value: function getSquaredDistance(vector3) {
-                this.subtract(vector3);
-                var squaredMagnitude = this.getSquaredMagnitude();
-                this.add(vector3);
-                return squaredMagnitude;
-            }
-        }, {
             key: 'add',
-            value: function add(vector3) {
-                this.x += vector3.x;
-                this.y += vector3.y;
-                this.z += vector3.z;
+            value: function add(v) {
+                this.x += v.x;
+                this.y += v.y;
+                this.z += v.z;
                 return this;
             }
         }, {
@@ -1208,26 +1133,18 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'addScaledVector',
-            value: function addScaledVector(vector3, scalar) {
-                this.x += vector3.x * scalar;
-                this.y += vector3.y * scalar;
-                this.z += vector3.z * scalar;
-                return this;
-            }
-        }, {
-            key: 'addVectors',
-            value: function addVectors(v1, v2) {
-                this.x = v1.x + v2.x;
-                this.y = v1.y + v2.y;
-                this.z = v1.z + v2.z;
+            value: function addScaledVector(v, scalar) {
+                this.x += v.x * scalar;
+                this.y += v.y * scalar;
+                this.z += v.z * scalar;
                 return this;
             }
         }, {
             key: 'subtract',
-            value: function subtract(vector3) {
-                this.x -= vector3.x;
-                this.y -= vector3.y;
-                this.z -= vector3.z;
+            value: function subtract(v) {
+                this.x -= v.x;
+                this.y -= v.y;
+                this.z -= v.z;
                 return this;
             }
         }, {
@@ -1240,18 +1157,10 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'subtractScaledVector',
-            value: function subtractScaledVector(vector3, scalar) {
-                this.x -= vector3.x * scalar;
-                this.y -= vector3.y * scalar;
-                this.z -= vector3.z * scalar;
-                return this;
-            }
-        }, {
-            key: 'subtractVectors',
-            value: function subtractVectors(v1, v2) {
-                this.x = v1.x - v2.x;
-                this.y = v1.y - v2.y;
-                this.z = v1.z - v2.z;
+            value: function subtractScaledVector(v, scalar) {
+                this.x -= v.x * scalar;
+                this.y -= v.y * scalar;
+                this.z -= v.z * scalar;
                 return this;
             }
         }, {
@@ -1264,50 +1173,34 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'multiply',
-            value: function multiply(vector3) {
-                this.x *= vector3.x;
-                this.y *= vector3.y;
-                this.z *= vector3.z;
+            value: function multiply(v) {
+                this.x *= v.x;
+                this.y *= v.y;
+                this.z *= v.z;
                 return this;
             }
         }, {
             key: 'multiplyScaledVector',
-            value: function multiplyScaledVector(vector3, scalar) {
-                this.x *= vector3.x * scalar;
-                this.y *= vector3.y * scalar;
-                this.z *= vector3.z * scalar;
-                return this;
-            }
-        }, {
-            key: 'multiplyVectors',
-            value: function multiplyVectors(v1, v2) {
-                this.x = v1.x * v2.x;
-                this.y = v1.y * v2.y;
-                this.z = v1.z * v2.z;
+            value: function multiplyScaledVector(v, scalar) {
+                this.x *= v.x * scalar;
+                this.y *= v.y * scalar;
+                this.z *= v.z * scalar;
                 return this;
             }
         }, {
             key: 'divide',
-            value: function divide(vector3) {
-                this.x /= vector3.x;
-                this.y /= vector3.y;
-                this.z /= vector3.z;
+            value: function divide(v) {
+                this.x /= v.x;
+                this.y /= v.y;
+                this.z /= v.z;
                 return this;
             }
         }, {
             key: 'divideScaledVector',
-            value: function divideScaledVector(vector3, scalar) {
-                this.x /= vector3.x * scalar;
-                this.y /= vector3.y * scalar;
-                this.z /= vector3.z * scalar;
-                return this;
-            }
-        }, {
-            key: 'divideVectors',
-            value: function divideVectors(v1, v2) {
-                this.x = v1.x / v2.x;
-                this.y = v1.y / v2.y;
-                this.z = v1.z / v2.z;
+            value: function divideScaledVector(v, scalar) {
+                this.x /= v.x * scalar;
+                this.y /= v.y * scalar;
+                this.z /= v.z * scalar;
                 return this;
             }
         }, {
@@ -1320,18 +1213,18 @@ var Roostr = (function (exports) {
             }
         }, {
             key: 'max',
-            value: function max(vector3) {
-                this.x = Math.max(this.x, vector3.x);
-                this.y = Math.max(this.y, vector3.y);
-                this.z = Math.max(this.z, vector3.z);
+            value: function max(v) {
+                this.x = Math.max(this.x, v.x);
+                this.y = Math.max(this.y, v.y);
+                this.z = Math.max(this.z, v.z);
                 return this;
             }
         }, {
             key: 'min',
-            value: function min(vector3) {
-                this.x = Math.min(this.x, vector3.x);
-                this.y = Math.min(this.y, vector3.y);
-                this.z = Math.min(this.z, vector3.z);
+            value: function min(v) {
+                this.x = Math.min(this.x, v.x);
+                this.y = Math.min(this.y, v.y);
+                this.z = Math.min(this.z, v.z);
                 return this;
             }
         }, {
@@ -1360,38 +1253,117 @@ var Roostr = (function (exports) {
                 return this;
             }
         }, {
-            key: 'dotProduct',
-            value: function dotProduct(vector3) {
-                return this.x * vector3.x + this.y * vector3.y + this.z * vector3.z;
-            }
-        }, {
-            key: 'cross',
-            value: function cross(vector3) {
-                var x = this.x,
-                    y = this.y,
-                    z = this.z;
-                this.x = y * vector3.z - z * vector3.y;
-                this.y = z * vector3.x - x * vector3.z;
-                this.z = x * vector3.y - y * vector3.x;
+            key: 'absolute',
+            value: function absolute() {
+                this.x = Math.abs(this.x);
+                this.y = Math.abs(this.y);
+                this.z = Math.abs(this.z);
                 return this;
             }
         }, {
-            key: 'crossVectors',
-            value: function crossVectors(v1, v2) {
-                var v1x = v1.x,
-                    v1y = v1.y,
-                    v1z = v1.z;
-                var v2x = v2.x,
-                    v2y = v2.y,
-                    v2z = v2.z;
-                this.x = v1y * v2z - v1z * v2y;
-                this.y = v1z * v2x - v1x * v2z;
-                this.z = v1x * v2y - v1y * v2x;
+            key: 'opposite',
+            value: function opposite() {
+                this.x = -this.x;
+                this.y = -this.y;
+                this.z = -this.z;
+                return this;
+            }
+        }, {
+            key: 'dotProduct',
+            value: function dotProduct(v) {
+                return this.x * v.x + this.y * v.y + this.z * v.z;
+            }
+        }, {
+            key: 'cross',
+            value: function cross(v) {
+                var x = this.x,
+                    y = this.y,
+                    z = this.z;
+                this.x = y * v.z - z * v.y;
+                this.y = z * v.x - x * v.z;
+                this.z = x * v.y - y * v.x;
                 return this;
             }
         }]);
 
         return Vector3;
+    }();
+
+    var Matrix3x3 = function () {
+        function Matrix3x3(x1, x2, x3, y1, y2, y3, t1, t2, t3) {
+            _classCallCheck(this, Matrix3x3);
+
+            this.m = new Float32Array(9);
+            this.make(x1, x2, x3, y1, y2, y3, t1, t2, t3);
+        }
+
+        _createClass(Matrix3x3, [{
+            key: 'make',
+            value: function make(x1, x2, x3, y1, y2, y3, t1, t2, t3) {
+                this.m[0] = x1 || 0.0;
+                this.m[1] = x2 || 0.0;
+                this.m[2] = x3 || 0.0;
+                this.m[3] = y1 || 0.0;
+                this.m[4] = y2 || 0.0;
+                this.m[5] = y3 || 0.0;
+                this.m[6] = t1 || 0.0;
+                this.m[7] = t2 || 0.0;
+                this.m[8] = t3 || 0.0;
+            }
+        }, {
+            key: 'copy',
+            value: function copy(matrix3x3) {
+                var m = matrix3x3.m;
+                this.make(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8]);
+                return this;
+            }
+        }, {
+            key: 'toArray',
+            value: function toArray() {
+                return this.m;
+            }
+        }, {
+            key: 'toString',
+            value: function toString() {
+                return '(' + this.m[0] + ',' + this.m[1] + ',' + this.m[2] + ';' + this.m[3] + ',' + this.m[4] + ',' + this.m[5] + ';' + this.m[6] + ',' + this.m[7] + ',' + this.m[8] + ')';
+            }
+        }, {
+            key: 'identity',
+            value: function identity() {
+                this.make(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
+                return this;
+            }
+        }, {
+            key: 'scale',
+            value: function scale(vector2) {
+                this.make(vector2.x, 0.0, 0.0, 0.0, vector2.y, 0.0, 0.0, 0.0, 1.0);
+                return this;
+            }
+        }, {
+            key: 'rotate',
+            value: function rotate(angle) {
+                var cos = Trigonometry.cosine(angle);
+                var sin = Trigonometry.sine(angle);
+                this.make(cos, sin, 0.0, -sin, cos, 0.0, 0.0, 0.0, 1.0);
+                return this;
+            }
+        }, {
+            key: 'translate',
+            value: function translate(vector2) {
+                this.make(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, vector2.x, vector2.y, 1.0);
+                return this;
+            }
+        }, {
+            key: 'multiply',
+            value: function multiply(matrix3x3) {
+                var m1 = this.m;
+                var m2 = matrix3x3.m;
+                this.make(m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2], m1[0] * m2[3] + m1[3] * m2[4] + m1[6] * m2[5], m1[1] * m2[3] + m1[4] * m2[4] + m1[7] * m2[5], m1[2] * m2[3] + m1[5] * m2[4] + m1[8] * m2[5], m1[0] * m2[6] + m1[3] * m2[7] + m1[6] * m2[8], m1[1] * m2[6] + m1[4] * m2[7] + m1[7] * m2[8], m1[2] * m2[6] + m1[5] * m2[7] + m1[8] * m2[8]);
+                return this;
+            }
+        }]);
+
+        return Matrix3x3;
     }();
 
     var Matrix4x3 = function () {
@@ -1495,9 +1467,9 @@ var Roostr = (function (exports) {
         }, {
             key: 'lookAtRH',
             value: function lookAtRH(eye, target, up) {
-                this.zAxis.subtractVectors(eye, target).normalize();
-                this.xAxis.crossVectors(up, this.zAxis).normalize();
-                this.yAxis.crossVectors(this.zAxis, this.xAxis);
+                this.zAxis.copy(eye).subtract(target).normalize();
+                this.xAxis.copy(up).cross(this.zAxis).normalize();
+                this.yAxis.copy(this.zAxis).cross(this.xAxis);
                 this.make(this.xAxis.x, this.yAxis.x, this.zAxis.x, this.xAxis.y, this.yAxis.y, this.zAxis.y, this.xAxis.z, this.yAxis.z, this.zAxis.z, -this.xAxis.dotProduct(eye), -this.yAxis.dotProduct(eye), -this.zAxis.dotProduct(eye));
                 return this;
             }
