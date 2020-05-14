@@ -1,3 +1,7 @@
+Version 0.5.8 (May 14th 2020)
+-----------------------------
+ * Update Type6.js dependency to version 2
+
 Version 0.5.7 (January 04th 2019)
 -----------------------------
  * Updated typings for Angular

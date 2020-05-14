@@ -4,7 +4,6 @@ import { PointLight } from '../lights/point';
 import { SpotLight } from '../lights/spot';
 import { IFlatLights } from '../interfaces';
 
-
 export class Lights {
 
   directionals : DirectionalLight[];

@@ -151,7 +151,6 @@ export declare class VWing extends BasicMesh {
     constructor();
 }
 
-
 export interface IGeometry {
     vertices: number[] | null;
     indices: number[] | null;
@@ -261,7 +260,6 @@ export declare class Material {
     constructor();
 }
 
-
 export declare enum eDrawMethod {
     drawElements = "drawElements",
     drawArrays = "drawArrays"
@@ -362,29 +360,6 @@ export declare class SceneRenderer {
     getParameter(parameterName: GLenum): GLenum | Float32Array | GLint | WebGLBuffer | GLboolean | Array<GLboolean> | GLfloat | WebGLFramebuffer | Int32Array | GLuint | WebGLTexture;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export declare class Lights {
     directionals: DirectionalLight[];
     points: PointLight[];
@@ -402,11 +377,6 @@ export declare class Lights {
     flatten(): IFlatLights;
     getFlatArray(property: string): any;
 }
-
-
-
-
-
 
 export declare class Scene {
     meshes: Mesh[];

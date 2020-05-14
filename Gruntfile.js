@@ -426,8 +426,8 @@ module.exports = function(grunt){
                         'rollup:iife',
                         'uglify:libIife',
                         //declaration
-                        //'concat:declaration',
-                        //'strip_code:declaration'
+                        'concat:declaration',
+                        'strip_code:declaration'
                         //'replace:declaration'
                       ]
                     );
