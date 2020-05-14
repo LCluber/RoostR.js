@@ -16,7 +16,7 @@
     "suppressImplicitAnyIndexErrors":false,
     "allowJs": false,
     "removeComments": true,
-    "declaration":false,
+    "declaration":true,
     "declarationDir":"build/es6/",
     "outDir":"build/es6/",
     "rootDir":"src/ts/"
