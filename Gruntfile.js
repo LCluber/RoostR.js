@@ -240,7 +240,7 @@ module.exports = function(grunt){
             if_return:true,
             join_vars:true,
             warnings: true,
-            drop_console: true,
+            drop_console: false,
             keep_fargs: false,
             keep_fnames: false
           }
@@ -486,7 +486,7 @@ module.exports = function(grunt){
                         //build site
                         grunt.task.run('website');
                         //build documentation
-                        grunt.task.run('doc');
+                        // grunt.task.run('doc');
                         // launch server and watch for changes
                         grunt.task.run('serve');
                       }

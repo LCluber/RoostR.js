@@ -32,6 +32,7 @@
   var modal = Wee.Dom.findById('myModal');
 
   var cameraDefaultPosition = {
+    // quad       : new Type6.Vector3(0.0, 0.0, 0.0),
     cube       : new Type6.Vector3(0.0, 0.0, 5.0),
     sphere     : new Type6.Vector3(0.0, 0.0, 4.0),
     vwing      : new Type6.Vector3(0.0, 0.0,12.0)
@@ -84,6 +85,7 @@
     meshes.vwing  = new Roostr.Mesh( new Roostr.VWing(),  renderer.getContext() );
     meshes.cube   = new Roostr.Mesh( new Roostr.Cube(),   renderer.getContext() );
     meshes.sphere = new Roostr.Mesh( new Roostr.Sphere(), renderer.getContext() );
+    // meshes.quad   = new Roostr.Mesh( new Roostr.Quad(4,4),  renderer.getContext() );
 
     appendMeshesList();
 
@@ -115,6 +117,10 @@
     meshes.sphere.addCustomUniform('lightDiffuse', 'uniform3fv',  scene.getLightsProperty('diffuse'));
     meshes.sphere.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
 
+    // meshes.quad.addCustomUniform('lightPosition', 'uniform3fv', scene.getLightsProperty('position'));
+    // meshes.quad.addCustomUniform('lightDiffuse', 'uniform3fv',  scene.getLightsProperty('diffuse'));
+    // meshes.quad.addCustomUniform('lightSpecular', 'uniform3fv', scene.getLightsProperty('specular'));
+
     //compile shader
     meshes.vwing.addProgram( vertShader, fragShader, material );
     meshes.vwing.addProgram( assetsLoader.getAsset('emissive_vert.glsl').xhr.response,
@@ -124,6 +130,7 @@
 
     meshes.cube.addProgram( vertShader, fragShader, material );
     meshes.sphere.addProgram( vertShader, fragShader, material );
+    // meshes.quad.addProgram( vertShader, fragShader, material );
 
     //scene.addMesh(meshes.vwing);
     camera = new Roostr.PerspectiveCamera( 45, 0.1, 1000, renderer.getContext() );

@@ -60,9 +60,9 @@ export declare class PerspectiveCamera extends Camera {
 
 
 export declare class BasicMesh implements IGeometry {
-    vertices: number[];
-    indices: number[];
-    normals: number[];
+    vertices: number[] | null;
+    indices: number[] | null;
+    normals: number[] | null;
     subMeshes: SubMesh[];
     itemSize: number;
     primitive: string;

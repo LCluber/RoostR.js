@@ -3,9 +3,9 @@ import { SubMesh } from './subMesh';
 
 export class BasicMesh implements IGeometry {
 
-  vertices    : number[];
-  indices     : number[];
-  normals     : number[];
+  vertices    : number[] | null;
+  indices     : number[] | null;
+  normals     : number[] | null;
   subMeshes   : SubMesh[];
   itemSize    : number;
   // nbSubMeshes : number;
@@ -13,9 +13,9 @@ export class BasicMesh implements IGeometry {
 
   constructor() {
 
-    this.vertices = [];
-    this.indices = [];
-    this.normals = [];
+    this.vertices = null;
+    this.indices = null;
+    this.normals = null;
     this.subMeshes = [];
     this.itemSize = 3;
     this.primitive = 'TRIANGLES';

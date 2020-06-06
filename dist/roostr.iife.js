@@ -2831,9 +2831,9 @@ var Roostr = (function (exports) {
 
     var BasicMesh = function () {
         function BasicMesh() {
-            this.vertices = [];
-            this.indices = [];
-            this.normals = [];
+            this.vertices = null;
+            this.indices = null;
+            this.normals = null;
             this.subMeshes = [];
             this.itemSize = 3;
             this.primitive = 'TRIANGLES';

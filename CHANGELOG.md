@@ -1,3 +1,7 @@
+Version 0.5.9 (June 06th 2020)
+-----------------------------
+ * Fix range out of bounds of buffer for quads meshes
+
 Version 0.5.8 (May 14th 2020)
 -----------------------------
  * Update Type6.js dependency to version 2

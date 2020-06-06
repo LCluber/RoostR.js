@@ -217,13 +217,11 @@ export class Mesh implements IMesh {
   }
 
   private addProgramAttribute(name:string): void {
-    //var attribute = name + 'Attribute';
     this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], 'a' + this.ucfirst(name));
     this.context.enableVertexAttribArray(this.programs[this.nbPrograms][name]);
   }
 
   private addProgramUniform(name:string): void {
-    //var attribute = name + 'Uniform';
     this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], 'u' + this.ucfirst(name));
   }
 
