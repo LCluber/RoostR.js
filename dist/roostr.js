@@ -25,7 +25,6 @@
 
 import { Matrix4x3, Matrix4x4, Vector3 } from '@lcluber/type6js';
 import { Dom } from '@lcluber/weejs';
-import { Logger } from '@lcluber/mouettejs';
 
 class SceneRenderer {
     constructor(context) {
@@ -329,13 +328,12 @@ class Shader {
             context.shaderSource(shader, str);
             context.compileShader(shader);
             if (!context.getShaderParameter(shader, context.COMPILE_STATUS)) {
-                this.log.error('shader creation failed : ' + context.getShaderInfoLog(shader));
+                console.log(context.getShaderInfoLog(shader));
             }
         }
         return shader;
     }
 }
-Shader.log = Logger.addGroup("RoostR");
 
 class Program {
     static create(context, vertexShader, fragmentShader) {
@@ -351,13 +349,12 @@ class Program {
             }
             context.linkProgram(program);
             if (!context.getProgramParameter(program, context.LINK_STATUS)) {
-                this.log.error('program creation failed : ' + context.getProgramInfoLog(program));
+                console.log(context.getProgramInfoLog(program));
             }
         }
         return program;
     }
 }
-Program.log = Logger.addGroup("RoostR");
 
 class Texture {
     static create(img, context) {

@@ -151,6 +151,11 @@ export declare class VWing extends BasicMesh {
     constructor();
 }
 
+
+
+
+
+import { Matrix4x3 } from '@lcluber/type6js';
 export interface IGeometry {
     vertices: number[] | null;
     indices: number[] | null;
@@ -219,6 +224,7 @@ export interface IFlatLights {
     direction: number[];
     type: number[];
 }
+import { Vector3 } from '@lcluber/type6js';
 
 export declare class DirectionalLight {
     position: Vector3;
@@ -240,6 +246,7 @@ export declare class PointLight extends DirectionalLight {
     setLinearAttenuation(): void;
     setQuadraticAttenuation(): void;
 }
+import { Vector3 } from '@lcluber/type6js';
 
 export declare class SpotLight extends PointLight {
     cutoff: number;
@@ -250,6 +257,7 @@ export declare class SpotLight extends PointLight {
     setExponent(): void;
     setDirection(): void;
 }
+import { Vector3 } from '@lcluber/type6js';
 
 export declare class Material {
     ambient: Vector3;
@@ -259,6 +267,11 @@ export declare class Material {
     uniforms: IMaterialUniforms;
     constructor();
 }
+import { Matrix4x3 } from '@lcluber/type6js';
+
+
+
+
 
 export declare enum eDrawMethod {
     drawElements = "drawElements",
@@ -315,7 +328,6 @@ export declare class Mesh implements IMesh {
     private ucfirst;
 }
 export declare class Program {
-    private static log;
     static create(context: WebGLRenderingContext, vertexShader: string, fragmentShader: string): WebGLProgram | null;
 }
 export declare class Renderer {
@@ -360,6 +372,29 @@ export declare class SceneRenderer {
     getParameter(parameterName: GLenum): GLenum | Float32Array | GLint | WebGLBuffer | GLboolean | Array<GLboolean> | GLfloat | WebGLFramebuffer | Int32Array | GLuint | WebGLTexture;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export declare class Lights {
     directionals: DirectionalLight[];
     points: PointLight[];
@@ -377,6 +412,11 @@ export declare class Lights {
     flatten(): IFlatLights;
     getFlatArray(property: string): any;
 }
+
+
+
+
+
 
 export declare class Scene {
     meshes: Mesh[];
@@ -397,7 +437,7 @@ export declare class Scene {
     private computeWorldMatrices;
     private renderBlended;
 }
-
+import { Matrix4x3 } from '@lcluber/type6js';
 export declare class SceneGraph {
     model: Array<Matrix4x3>;
     nbModel: number;
@@ -409,7 +449,6 @@ export declare class SceneGraph {
 }
 export declare type ShaderType = 'VERTEX_SHADER' | 'FRAGMENT_SHADER';
 export declare class Shader {
-    private static log;
     static create(context: WebGLRenderingContext, str: string, type: ShaderType): WebGLShader | null;
 }
 export declare class Texture {

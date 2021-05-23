@@ -1,3 +1,7 @@
+Version 0.5.10 (May 23th 2021)
+-----------------------------
+ * Delete logger dependency
+
 Version 0.5.9 (June 06th 2020)
 -----------------------------
  * Fix range out of bounds of buffer for quads meshes
