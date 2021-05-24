@@ -24,7 +24,6 @@
 */
 
 import { Matrix4x3, Matrix4x4, Vector3 } from '@lcluber/type6js';
-import { Dom } from '@lcluber/weejs';
 
 class SceneRenderer {
     constructor(context) {
@@ -217,7 +216,7 @@ class Scene {
 
 class Renderer {
     constructor(canvasID) {
-        this.canvas = Dom.findById(canvasID);
+        this.canvas = this.findById(canvasID);
         this.canvas.width = 1280;
         this.canvas.height = 720;
         this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl", { alpha: false });
@@ -254,6 +253,9 @@ class Renderer {
     }
     getContext() {
         return this.context;
+    }
+    findById(id) {
+        return document.getElementById(id);
     }
 }
 

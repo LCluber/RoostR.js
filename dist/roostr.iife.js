@@ -75,35 +75,39 @@ var Roostr = (function (exports) {
 
     var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+    function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+    function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
     function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
     function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
     /** MIT License
-    * 
-    * Copyright (c) 2011 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * http://type6js.lcluber.com
-    */
-
+     *
+     * Copyright (c) 2011 Ludovic CLUBER
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice (including the next
+     * paragraph) shall be included in all copies or substantial portions of the
+     * Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+     * SOFTWARE.
+     *
+     * https://github.com/LCluber/Type6.js
+     */
     var Utils = function () {
         function Utils() {
             _classCallCheck(this, Utils);
@@ -132,9 +136,7 @@ var Roostr = (function (exports) {
             value: function trunc(x, decimals) {
                 decimals = Math.pow(10, decimals);
                 var v = +x * decimals;
-                if (!isFinite(v)) {
-                    return v;
-                }
+                if (!isFinite(v)) return v;
                 return (v - v % 1) / decimals || (v < 0 ? -0 : v === 0 ? v : 0);
             }
         }, {
@@ -275,22 +277,14 @@ var Roostr = (function (exports) {
             key: 'sine',
             value: function sine(angle) {
                 angle = this.normalizeRadian(angle);
-                if (Trigonometry.sineDecimals <= 2 && angle < 0.28 && angle > -0.28) {
-                    return angle;
-                } else {
-                    return this.taylorSerie(3, Trigonometry.sineLoops[this.sineDecimals], angle, angle, true);
-                }
+                if (Trigonometry.sineDecimals <= 2 && angle < 0.28 && angle > -0.28) return angle;else return this.taylorSerie(3, Trigonometry.sineLoops[this.sineDecimals], angle, angle, true);
             }
         }, {
             key: 'cosine',
             value: function cosine(angle) {
                 angle = this.normalizeRadian(angle);
                 var squaredAngle = angle * angle;
-                if (this.cosineDecimals <= 2 && angle <= 0.5 && angle >= -0.5) {
-                    return 1 - squaredAngle * 0.5;
-                } else {
-                    return this.taylorSerie(2, Trigonometry.cosineLoops[this.cosineDecimals], 1, angle, true);
-                }
+                if (this.cosineDecimals <= 2 && angle <= 0.5 && angle >= -0.5) return 1 - squaredAngle * 0.5;else return this.taylorSerie(2, Trigonometry.cosineLoops[this.cosineDecimals], 1, angle, true);
             }
         }, {
             key: 'arctan2',
@@ -299,28 +293,16 @@ var Roostr = (function (exports) {
                 if (x > 0) {
                     return this.arctan(angle);
                 } else if (x < 0) {
-                    if (y < 0) {
-                        return this.arctan(angle) - this.pi;
-                    } else {
-                        return this.arctan(angle) + this.pi;
-                    }
+                    if (y < 0) return this.arctan(angle) - this.pi;else return this.arctan(angle) + this.pi;
                 } else {
-                    if (y < 0) {
-                        return -this.halfpi;
-                    } else if (y > 0) {
-                        return this.halfpi;
-                    } else {
-                        return false;
-                    }
+                    if (y < 0) return -this.halfpi;else if (y > 0) return this.halfpi;else return false;
                 }
             }
         }, {
             key: 'arctan',
             value: function arctan(angle) {
                 var loops = Trigonometry.arctanLoops[this.arctanDecimals];
-                if (angle < 1 && angle > -1) {
-                    return this.taylorSerie(3, loops, angle, angle, false);
-                } else {
+                if (angle < 1 && angle > -1) return this.taylorSerie(3, loops, angle, angle, false);else {
                     if (angle >= 1) {
                         angle = 1 / angle;
                         return -(this.taylorSerie(3, loops, angle, angle, false) - this.halfpi);
@@ -501,84 +483,74 @@ var Roostr = (function (exports) {
         return Bezier;
     }();
 
-    var Vector2 = function () {
-        function Vector2(x, y) {
-            _classCallCheck(this, Vector2);
-
-            this.x = x || 0.0;
-            this.y = y || 0.0;
+    var Vector = function () {
+        function Vector() {
+            _classCallCheck(this, Vector);
         }
 
-        _createClass(Vector2, [{
-            key: 'isOrigin',
-            value: function isOrigin() {
-                return this.x === 0 && this.y === 0 ? true : false;
+        _createClass(Vector, [{
+            key: 'setScalar',
+            value: function setScalar(x, y, z) {
+                this.x = x !== null && x !== void 0 ? x : this.x;
+                this.y = y !== null && y !== void 0 ? y : this.y;
+                if (this.hasOwnProperty('z')) this.z = z !== null && z !== void 0 ? z : this.z;
+                return this;
+            }
+        }, {
+            key: 'setArray',
+            value: function setArray(array, offset) {
+                var _a, _b, _c;
+                if (offset === undefined) {
+                    offset = 0;
+                }
+                this.x = (_a = array[offset]) !== null && _a !== void 0 ? _a : this.x;
+                this.y = (_b = array[offset + 1]) !== null && _b !== void 0 ? _b : this.y;
+                if (this.hasOwnProperty('z')) this.z = (_c = array[offset + 2]) !== null && _c !== void 0 ? _c : this.z;
+                return this;
+            }
+        }, {
+            key: 'copy',
+            value: function copy(vector) {
+                var _a, _b, _c;
+                this.x = (_a = vector.x) !== null && _a !== void 0 ? _a : this.x;
+                this.y = (_b = vector.y) !== null && _b !== void 0 ? _b : this.y;
+                if (this.hasOwnProperty('z')) this.z = (_c = vector.z) !== null && _c !== void 0 ? _c : this.z;
+                return this;
             }
         }, {
             key: 'isPositive',
             value: function isPositive() {
-                return this.x >= 0 && this.y >= 0 ? true : false;
+                return this.x >= 0 && this.y >= 0 && (!this.hasOwnProperty('z') || this.z >= 0) ? true : false;
             }
         }, {
-            key: 'setFromArray',
-            value: function setFromArray(array, offset) {
-                if (offset === undefined) {
-                    offset = 0;
-                }
-                this.x = array[offset];
-                this.y = array[offset + 1];
-                return this;
+            key: 'isEqualTo',
+            value: function isEqualTo(scalar) {
+                return this.x === scalar && this.y === scalar && (!this.hasOwnProperty('z') || this.z === scalar) ? true : false;
+            }
+        }, {
+            key: 'isOrigin',
+            value: function isOrigin() {
+                return this.x === 0 && this.y === 0 && (!this.hasOwnProperty('z') || this.z === 0) ? true : false;
             }
         }, {
             key: 'toArray',
             value: function toArray() {
-                return [this.x, this.y];
+                return Object.values(this);
             }
         }, {
             key: 'toString',
             value: function toString() {
-                return '(x = ' + this.x + '; y = ' + this.y + ')';
-            }
-        }, {
-            key: 'set',
-            value: function set(x, y) {
-                this.x = x;
-                this.y = y;
-                return this;
-            }
-        }, {
-            key: 'clone',
-            value: function clone() {
-                return new Vector2(this.x, this.y);
-            }
-        }, {
-            key: 'copy',
-            value: function copy(v) {
-                this.x = v.x;
-                this.y = v.y;
-                return this;
+                var z = ')';
+                if (this.hasOwnProperty('z')) z = '; z = ' + this.z + ')';
+                return '(x = ' + this.x + '; y = ' + this.y + z;
             }
         }, {
             key: 'origin',
             value: function origin() {
                 this.x = 0.0;
                 this.y = 0.0;
+                if (this.hasOwnProperty('z')) this.z = 0.0;
                 return this;
-            }
-        }, {
-            key: 'setFromAngle',
-            value: function setFromAngle(angle) {
-                if (angle) {
-                    var length = this.getMagnitude();
-                    this.x = Trigonometry.cosine(angle) * length;
-                    this.y = Trigonometry.sine(angle) * length;
-                }
-                return this;
-            }
-        }, {
-            key: 'getAngle',
-            value: function getAngle() {
-                return Math.atan2(this.y, this.x);
             }
         }, {
             key: 'getMagnitude',
@@ -590,17 +562,247 @@ var Roostr = (function (exports) {
         }, {
             key: 'getSquaredMagnitude',
             value: function getSquaredMagnitude() {
-                return this.x * this.x + this.y * this.y;
+                return Math.pow(this.x, 2) + Math.pow(this.y, 2) + (this.hasOwnProperty('z') ? Math.pow(this.z, 2) : 0);
             }
         }, {
             key: 'getDistance',
-            value: function getDistance(v) {
+            value: function getDistance(vector) {
                 var square = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-                this.subtract(v);
+                this.subtract(vector);
                 var magnitude = this.getMagnitude(square);
-                this.add(v);
+                this.add(vector);
                 return magnitude;
+            }
+        }, {
+            key: 'add',
+            value: function add(vector) {
+                this.x += vector.x;
+                this.y += vector.y;
+                if (this.hasOwnProperty('z')) this.z += vector.z;
+                return this;
+            }
+        }, {
+            key: 'addScaledVector',
+            value: function addScaledVector(vector, scalar) {
+                this.x += vector.x * scalar;
+                this.y += vector.y * scalar;
+                if (this.hasOwnProperty('z')) this.z += vector.z * scalar;
+                return this;
+            }
+        }, {
+            key: 'addScalar',
+            value: function addScalar(scalar) {
+                this.x += scalar;
+                this.y += scalar;
+                if (this.hasOwnProperty('z')) this.z += scalar;
+                return this;
+            }
+        }, {
+            key: 'subtract',
+            value: function subtract(vector) {
+                this.x -= vector.x;
+                this.y -= vector.y;
+                if (this.hasOwnProperty('z')) this.z -= vector.z;
+                return this;
+            }
+        }, {
+            key: 'subtractScaledVector',
+            value: function subtractScaledVector(vector, scalar) {
+                this.x -= vector.x * scalar;
+                this.y -= vector.y * scalar;
+                if (this.hasOwnProperty('z')) this.z -= vector.z * scalar;
+                return this;
+            }
+        }, {
+            key: 'subtractScalar',
+            value: function subtractScalar(scalar) {
+                this.x -= scalar;
+                this.y -= scalar;
+                if (this.hasOwnProperty('z')) this.z -= scalar;
+                return this;
+            }
+        }, {
+            key: 'multiply',
+            value: function multiply(vector) {
+                this.x *= vector.x;
+                this.y *= vector.y;
+                if (this.hasOwnProperty('z')) this.z *= vector.z;
+                return this;
+            }
+        }, {
+            key: 'multiplyScaledVector',
+            value: function multiplyScaledVector(vector, scalar) {
+                this.x *= vector.x * scalar;
+                this.y *= vector.y * scalar;
+                if (this.hasOwnProperty('z')) this.z *= vector.z * scalar;
+                return this;
+            }
+        }, {
+            key: 'scale',
+            value: function scale(scalar) {
+                this.x *= scalar;
+                this.y *= scalar;
+                if (this.hasOwnProperty('z')) this.z *= scalar;
+                return this;
+            }
+        }, {
+            key: 'divide',
+            value: function divide(vector) {
+                this.x /= vector.x;
+                this.y /= vector.y;
+                if (this.hasOwnProperty('z')) this.z /= vector.z;
+                return this;
+            }
+        }, {
+            key: 'divideScaledVector',
+            value: function divideScaledVector(vector, scalar) {
+                this.x /= vector.x * scalar;
+                this.y /= vector.y * scalar;
+                if (this.hasOwnProperty('z')) this.z /= vector.z * scalar;
+                return this;
+            }
+        }, {
+            key: 'divideScalar',
+            value: function divideScalar(scalar) {
+                this.x /= scalar;
+                this.y /= scalar;
+                if (this.hasOwnProperty('z')) this.z /= scalar;
+                return this;
+            }
+        }, {
+            key: 'halve',
+            value: function halve() {
+                this.x *= 0.5;
+                this.y *= 0.5;
+                if (this.hasOwnProperty('z')) this.z *= 0.5;
+                return this;
+            }
+        }, {
+            key: 'max',
+            value: function max(vector) {
+                this.x = Math.max(this.x, vector.x);
+                this.y = Math.max(this.y, vector.y);
+                if (this.hasOwnProperty('z')) this.z = Math.max(this.z, vector.z);
+                return this;
+            }
+        }, {
+            key: 'min',
+            value: function min(vector) {
+                this.x = Math.min(this.x, vector.x);
+                this.y = Math.min(this.y, vector.y);
+                if (this.hasOwnProperty('z')) this.z = Math.min(this.z, vector.z);
+                return this;
+            }
+        }, {
+            key: 'maxScalar',
+            value: function maxScalar(scalar) {
+                this.x = Math.max(this.x, scalar);
+                this.y = Math.max(this.y, scalar);
+                if (this.hasOwnProperty('z')) this.z = Math.max(this.z, scalar);
+                return this;
+            }
+        }, {
+            key: 'minScalar',
+            value: function minScalar(scalar) {
+                this.x = Math.min(this.x, scalar);
+                this.y = Math.min(this.y, scalar);
+                if (this.hasOwnProperty('z')) this.z = Math.min(this.z, scalar);
+                return this;
+            }
+        }, {
+            key: 'normalize',
+            value: function normalize() {
+                var length = this.getMagnitude();
+                if (length && length != 1) this.scale(1 / length);
+                return this;
+            }
+        }, {
+            key: 'absolute',
+            value: function absolute(axis) {
+                if (!axis || axis === 'x') this.x = Math.abs(this.x);
+                if (!axis || axis === 'y') this.y = Math.abs(this.y);
+                if (this.hasOwnProperty('z') && (!axis || axis === 'z')) this.z = Math.abs(this.z);
+                return this;
+            }
+        }, {
+            key: 'opposite',
+            value: function opposite(axis) {
+                if (!axis || axis === 'x') this.x = -this.x;
+                if (!axis || axis === 'y') this.y = -this.y;
+                if (this.hasOwnProperty('z') && (!axis || axis === 'z')) this.z = -this.z;
+                return this;
+            }
+        }, {
+            key: 'dotProduct',
+            value: function dotProduct(vector) {
+                return this.x * vector.x + this.y * vector.y + (this.hasOwnProperty('z') ? this.z * vector.z : 0);
+            }
+        }]);
+
+        return Vector;
+    }();
+
+    var Vector2 = function (_Vector) {
+        _inherits(Vector2, _Vector);
+
+        function Vector2(x, y) {
+            _classCallCheck(this, Vector2);
+
+            var _this = _possibleConstructorReturn(this, (Vector2.__proto__ || Object.getPrototypeOf(Vector2)).call(this));
+
+            _this.x = 0.0;
+            _this.y = 0.0;
+            _this.setScalar(x, y);
+            return _this;
+        }
+
+        _createClass(Vector2, [{
+            key: 'setRadian',
+            value: function setRadian(angle) {
+                if (angle) {
+                    var length = this.getMagnitude();
+                    this.x = Trigonometry.cosine(angle) * length;
+                    this.y = Trigonometry.sine(angle) * length;
+                }
+                return this;
+            }
+        }, {
+            key: 'setDegree',
+            value: function setDegree(angle) {
+                if (angle) {
+                    angle = Trigonometry.degreeToRadian(angle);
+                    this.setRadian(angle);
+                }
+                return this;
+            }
+        }, {
+            key: 'setMinAxis',
+            value: function setMinAxis(scalar) {
+                if (this.y < this.x) this.y = scalar;else this.x = scalar;
+                return this;
+            }
+        }, {
+            key: 'setMaxAxis',
+            value: function setMaxAxis(scalar) {
+                if (this.y > this.x) this.y = scalar;else this.x = scalar;
+                return this;
+            }
+        }, {
+            key: 'setOppositeAxis',
+            value: function setOppositeAxis(axis, value) {
+                if (axis === 'y') this.x = value;else this.y = value;
+                return this;
+            }
+        }, {
+            key: 'clone',
+            value: function clone() {
+                return new Vector2(this.x, this.y);
+            }
+        }, {
+            key: 'getAngle',
+            value: function getAngle() {
+                return Trigonometry.arctan2(this.y, this.x);
             }
         }, {
             key: 'quadraticBezier',
@@ -617,118 +819,6 @@ var Roostr = (function (exports) {
                 return this;
             }
         }, {
-            key: 'add',
-            value: function add(v) {
-                this.x += v.x;
-                this.y += v.y;
-                return this;
-            }
-        }, {
-            key: 'addScalar',
-            value: function addScalar(scalar) {
-                this.x += scalar;
-                this.y += scalar;
-                return this;
-            }
-        }, {
-            key: 'addScaledVector',
-            value: function addScaledVector(v, scalar) {
-                this.x += v.x * scalar;
-                this.y += v.y * scalar;
-                return this;
-            }
-        }, {
-            key: 'subtract',
-            value: function subtract(v) {
-                this.x -= v.x;
-                this.y -= v.y;
-                return this;
-            }
-        }, {
-            key: 'subtractScalar',
-            value: function subtractScalar(scalar) {
-                this.x -= scalar;
-                this.y -= scalar;
-                return this;
-            }
-        }, {
-            key: 'subtractScaledVector',
-            value: function subtractScaledVector(v, scalar) {
-                this.x -= v.x * scalar;
-                this.y -= v.y * scalar;
-                return this;
-            }
-        }, {
-            key: 'scale',
-            value: function scale(value) {
-                this.x *= value;
-                this.y *= value;
-                return this;
-            }
-        }, {
-            key: 'multiply',
-            value: function multiply(v) {
-                this.x *= v.x;
-                this.y *= v.y;
-                return this;
-            }
-        }, {
-            key: 'multiplyScaledVector',
-            value: function multiplyScaledVector(v, scalar) {
-                this.x *= v.x * scalar;
-                this.y *= v.y * scalar;
-                return this;
-            }
-        }, {
-            key: 'divide',
-            value: function divide(v) {
-                this.x /= v.x;
-                this.y /= v.y;
-                return this;
-            }
-        }, {
-            key: 'divideScaledVector',
-            value: function divideScaledVector(v, scalar) {
-                this.x /= v.x * scalar;
-                this.y /= v.y * scalar;
-                return this;
-            }
-        }, {
-            key: 'halve',
-            value: function halve() {
-                this.x *= 0.5;
-                this.y *= 0.5;
-                return this;
-            }
-        }, {
-            key: 'max',
-            value: function max(v) {
-                this.x = Math.max(this.x, v.x);
-                this.y = Math.max(this.y, v.y);
-                return this;
-            }
-        }, {
-            key: 'min',
-            value: function min(v) {
-                this.x = Math.min(this.x, v.x);
-                this.y = Math.min(this.y, v.y);
-                return this;
-            }
-        }, {
-            key: 'maxScalar',
-            value: function maxScalar(scalar) {
-                this.x = Math.max(this.x, scalar);
-                this.y = Math.max(this.y, scalar);
-                return this;
-            }
-        }, {
-            key: 'minScalar',
-            value: function minScalar(scalar) {
-                this.x = Math.min(this.x, scalar);
-                this.y = Math.min(this.y, scalar);
-                return this;
-            }
-        }, {
             key: 'getMaxAxis',
             value: function getMaxAxis() {
                 return this.y > this.x ? 'y' : 'x';
@@ -737,39 +827,6 @@ var Roostr = (function (exports) {
             key: 'getMinAxis',
             value: function getMinAxis() {
                 return this.y < this.x ? 'y' : 'x';
-            }
-        }, {
-            key: 'setOppositeAxis',
-            value: function setOppositeAxis(axis, value) {
-                if (axis === 'y') {
-                    this.x = value;
-                } else {
-                    this.y = value;
-                }
-                return this;
-            }
-        }, {
-            key: 'normalize',
-            value: function normalize() {
-                var length = this.getMagnitude();
-                if (length && length != 1) {
-                    this.scale(1 / length);
-                }
-                return this;
-            }
-        }, {
-            key: 'absolute',
-            value: function absolute() {
-                this.x = Math.abs(this.x);
-                this.y = Math.abs(this.y);
-                return this;
-            }
-        }, {
-            key: 'opposite',
-            value: function opposite() {
-                this.x = -this.x;
-                this.y = -this.y;
-                return this;
             }
         }, {
             key: 'clamp',
@@ -785,18 +842,13 @@ var Roostr = (function (exports) {
                 this.y = Utils.lerp(min.y, max.y, amount);
                 return this;
             }
-        }, {
-            key: 'dotProduct',
-            value: function dotProduct(v) {
-                return this.x * v.x + this.y * v.y;
-            }
         }]);
 
         return Vector2;
-    }();
+    }(Vector);
 
     var Circle = function () {
-        function Circle(positionX, positionY, radius) {
+        function Circle(radius, positionX, positionY) {
             _classCallCheck(this, Circle);
 
             this.shape = 'circle';
@@ -809,7 +861,7 @@ var Roostr = (function (exports) {
         _createClass(Circle, [{
             key: 'clone',
             value: function clone() {
-                return new Circle(this.position.x, this.position.y, this.radius);
+                return new Circle(this.radius, this.position.x, this.position.y);
             }
         }, {
             key: 'copy',
@@ -819,22 +871,21 @@ var Roostr = (function (exports) {
                 return this;
             }
         }, {
-            key: 'set',
-            value: function set(positionX, positionY, radius) {
-                this.position.set(positionX, positionY);
+            key: 'setPosition',
+            value: function setPosition(positionX, positionY) {
+                this.position.setScalar(positionX, positionY);
+                return this;
+            }
+        }, {
+            key: 'setRadius',
+            value: function setRadius(radius) {
                 this.radius = radius;
                 return this;
             }
         }, {
-            key: 'setPositionXY',
-            value: function setPositionXY(positionX, positionY) {
-                this.position.set(positionX, positionY);
-                return this;
-            }
-        }, {
-            key: 'setPositionFromVector',
-            value: function setPositionFromVector(position) {
-                this.position.copy(position);
+            key: 'setDiameter',
+            value: function setDiameter(diameter) {
+                this.diameter = diameter;
                 return this;
             }
         }, {
@@ -887,117 +938,43 @@ var Roostr = (function (exports) {
     }();
 
     var Rectangle = function () {
-        function Rectangle(positionX, positionY, sizeX, sizeY) {
+        function Rectangle(width, height, positionX, positionY) {
             _classCallCheck(this, Rectangle);
 
             this.shape = 'aabb';
-            this.size = new Vector2(sizeX, sizeY);
-            this.halfSize = new Vector2();
-            this.setHalfSize();
             this.position = new Vector2(positionX, positionY);
-            this.topLeftCorner = new Vector2(positionX - this.halfSize.x, positionY - this.halfSize.y);
-            this.bottomRightCorner = new Vector2(positionX + this.halfSize.x, positionY + this.halfSize.y);
+            this.size = new Vector2(width, height);
+            this.halfSize = new Vector2();
+            this.topLeftCorner = new Vector2();
+            this.bottomRightCorner = new Vector2();
+            this.setHalfSize();
+            this.setCorners();
         }
 
         _createClass(Rectangle, [{
             key: 'clone',
             value: function clone() {
-                return new Rectangle(this.position.x, this.position.y, this.size.x, this.size.y);
+                return new Rectangle(this.size.x, this.size.y, this.position.x, this.position.y);
             }
         }, {
             key: 'copy',
             value: function copy(rectangle) {
-                this.setSizeFromVector(rectangle.size);
-                this.setPositionFromVector(rectangle.position);
-                return this;
-            }
-        }, {
-            key: 'set',
-            value: function set(positionX, positionY, sizeX, sizeY) {
-                this.setSizeXY(sizeX, sizeY);
-                this.setPositionXY(positionX, positionY);
-                return this;
-            }
-        }, {
-            key: 'setPositionX',
-            value: function setPositionX(x) {
-                this.setPosition('x', x);
-                return this;
-            }
-        }, {
-            key: 'setPositionY',
-            value: function setPositionY(y) {
-                this.setPosition('y', y);
+                this.setSize(rectangle.size.x, rectangle.size.y);
+                this.setPosition(rectangle.position.x, rectangle.position.y);
                 return this;
             }
         }, {
             key: 'setPosition',
-            value: function setPosition(property, value) {
-                this.position[property] = value;
-                this.topLeftCorner[property] = value - this.halfSize[property];
-                this.bottomRightCorner[property] = value + this.halfSize[property];
-            }
-        }, {
-            key: 'setPositionXY',
-            value: function setPositionXY(positionX, positionY) {
-                this.position.set(positionX, positionY);
+            value: function setPosition(positionX, positionY) {
+                this.position.setScalar(positionX, positionY);
                 this.setCorners();
-                return this;
-            }
-        }, {
-            key: 'setPositionFromVector',
-            value: function setPositionFromVector(position) {
-                this.position.copy(position);
-                this.setCorners();
-                return this;
-            }
-        }, {
-            key: 'setSizeX',
-            value: function setSizeX(width) {
-                this.setSize('x', width);
-                return this;
-            }
-        }, {
-            key: 'setSizeY',
-            value: function setSizeY(height) {
-                this.setSize('y', height);
-                return this;
             }
         }, {
             key: 'setSize',
-            value: function setSize(property, value) {
-                this.size[property] = value;
-                this.setHalfSize();
-                this.topLeftCorner[property] = this.position[property] - this.halfSize[property];
-                this.bottomRightCorner[property] = this.position[property] + this.halfSize[property];
-            }
-        }, {
-            key: 'setSizeXY',
-            value: function setSizeXY(width, height) {
-                this.size.set(width, height);
+            value: function setSize(width, height) {
+                this.size.setScalar(width, height);
                 this.setHalfSize();
                 this.setCorners();
-                return this;
-            }
-        }, {
-            key: 'setSizeFromVector',
-            value: function setSizeFromVector(size) {
-                this.size.copy(size);
-                this.setHalfSize();
-                this.setCorners();
-                return this;
-            }
-        }, {
-            key: 'setCorners',
-            value: function setCorners() {
-                this.topLeftCorner.set(this.position.x - this.halfSize.x, this.position.y - this.halfSize.y);
-                this.bottomRightCorner.set(this.position.x + this.halfSize.x, this.position.y + this.halfSize.y);
-            }
-        }, {
-            key: 'setHalfSize',
-            value: function setHalfSize() {
-                this.halfSize.copy(this.size);
-                this.halfSize.halve();
             }
         }, {
             key: 'isIn',
@@ -1019,259 +996,41 @@ var Roostr = (function (exports) {
                     context.stroke();
                 }
             }
+        }, {
+            key: 'setCorners',
+            value: function setCorners() {
+                this.topLeftCorner.copy(this.position).subtract(this.halfSize);
+                this.bottomRightCorner.copy(this.position).add(this.halfSize);
+            }
+        }, {
+            key: 'setHalfSize',
+            value: function setHalfSize() {
+                this.halfSize.copy(this.size).halve();
+            }
         }]);
 
         return Rectangle;
     }();
 
-    var Vector3 = function () {
+    var Vector3 = function (_Vector2) {
+        _inherits(Vector3, _Vector2);
+
         function Vector3(x, y, z) {
             _classCallCheck(this, Vector3);
 
-            this.x = x || 0.0;
-            this.y = y || 0.0;
-            this.z = z || 0.0;
+            var _this2 = _possibleConstructorReturn(this, (Vector3.__proto__ || Object.getPrototypeOf(Vector3)).call(this));
+
+            _this2.x = 0.0;
+            _this2.y = 0.0;
+            _this2.z = 0.0;
+            _this2.setScalar(x, y, z);
+            return _this2;
         }
 
         _createClass(Vector3, [{
-            key: 'isOrigin',
-            value: function isOrigin() {
-                return this.x === 0 && this.y === 0 && this.z === 0 ? true : false;
-            }
-        }, {
-            key: 'isPositive',
-            value: function isPositive() {
-                return this.x >= 0 && this.y >= 0 && this.z >= 0 ? true : false;
-            }
-        }, {
-            key: 'setFromArray',
-            value: function setFromArray(array, offset) {
-                if (offset === undefined) {
-                    offset = 0;
-                }
-                this.x = array[offset];
-                this.y = array[offset + 1];
-                this.z = array[offset + 2];
-                return this;
-            }
-        }, {
-            key: 'toArray',
-            value: function toArray() {
-                return [this.x, this.y, this.z];
-            }
-        }, {
-            key: 'toString',
-            value: function toString() {
-                return '(x = ' + this.x + '; y = ' + this.y + '; z = ' + this.z + ')';
-            }
-        }, {
-            key: 'set',
-            value: function set(x, y, z) {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-                return this;
-            }
-        }, {
             key: 'clone',
             value: function clone() {
                 return new Vector3(this.x, this.y, this.z);
-            }
-        }, {
-            key: 'copy',
-            value: function copy(v) {
-                this.x = v.x;
-                this.y = v.y;
-                this.z = v.z;
-                return this;
-            }
-        }, {
-            key: 'origin',
-            value: function origin() {
-                this.x = 0.0;
-                this.y = 0.0;
-                this.z = 0.0;
-                return this;
-            }
-        }, {
-            key: 'getMagnitude',
-            value: function getMagnitude() {
-                var square = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-                return square ? this.getSquaredMagnitude() : Math.sqrt(this.getSquaredMagnitude());
-            }
-        }, {
-            key: 'getSquaredMagnitude',
-            value: function getSquaredMagnitude() {
-                return this.x * this.x + this.y * this.y + this.z * this.z;
-            }
-        }, {
-            key: 'getDistance',
-            value: function getDistance(v) {
-                var square = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-                this.subtract(v);
-                var magnitude = this.getMagnitude(square);
-                this.add(v);
-                return magnitude;
-            }
-        }, {
-            key: 'add',
-            value: function add(v) {
-                this.x += v.x;
-                this.y += v.y;
-                this.z += v.z;
-                return this;
-            }
-        }, {
-            key: 'addScalar',
-            value: function addScalar(scalar) {
-                this.x += scalar;
-                this.y += scalar;
-                this.z += scalar;
-                return this;
-            }
-        }, {
-            key: 'addScaledVector',
-            value: function addScaledVector(v, scalar) {
-                this.x += v.x * scalar;
-                this.y += v.y * scalar;
-                this.z += v.z * scalar;
-                return this;
-            }
-        }, {
-            key: 'subtract',
-            value: function subtract(v) {
-                this.x -= v.x;
-                this.y -= v.y;
-                this.z -= v.z;
-                return this;
-            }
-        }, {
-            key: 'subtractScalar',
-            value: function subtractScalar(scalar) {
-                this.x -= scalar;
-                this.y -= scalar;
-                this.z -= scalar;
-                return this;
-            }
-        }, {
-            key: 'subtractScaledVector',
-            value: function subtractScaledVector(v, scalar) {
-                this.x -= v.x * scalar;
-                this.y -= v.y * scalar;
-                this.z -= v.z * scalar;
-                return this;
-            }
-        }, {
-            key: 'scale',
-            value: function scale(value) {
-                this.x *= value;
-                this.y *= value;
-                this.z *= value;
-                return this;
-            }
-        }, {
-            key: 'multiply',
-            value: function multiply(v) {
-                this.x *= v.x;
-                this.y *= v.y;
-                this.z *= v.z;
-                return this;
-            }
-        }, {
-            key: 'multiplyScaledVector',
-            value: function multiplyScaledVector(v, scalar) {
-                this.x *= v.x * scalar;
-                this.y *= v.y * scalar;
-                this.z *= v.z * scalar;
-                return this;
-            }
-        }, {
-            key: 'divide',
-            value: function divide(v) {
-                this.x /= v.x;
-                this.y /= v.y;
-                this.z /= v.z;
-                return this;
-            }
-        }, {
-            key: 'divideScaledVector',
-            value: function divideScaledVector(v, scalar) {
-                this.x /= v.x * scalar;
-                this.y /= v.y * scalar;
-                this.z /= v.z * scalar;
-                return this;
-            }
-        }, {
-            key: 'halve',
-            value: function halve() {
-                this.x *= 0.5;
-                this.y *= 0.5;
-                this.z *= 0.5;
-                return this;
-            }
-        }, {
-            key: 'max',
-            value: function max(v) {
-                this.x = Math.max(this.x, v.x);
-                this.y = Math.max(this.y, v.y);
-                this.z = Math.max(this.z, v.z);
-                return this;
-            }
-        }, {
-            key: 'min',
-            value: function min(v) {
-                this.x = Math.min(this.x, v.x);
-                this.y = Math.min(this.y, v.y);
-                this.z = Math.min(this.z, v.z);
-                return this;
-            }
-        }, {
-            key: 'maxScalar',
-            value: function maxScalar(scalar) {
-                this.x = Math.max(this.x, scalar);
-                this.y = Math.max(this.y, scalar);
-                this.z = Math.max(this.z, scalar);
-                return this;
-            }
-        }, {
-            key: 'minScalar',
-            value: function minScalar(scalar) {
-                this.x = Math.min(this.x, scalar);
-                this.y = Math.min(this.y, scalar);
-                this.z = Math.min(this.z, scalar);
-                return this;
-            }
-        }, {
-            key: 'normalize',
-            value: function normalize() {
-                var length = this.getMagnitude();
-                if (length && length != 1) {
-                    this.scale(1 / length);
-                }
-                return this;
-            }
-        }, {
-            key: 'absolute',
-            value: function absolute() {
-                this.x = Math.abs(this.x);
-                this.y = Math.abs(this.y);
-                this.z = Math.abs(this.z);
-                return this;
-            }
-        }, {
-            key: 'opposite',
-            value: function opposite() {
-                this.x = -this.x;
-                this.y = -this.y;
-                this.z = -this.z;
-                return this;
-            }
-        }, {
-            key: 'dotProduct',
-            value: function dotProduct(v) {
-                return this.x * v.x + this.y * v.y + this.z * v.z;
             }
         }, {
             key: 'cross',
@@ -1287,7 +1046,7 @@ var Roostr = (function (exports) {
         }]);
 
         return Vector3;
-    }();
+    }(Vector);
 
     var Matrix3x3 = function () {
         function Matrix3x3(x1, x2, x3, y1, y2, y3, t1, t2, t3) {
@@ -1746,406 +1505,9 @@ var Roostr = (function (exports) {
         return Scene;
     }();
 
-    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-    function isArray(array) {
-        return array !== null && array.constructor === Array;
-    }
-    function isString(string) {
-        return typeof string === "string";
-    }
-    function isHtmlElement(htmlElement) {
-        if (htmlElement) {
-            return (typeof HTMLElement === "undefined" ? "undefined" : _typeof(HTMLElement)) === "object" ? htmlElement instanceof HTMLElement : htmlElement && (typeof htmlElement === "undefined" ? "undefined" : _typeof(htmlElement)) === "object" && htmlElement !== null && htmlElement.nodeType === 1 && typeof htmlElement.nodeName === "string";
-        }
-        return false;
-    }
-    function isHtmlEventAttribute(htmlEventAttribute) {
-        switch (htmlEventAttribute) {
-            case "onafterprint":
-            case "onbeforeprint":
-            case "onbeforeunload":
-            case "onerror":
-            case "onhashchange":
-            case "onload":
-            case "onmessage":
-            case "onoffline":
-            case "ononline":
-            case "onpagehide":
-            case "onpageshow":
-            case "onpopstate":
-            case "onresize":
-            case "onstorage":
-            case "onunload":
-            case "onblur":
-            case "onchange":
-            case "oncontextmenu":
-            case "onfocus":
-            case "oninput":
-            case "oninvalid":
-            case "onreset":
-            case "onsearch":
-            case "onselect":
-            case "onsubmit":
-            case "onkeydown":
-            case "onkeypress":
-            case "onkeyup":
-            case "onclick":
-            case "ondblclick":
-            case "onmousedown":
-            case "onmousemove":
-            case "onmouseout":
-            case "onmouseover":
-            case "onmouseup":
-            case "onmousewheel":
-            case "onwheel":
-            case "ondrag":
-            case "ondragend":
-            case "ondragenter":
-            case "ondragleave":
-            case "ondragover":
-            case "ondragstart":
-            case "ondrop":
-            case "onscroll":
-            case "oncopy":
-            case "oncut":
-            case "onpaste":
-            case "onabort":
-            case "oncanplay":
-            case "oncanplaythrough":
-            case "oncuechange":
-            case "ondurationchange":
-            case "onemptied":
-            case "onended":
-            case "onerror":
-            case "onloadeddata":
-            case "onloadedmetadata":
-            case "onloadstart":
-            case "onpause":
-            case "onplay":
-            case "onplaying":
-            case "onprogress":
-            case "onratechange":
-            case "onseeked":
-            case "onseeking":
-            case "onstalled":
-            case "onsuspend":
-            case "ontimeupdate":
-            case "onvolumechange":
-            case "onwaiting":
-            case "ontoggle":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-    function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    /** MIT License
-    * 
-    * Copyright (c) 2015 Ludovic CLUBER 
-    * 
-    * Permission is hereby granted, free of charge, to any person obtaining a copy
-    * of this software and associated documentation files (the "Software"), to deal
-    * in the Software without restriction, including without limitation the rights
-    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    * copies of the Software, and to permit persons to whom the Software is
-    * furnished to do so, subject to the following conditions:
-    *
-    * The above copyright notice and this permission notice shall be included in all
-    * copies or substantial portions of the Software.
-    *
-    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    * SOFTWARE.
-    *
-    * https://github.com/LCluber/Wee.js
-    */
-
-    var Dom = function () {
-        function Dom() {
-            _classCallCheck$1(this, Dom);
-        }
-
-        _createClass$1(Dom, null, [{
-            key: "scrollToBottom",
-            value: function scrollToBottom(HtmlElement) {
-                HtmlElement.scrollTop = HtmlElement.scrollHeight;
-            }
-        }, {
-            key: "scrollToTop",
-            value: function scrollToTop(HtmlElement) {
-                HtmlElement.scrollTop = 0;
-            }
-        }, {
-            key: "findById",
-            value: function findById(id) {
-                return document.getElementById(id);
-            }
-        }, {
-            key: "findByClass",
-            value: function findByClass(className) {
-                return this.arrayFrom(document.getElementsByClassName(className));
-            }
-        }, {
-            key: "findByTag",
-            value: function findByTag(tagName) {
-                return this.arrayFrom(document.getElementsByTagName(tagName));
-            }
-        }, {
-            key: "showElement",
-            value: function showElement(element) {
-                return this.styleElement(element, "display", "block");
-            }
-        }, {
-            key: "hideElement",
-            value: function hideElement(element) {
-                return this.styleElement(element, "display", "none");
-            }
-        }, {
-            key: "styleElement",
-            value: function styleElement(element, parameter, value) {
-                var htmlelement = this.checkElement(element);
-                if (htmlelement) {
-                    htmlelement.style[parameter] = value;
-                }
-                return htmlelement;
-            }
-        }, {
-            key: "showOverflow",
-            value: function showOverflow() {
-                document.body.style.overflow = "visible";
-            }
-        }, {
-            key: "hideOverflow",
-            value: function hideOverflow() {
-                document.body.style.overflow = "hidden";
-            }
-        }, {
-            key: "getInputValue",
-            value: function getInputValue(element) {
-                var htmlelement = this.checkElement(element);
-                if (htmlelement) {
-                    return htmlelement.value;
-                }
-                return null;
-            }
-        }, {
-            key: "clearInputValue",
-            value: function clearInputValue(element) {
-                var htmlelement = this.checkElement(element);
-                if (htmlelement) {
-                    htmlelement.value = "";
-                }
-                return htmlelement;
-            }
-        }, {
-            key: "focusOn",
-            value: function focusOn(element) {
-                var htmlelement = this.checkElement(element);
-                if (htmlelement) {
-                    htmlelement.focus();
-                }
-                return htmlelement;
-            }
-        }, {
-            key: "addHTMLElement",
-            value: function addHTMLElement(parentElement, childElementType, childElementAttributes) {
-                var parentHtmlElement = this.checkElement(parentElement);
-                if (parentHtmlElement) {
-                    var newElement = document.createElement(childElementType);
-                    if (childElementAttributes) {
-                        Object.keys(childElementAttributes).forEach(function (key) {
-                            if (key === "textContent" || key === "innerHTML" || isHtmlEventAttribute(key)) {
-                                newElement[key] = childElementAttributes[key];
-                            } else {
-                                newElement.setAttribute(key, childElementAttributes[key]);
-                            }
-                        });
-                    }
-                    parentHtmlElement.appendChild(newElement);
-                    return newElement;
-                }
-                return null;
-            }
-        }, {
-            key: "clearHTMLElement",
-            value: function clearHTMLElement(element) {
-                var htmlelement = this.checkElement(element);
-                if (htmlelement) {
-                    htmlelement.innerHTML = "";
-                }
-                return htmlelement;
-            }
-        }, {
-            key: "arrayFrom",
-            value: function arrayFrom(htmlCollection) {
-                var elements = [];
-                for (var i = 0; i < htmlCollection.length; i++) {
-                    elements.push(htmlCollection[i]);
-                }
-                return elements;
-            }
-        }, {
-            key: "checkElement",
-            value: function checkElement(element) {
-                if (isString(element)) {
-                    return this.findById(element);
-                }
-                return element;
-            }
-        }]);
-
-        return Dom;
-    }();
-
-    var Binding = function () {
-        function Binding(element, property, value) {
-            _classCallCheck$1(this, Binding);
-
-            this._value = "";
-            this.elements = this.getElements(element);
-            this.property = [];
-            this.lastProperty = "";
-            if (property) {
-                this.property = property.split(".");
-                this.lastProperty = this.property[this.property.length - 1];
-                this.addPropertyToElement();
-            }
-            this.value = value;
-        }
-
-        _createClass$1(Binding, [{
-            key: "addPropertyToElement",
-            value: function addPropertyToElement() {
-                if (this.elements) {
-                    for (var j = 0; j < this.elements.length; j++) {
-                        for (var i = 0; i < this.property.length - 1; i++) {
-                            this.elements[j] = this.elements[j][this.property[i]];
-                        }
-                    }
-                }
-            }
-        }, {
-            key: "update",
-            value: function update(value) {
-                this.value = value;
-            }
-        }, {
-            key: "updateDom",
-            value: function updateDom() {
-                if (this.elements) {
-                    var str = this._value;
-                    var _iteratorNormalCompletion = true;
-                    var _didIteratorError = false;
-                    var _iteratorError = undefined;
-
-                    try {
-                        for (var _iterator = this.elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                            var element = _step.value;
-
-                            if (this.property.length) {
-                                if (this.property.length > 1) {
-                                    element[this.lastProperty] = str;
-                                } else {
-                                    element.setAttribute(this.lastProperty, str);
-                                }
-                            } else {
-                                if (element.hasAttribute("value")) {
-                                    element.value = str;
-                                } else {
-                                    var pattern = /<\s*.*[^>]*>(.*?)<\s*.*\s*>/gi;
-                                    if (isString(this._value) && str.match(pattern)) {
-                                        element.innerHTML = str;
-                                    } else {
-                                        element.textContent = str;
-                                    }
-                                }
-                            }
-                        }
-                    } catch (err) {
-                        _didIteratorError = true;
-                        _iteratorError = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion && _iterator.return) {
-                                _iterator.return();
-                            }
-                        } finally {
-                            if (_didIteratorError) {
-                                throw _iteratorError;
-                            }
-                        }
-                    }
-                }
-            }
-        }, {
-            key: "getElements",
-            value: function getElements(element) {
-                var elements = [];
-                if (isArray(element)) {
-                    var _iteratorNormalCompletion2 = true;
-                    var _didIteratorError2 = false;
-                    var _iteratorError2 = undefined;
-
-                    try {
-                        for (var _iterator2 = element[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                            var elt = _step2.value;
-
-                            if (isHtmlElement(elt)) {
-                                elements.push(elt);
-                            }
-                        }
-                    } catch (err) {
-                        _didIteratorError2 = true;
-                        _iteratorError2 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                _iterator2.return();
-                            }
-                        } finally {
-                            if (_didIteratorError2) {
-                                throw _iteratorError2;
-                            }
-                        }
-                    }
-                } else if (isString(element)) {
-                    var htmlElement = Dom.findById(element);
-                    if (htmlElement) {
-                        elements.push(htmlElement);
-                    } else {
-                        elements = Dom.findByClass(element);
-                    }
-                } else if (isHtmlElement(element)) {
-                    elements.push(element);
-                }
-                return elements;
-            }
-        }, {
-            key: "value",
-            set: function set(value) {
-                this._value = value;
-                this.updateDom();
-            },
-            get: function get() {
-                return this._value;
-            }
-        }]);
-
-        return Binding;
-    }();
-
     var Renderer = function () {
         function Renderer(canvasID) {
-            this.canvas = Dom.findById(canvasID);
+            this.canvas = this.findById(canvasID);
             this.canvas.width = 1280;
             this.canvas.height = 720;
             this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl", { alpha: false });
@@ -2182,6 +1544,9 @@ var Roostr = (function (exports) {
         };
         Renderer.prototype.getContext = function () {
             return this.context;
+        };
+        Renderer.prototype.findById = function (id) {
+            return document.getElementById(id);
         };
         return Renderer;
     }();

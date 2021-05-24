@@ -1,3 +1,7 @@
+Version 0.5.11 (May 24th 2021)
+-----------------------------
+ * Delete Dom dependency
+
 Version 0.5.10 (May 23th 2021)
 -----------------------------
  * Delete logger dependency

@@ -343,6 +343,7 @@ export declare class Renderer {
     setClearColor(red: number, green: number, blue: number, alpha: number): void;
     clearFrame(): void;
     getContext(): WebGLRenderingContext | null;
+    private findById;
 }
 
 export declare class MeshRenderer {

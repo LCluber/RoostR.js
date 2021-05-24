@@ -1,14 +1,11 @@
 
-//var canvas = require('./canvas');
-import {Dom} from '@lcluber/weejs';
-
 export class Renderer {
 
   canvas: HTMLCanvasElement;
   context: WebGLRenderingContext;
 
   constructor(canvasID:string) {
-    this.canvas = Dom.findById(canvasID) as HTMLCanvasElement;
+    this.canvas = this.findById(canvasID) as HTMLCanvasElement;
     // default resolution
     this.canvas.width = 1280;
     this.canvas.height = 720;
@@ -83,5 +80,9 @@ export class Renderer {
   public getContext(): WebGLRenderingContext | null {
     return this.context;
 	}
+
+  private findById(id: string): HTMLCanvasElement | null {
+    return document.getElementById(id) as HTMLCanvasElement;
+  }
 
 }
