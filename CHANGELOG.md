@@ -1,3 +1,7 @@
+Version 0.5.12 (June 13th 2021)
+-----------------------------
+ * Fix duplicate identifier in definitions file
+
 Version 0.5.11 (May 24th 2021)
 -----------------------------
  * Delete Dom dependency

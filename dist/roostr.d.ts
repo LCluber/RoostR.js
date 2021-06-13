@@ -23,6 +23,7 @@
 * http://roostrjs.lcluber.com
 */
 import { Vector3, Matrix4x3, Matrix4x4 } from '@lcluber/type6js';
+
 export declare class Camera {
     viewMatrix: Matrix4x3;
     projectionMatrix: Matrix4x4;
@@ -153,9 +154,6 @@ export declare class VWing extends BasicMesh {
 
 
 
-
-
-import { Matrix4x3 } from '@lcluber/type6js';
 export interface IGeometry {
     vertices: number[] | null;
     indices: number[] | null;
@@ -224,7 +222,6 @@ export interface IFlatLights {
     direction: number[];
     type: number[];
 }
-import { Vector3 } from '@lcluber/type6js';
 
 export declare class DirectionalLight {
     position: Vector3;
@@ -246,7 +243,6 @@ export declare class PointLight extends DirectionalLight {
     setLinearAttenuation(): void;
     setQuadraticAttenuation(): void;
 }
-import { Vector3 } from '@lcluber/type6js';
 
 export declare class SpotLight extends PointLight {
     cutoff: number;
@@ -257,7 +253,7 @@ export declare class SpotLight extends PointLight {
     setExponent(): void;
     setDirection(): void;
 }
-import { Vector3 } from '@lcluber/type6js';
+
 
 export declare class Material {
     ambient: Vector3;
@@ -267,9 +263,6 @@ export declare class Material {
     uniforms: IMaterialUniforms;
     constructor();
 }
-import { Matrix4x3 } from '@lcluber/type6js';
-
-
 
 
 
@@ -374,28 +367,6 @@ export declare class SceneRenderer {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export declare class Lights {
     directionals: DirectionalLight[];
     points: PointLight[];
@@ -438,7 +409,7 @@ export declare class Scene {
     private computeWorldMatrices;
     private renderBlended;
 }
-import { Matrix4x3 } from '@lcluber/type6js';
+
 export declare class SceneGraph {
     model: Array<Matrix4x3>;
     nbModel: number;
