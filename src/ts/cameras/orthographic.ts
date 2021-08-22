@@ -11,7 +11,13 @@ export class OrthographicCamera extends Camera {
   far : number;
   //camera : Camera;
 
-  constructor(left: number, right: number, top: number, bottom: number, near: number, far: number) {
+  constructor(left: number, 
+              right: number, 
+              top: number, 
+              bottom: number, 
+              near: number, 
+              far: number
+            ) {
 
     super(  new Vector3(),
             new Vector3(),

@@ -219,7 +219,8 @@ class Renderer {
         this.canvas = this.findById(canvasID);
         this.canvas.width = 1280;
         this.canvas.height = 720;
-        this.context = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl", { alpha: false });
+        this.context = this.canvas.getContext("webgl") ||
+            this.canvas.getContext("experimental-webgl", { alpha: false });
         this.defaultSettings();
     }
     defaultSettings() {
@@ -430,10 +431,18 @@ class Mesh {
         this.context = context;
         this.renderer = new MeshRenderer(this.context);
         this.WebGLTexture = null;
-        this.vertexBuffer = this.vertices ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.vertices), 'STATIC_DRAW') : null;
-        this.indexBuffer = this.indices ? this.renderer.createBuffer('ELEMENT_ARRAY_BUFFER', new Uint16Array(this.indices), 'STATIC_DRAW') : null;
-        this.normalBuffer = this.normals ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.normals), 'STATIC_DRAW') : null;
-        this.texCoordBuffer = this.uvs ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.uvs), 'STATIC_DRAW') : null;
+        this.vertexBuffer = this.vertices
+            ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.vertices), 'STATIC_DRAW')
+            : null;
+        this.indexBuffer = this.indices
+            ? this.renderer.createBuffer('ELEMENT_ARRAY_BUFFER', new Uint16Array(this.indices), 'STATIC_DRAW')
+            : null;
+        this.normalBuffer = this.normals
+            ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.normals), 'STATIC_DRAW')
+            : null;
+        this.texCoordBuffer = this.uvs
+            ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.uvs), 'STATIC_DRAW')
+            : null;
         this.modelMatrix = new Matrix4x3();
         this.rotationMatrix = new Matrix4x3();
         this.worldMatrix = new Matrix4x3();
@@ -832,7 +841,14 @@ class CustomMesh {
         this.subMeshes = [];
         this.itemSize = 3;
         this.primitive = 'TRIANGLES';
-        this.primitives = ['POINTS', 'LINE_STRIP', 'LINE_LOOP', 'LINES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'TRIANGLES'];
+        this.primitives = ['POINTS',
+            'LINE_STRIP',
+            'LINE_LOOP',
+            'LINES',
+            'TRIANGLE_STRIP',
+            'TRIANGLE_FAN',
+            'TRIANGLES'
+        ];
     }
     setVertices(array) {
         this.vertices = array.slice(0);

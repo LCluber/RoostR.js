@@ -2,7 +2,10 @@ import { Shader } from './shader';
 
 export class Program {
 
-  static create( context: WebGLRenderingContext, vertexShader:string, fragmentShader:string ): WebGLProgram | null {
+  static create( context: WebGLRenderingContext, 
+                 vertexShader:string,
+                 fragmentShader:string 
+                ): WebGLProgram | null {
     //find vert and frag shader before deleting lines and tabs.
     //var reg = shader.match(/"vertex":"([\s\S]*)",[\s\S]*"fragment":"([\s\S]*)"/mi);
     let program = context.createProgram();

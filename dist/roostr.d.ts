@@ -23,7 +23,6 @@
 * http://roostrjs.lcluber.com
 */
 import { Vector3, Matrix4x3, Matrix4x4 } from '@lcluber/type6js';
-
 export declare class Camera {
     viewMatrix: Matrix4x3;
     projectionMatrix: Matrix4x4;
@@ -254,7 +253,6 @@ export declare class SpotLight extends PointLight {
     setDirection(): void;
 }
 
-
 export declare class Material {
     ambient: Vector3;
     diffuse: Vector3;
@@ -365,6 +363,28 @@ export declare class SceneRenderer {
     disableBlendMode(): void;
     getParameter(parameterName: GLenum): GLenum | Float32Array | GLint | WebGLBuffer | GLboolean | Array<GLboolean> | GLfloat | WebGLFramebuffer | Int32Array | GLuint | WebGLTexture;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export declare class Lights {

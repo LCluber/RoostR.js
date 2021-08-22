@@ -28,7 +28,14 @@ export class CustomMesh {
     // gl.TRIANGLE_STRIP
     // gl.TRIANGLE_FAN
     // gl.TRIANGLES: Draws a triangle for a group of three vertices.
-    this.primitives = ['POINTS', 'LINE_STRIP', 'LINE_LOOP', 'LINES', 'TRIANGLE_STRIP', 'TRIANGLE_FAN', 'TRIANGLES'];
+    this.primitives = [ 'POINTS', 
+                        'LINE_STRIP', 
+                        'LINE_LOOP', 
+                        'LINES', 
+                        'TRIANGLE_STRIP', 
+                        'TRIANGLE_FAN', 
+                        'TRIANGLES'
+                      ];
   }
 
   public setVertices(array: Float32Array): void {

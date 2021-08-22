@@ -74,10 +74,30 @@ export class Mesh implements IMesh {
 
     this.WebGLTexture = null;
 
-    this.vertexBuffer   = this.vertices ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.vertices), 'STATIC_DRAW') : null;
-    this.indexBuffer    = this.indices ? this.renderer.createBuffer('ELEMENT_ARRAY_BUFFER', new Uint16Array(this.indices), 'STATIC_DRAW') : null;
-    this.normalBuffer   = this.normals ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.normals), 'STATIC_DRAW') : null;
-    this.texCoordBuffer = this.uvs ? this.renderer.createBuffer('ARRAY_BUFFER', new Float32Array(this.uvs), 'STATIC_DRAW') : null;
+    this.vertexBuffer   = this.vertices 
+                            ? this.renderer.createBuffer( 'ARRAY_BUFFER', 
+                                                          new Float32Array(this.vertices), 
+                                                          'STATIC_DRAW'
+                                                        ) 
+                            : null;
+    this.indexBuffer    = this.indices 
+                            ? this.renderer.createBuffer( 'ELEMENT_ARRAY_BUFFER', 
+                                                          new Uint16Array(this.indices), 
+                                                          'STATIC_DRAW'
+                                                        ) 
+                            : null;
+    this.normalBuffer   = this.normals 
+                            ? this.renderer.createBuffer('ARRAY_BUFFER', 
+                                                         new Float32Array(this.normals), 
+                                                         'STATIC_DRAW'
+                                                        )
+                            : null;
+    this.texCoordBuffer = this.uvs 
+                            ? this.renderer.createBuffer( 'ARRAY_BUFFER', 
+                                                          new Float32Array(this.uvs), 
+                                                          'STATIC_DRAW'
+                                                        ) 
+                            : null;
 
     this.modelMatrix    = new Matrix4x3();
     this.rotationMatrix = new Matrix4x3();
@@ -217,12 +237,16 @@ export class Mesh implements IMesh {
   }
 
   private addProgramAttribute(name:string): void {
-    this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], 'a' + this.ucfirst(name));
+    this.programs[this.nbPrograms][name] = this.context.getAttribLocation(this.programs[this.nbPrograms], 
+                                                                          'a' + this.ucfirst(name)
+                                                                         );
     this.context.enableVertexAttribArray(this.programs[this.nbPrograms][name]);
   }
 
   private addProgramUniform(name:string): void {
-    this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], 'u' + this.ucfirst(name));
+    this.programs[this.nbPrograms][name] = this.context.getUniformLocation(this.programs[this.nbPrograms], 
+                                                                           'u' + this.ucfirst(name)
+                                                                          );
   }
 
   public activateBlendMode(): void {
@@ -257,7 +281,7 @@ export class Mesh implements IMesh {
       let program = this.programs[0];
       // let material = null;
       for(let i = 0 ; i < this.nbSubMeshes ; i++) {
-        if(this.blendMode === blendMode){
+        if(this.blendMode === blendMode) {
           program = this.programs[i] || this.programs[this.nbPrograms - 1] ;
 
           this.renderer.useProgram(program);
@@ -276,11 +300,23 @@ export class Mesh implements IMesh {
             this.renderer.bindBuffer('ELEMENT_ARRAY_BUFFER', <WebGLBuffer>this.indexBuffer);
           }
           this.renderer.bindBuffer('ARRAY_BUFFER', <WebGLBuffer>this.vertexBuffer);
-          this.renderer.vertexAttribPointer(program.vertexPosition, <number>this.itemSize, 'FLOAT', false, 0, 0);
+          this.renderer.vertexAttribPointer(  program.vertexPosition, 
+                                              <number>this.itemSize, 
+                                              'FLOAT', 
+                                              false, 
+                                              0, 
+                                              0
+                                           );
 
           // normals
           if (this.normals) {
-            this.renderer.vertexAttribPointer(program.vertexNormal, <number>this.itemSize, 'FLOAT', false, 0, 0);
+            this.renderer.vertexAttribPointer(  program.vertexNormal, 
+                                                <number>this.itemSize, 
+                                                'FLOAT', 
+                                                false, 
+                                                0, 
+                                                0
+                                              );
           }
 
           // uvs
@@ -316,7 +352,7 @@ export class Mesh implements IMesh {
         }
       }
 
-      for ( let child of this.children ) {
+      for (let child of this.children) {
         child.render( projectionMatrix,
                       viewMatrix,
                       lights,
