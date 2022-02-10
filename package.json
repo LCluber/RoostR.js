@@ -72,7 +72,7 @@
     "jquery-easing": "0.0.1",
     "rollup-plugin-babel": "3.0.4",
     "rollup-plugin-node-resolve": "3.3.0",
-    "node-sass": "6.0.0",
+    "node-sass": "7.0.0",
     "time-grunt": "1.4.0",
     "tslint": "5.20.1",
     "typedoc": "0.17.7",
