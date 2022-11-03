@@ -65,7 +65,7 @@
     "grunt-rollup": "9.0.0",
     "grunt-sass": "3.1.0",
     "grunt-strip-code": "1.0.6",
-    "grunt-ts": "5.5.1",
+    "grunt-ts": "6.0.0-beta.22",
     "grunt-tslint": "5.0.1",
     "grunt-typedoc": "0.2.4",
     "jquery": "3.2.1",
