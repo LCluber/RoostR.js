@@ -1,4 +1,4 @@
-import { SubMesh } from './subMesh';
+import { SubMesh } from './submesh';
 
 export class Line {
 

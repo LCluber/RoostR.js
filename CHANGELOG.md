@@ -1,3 +1,9 @@
+Version 0.6.0 (July 22th 2026)
+-----------------------------
+ * Updated build configuration and dependencies (Rollup, Jest, TypeScript, UglifyJS).
+ * Refactored project structure (replaced Grunt build pipeline with npm scripts and Rollup).
+ * Added a complete test suite.
+
 Version 0.5.12 (June 13th 2021)
 -----------------------------
  * Fix duplicate identifier in definitions file

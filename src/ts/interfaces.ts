@@ -1,5 +1,5 @@
 import { Uniform } from './uniform';
-import { SubMesh } from './geometry/subMesh';
+import { SubMesh } from './geometry/submesh';
 import { MeshRenderer }  from './renderer/mesh';
 import { eDrawMethod } from './mesh';
 import { Material }  from './material';

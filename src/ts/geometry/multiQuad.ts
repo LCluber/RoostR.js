@@ -1,5 +1,5 @@
 import { BasicMesh } from './basic';
-import { SubMesh } from './subMesh';
+import { SubMesh } from './submesh';
 
 export interface IQuad {
   vertices : Float32Array;
@@ -44,8 +44,8 @@ export class MultiQuad extends BasicMesh{
 
   public createQuads(length: number): void {
     for (var i = 0 ; i < length ; i++) {
-      this.vertices.push.apply(this.vertices, this.quad.vertices);
-      this.indices.push.apply(this.indices, this.createIndices(i));
+      this.vertices!.push.apply(this.vertices, this.quad.vertices);
+      this.indices!.push.apply(this.indices, this.createIndices(i));
       this.uvs.push.apply(this.uvs, this.quad.uvs);
     }
 

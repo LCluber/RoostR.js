@@ -6,3 +6,4 @@ build/
 .sass-cache/
 .tscache/
 npm-debug.log
+tests/coverage/

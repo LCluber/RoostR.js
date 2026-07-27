@@ -1,5 +1,5 @@
 import { BasicMesh } from './basic';
-import { SubMesh } from './subMesh';
+import { SubMesh } from './submesh';
 
 export class Hemisphere extends BasicMesh {
 

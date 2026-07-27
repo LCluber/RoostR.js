@@ -1,26 +1,27 @@
-/** MIT License
-* 
-* Copyright (c) 2015 Ludovic CLUBER 
-* 
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all
-* copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*
-* http://roostrjs.lcluber.com
+/*
+MIT License
+
+Copyright (c) 2015 Ludovic CLUBER
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+http://roostrjs.lcluber.com
 */
 
 import { Matrix4x3, Matrix4x4, Vector3 } from '@lcluber/type6js';
@@ -416,7 +417,6 @@ var eDrawMethod;
     eDrawMethod["drawElements"] = "drawElements";
     eDrawMethod["drawArrays"] = "drawArrays";
 })(eDrawMethod || (eDrawMethod = {}));
-
 class Mesh {
     constructor(mesh, context) {
         this.vertices = mesh.vertices ? mesh.vertices : null;
@@ -949,4 +949,4 @@ class Material {
     }
 }
 
-export { Scene, Renderer, PerspectiveCamera, OrthographicCamera, Mesh, Line, FullscreenQuad, Quad, MultiQuad, Cube, Sphere, Hemisphere, VWing, Cannon, CustomMesh, Texture, DirectionalLight, PointLight, SpotLight, Material };
+export { Cannon, Cube, CustomMesh, DirectionalLight, FullscreenQuad, Hemisphere, Line, Material, Mesh, MultiQuad, OrthographicCamera, PerspectiveCamera, PointLight, Quad, Renderer, Scene, Sphere, SpotLight, Texture, VWing };

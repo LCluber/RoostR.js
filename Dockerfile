@@ -1,26 +1,15 @@
-FROM node:8.12.0-alpine
-
+FROM node:22.9.0-alpine3.20
 # Create app directory
 WORKDIR /usr/src/app
-
-# add `/usr/src/app/node_modules/.bin` to $PATH
-# ENV PATH /usr/src/app/node_modules/.bin:$PATH
-
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 COPY package*.json ./
-# COPY package.json /usr/src/app/package.json
 
-# RUN npm install -g grunt-cli typescript && npm install
+RUN npm i -no-progress --loglevel=error --ignore-scripts --no-fund
 # If you are building your code for production
-RUN npm install --only=production
-
+# RUN npm ci --only=production
 # Bundle app source
-COPY . .
 # COPY . /usr/src/app
-
-EXPOSE 3000
-# USER node
-# CMD [ "grunt" ]
-CMD [ "npm", "start" ]
+# EXPOSE 3000
+CMD [ "npm", "run", "build" ]

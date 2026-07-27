@@ -1,5 +1,5 @@
 
-import { SubMesh } from './subMesh';
+import { SubMesh } from './submesh';
 import { BasicMesh } from './basic';
 
 export class Cannon extends BasicMesh {
